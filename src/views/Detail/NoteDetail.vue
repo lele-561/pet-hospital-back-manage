@@ -81,6 +81,7 @@ export default {
   activated() {
     postRequest('/note/getNoteInfo', {id: this.$route.query.noteId}).then((resp) => {
       this.noteInfo = resp.data;
+      console.log(this.noteInfo)
     })
     if (this.noteInfo.publishUser.id === this.$store.state.user.token || this.$store.state.user.roleName === 'admin') {
       this.isShow = "";

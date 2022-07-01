@@ -49,6 +49,7 @@ export default {
     this.isCreate = this.$route.query.isCreate;
     if (!this.isCreate) {
       this.noteInfo = this.$route.query.noteInfo;
+      this.noteInfo.userId = this.$store.state.user.token;
     } else {
       this.noteInfo = {
         paperId: "",
@@ -76,6 +77,8 @@ export default {
       });
     },
     save() {
+      console.log("create"+this.isCreate)
+      console.log(this.noteInfo.userId)
       postRequest("/note/updateNote", {
         isCreate: this.isCreate,
         noteInfo: {
@@ -86,9 +89,9 @@ export default {
           userId: this.noteInfo.userId
         }
       }).then((resp) => {
-        this.$confirm("成功上传，继续编辑还是返回论文详情页？", "提示", {
+        this.$confirm("成功上传，继续编辑还是返回笔记详情页？", "提示", {
           confirmButtonText: "继续编辑",
-          cancelButtonText: "返回论文详情页",
+          cancelButtonText: "返回笔记详情页",
           type: "success",
         })
             .then(() => {
