@@ -48,6 +48,7 @@ export default {
   methods: {
     search: function () {
       postRequest('/dataset/getDatasetList', {input:this.form.input,currentPage:this.currentPage}).then((resp) => {
+        console.log(resp.data)
         this.datasets = resp.data.content;
         this.totalPages = resp.data.totalPages;
         this.currentPage= resp.data.currentPage;

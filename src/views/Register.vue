@@ -35,8 +35,8 @@ export default {
             trigger: "blur"
           },
           {
-            max: 15,
-            message: "用户名长度不能小于3位",
+            max: 10,
+            message: "用户名长度不能大于10位",
             trigger: "blur"
           }
         ],

@@ -81,8 +81,10 @@ export default {
     }
   },
   activated() {
+    console.log(this.$route.query.datasetId)
     postRequest('/dataset/getDatasetInfo', {id: this.$route.query.datasetId}).then((resp) => {
       this.datasetInfo = resp.data
+      console.log(this.datasetInfo)
     });
     if (this.$store.state.user.roleName === 'admin' || this.datasetInfo.publishUser.id === this.$store.state.user.token) {
       this.isShow = "";

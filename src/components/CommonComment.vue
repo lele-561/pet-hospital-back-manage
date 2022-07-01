@@ -17,8 +17,7 @@ export default {
       console.log(resp.data)
       this.commentList = resp.data
     })
-    // this.$store.commit('getToken')
-    // this.$store.commit('getToken')
+
     this.user.id = this.$store.state.user.token
     this.user.nickName = this.$store.state.user.userName
   },

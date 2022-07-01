@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     itemClick(row) {
-      this.$router.push({name: 'datasetDetail', query: {paperInfo: row}});
+      this.$router.push({name: 'datasetDetail', query: {datasetId: row.id}});
     },
   },
   props: ["datasets"],

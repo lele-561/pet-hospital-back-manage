@@ -37,8 +37,8 @@ export default {
             trigger: "blur"
           },
           {
-            max: 15,
-            message: "id长度不能大于15位",
+            max: 10,
+            message: "id长度不能大于10位",
             trigger: "blur"
           }
         ],
@@ -63,8 +63,7 @@ export default {
             password: this.$md5(this.form.password)
           }).then((resp) => {
             console.log(resp.data)
-            // if (resp.status === 200) {
-            if(resp.data.userId!=null){
+            if (resp.data.userId != null) {
               this.$store.commit('setToken', resp.data.userId)
               this.$store.commit('setRoleName', resp.data.roleName)
               this.$store.commit('setUserName', resp.data.userName)
@@ -73,21 +72,14 @@ export default {
                 type: 'success'
               })
               this.$router.push({name: 'home'})
-            }else{
+            } else {
               this.$message.error(resp.data.message);
-
-
             }
-            // } else {
-            //   this.$message.warning(resp.data.message)
-            // }
           })
         } else {
           return false;
         }
       });
-
-
     },
     register: function () {
       this.$router.replace({name: 'register'})
