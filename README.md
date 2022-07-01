@@ -1,24 +1,7 @@
-# vue-manage
+# 论文管理系统v1.0：前端
 
-## Project setup
-```
-npm install
-```
+## 运行指南
+### 跨域配置
+```vue.config.js```中修改```target```为后端所在端口
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```src/utils/api.js```中修改```base```为前端所在端口
