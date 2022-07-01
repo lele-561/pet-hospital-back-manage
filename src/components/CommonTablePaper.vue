@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table ref="multipleTable" :data="papers" :stripe="true" max-height="600"
+    <el-table ref="multipleTable" :data="papers" :stripe="true" max-height="100%"
               style="width: 100%; overflow-x: hidden; overflow-y: hidden" tooltip-effect="dark">
       <el-table-column align="left" label="标题" min-width="38%" prop="title">
         <template slot-scope="scope"><span style="color: #409eff; cursor: pointer" @click="itemClick(scope.row)">{{
@@ -131,7 +131,6 @@ export default {
     bottom: 0;
     right: 20px;
   }
-
 ;
 }
 </style>

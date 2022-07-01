@@ -1,23 +1,9 @@
 <template>
-  <!-- <div class="common-table" height="90%" stripe>
-      <el-table :data="tableData">
-          <el-table-column show-overflow-tooltip v-for="item in tableLabel" :key="item.prop" :label="item.label"
-              :width="item.width ? item.width : 125">
-              <template slot-scope="scope"><span style="margin-left:10px">{{ scope.row[item.prop] }}</span></template>
-          </el-table-column>
-          <el-table-column label="操作" min-width="180">
-              <el-button size="mini" @click="handleEdit">编辑</el-button>
-              <el-button type="danger" size="mini" @click="handleDelete">删除</el-button>
-          </el-table-column>
-      </el-table>
-      <el-pagination class="pager" :total="config.total" :current-page.sync="config.page" :page-size="10"
-          @current-change="changePage" layout="prev, pager, next"></el-pagination>
-  </div> -->
   <el-table
       ref="multipleTable"
       :data="papers"
       :stripe="true"
-      max-height="600"
+      max-height="100%"
       style="width: 100%; overflow-x: hidden; overflow-y: hidden"
       tooltip-effect="dark"
   >

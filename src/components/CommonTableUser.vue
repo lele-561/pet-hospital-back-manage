@@ -1,5 +1,5 @@
 <template>
-  <div class="common-table" height="90%" stripe>
+  <div class="common-table" height="100%" stripe>
     <el-table :data="tableData">
       <el-table-column v-for="item in tableLabel" :key="item.prop" :label="item.label" min-width="25%"
                        show-overflow-tooltip>

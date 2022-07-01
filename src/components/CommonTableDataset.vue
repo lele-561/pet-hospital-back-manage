@@ -3,7 +3,7 @@
       ref="multipleTable"
       :data="datasets"
       :stripe="true"
-      max-height="600"
+      max-height="100%"
       style="width: 100%; overflow-x: hidden; overflow-y: hidden"
       tooltip-effect="dark"
   >

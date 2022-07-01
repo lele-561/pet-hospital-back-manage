@@ -15,7 +15,7 @@
       </el-card>
       <el-card style="margin-top:15px;height:460px">
         <div style="font-weight:bold">我的发布</div>
-        <el-table :data="tableData" max-height="440">
+        <el-table :data="tableData" style="margin-bottom: 15px" max-height="440px">
           <el-table-column align="left" label="名称" min-width="70%" prop="title">
             <template slot-scope="scope">
               <span style="color: #409eff; cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.title }}</span>
