@@ -1,6 +1,6 @@
 <template>
   <!-- 左侧菜单 -->
-  <el-menu :collapse="isCollapse" alive-text-color="#ffd04b" background-color="#545c64" class="el-menu-vertical-demo"
+  <el-menu :collapse="isCollapse" alive-text-color="#C5A553" class="el-menu-vertical-demo"
            default-active="1-4-1" text-color="#fff" @close="handleClose" @open="handleOpen">
     <h3>论文管理系统</h3>
     <!-- :index跳转路由使用 -->
@@ -18,7 +18,6 @@
         <el-menu-item :index="subItem.path" @click="clickMenu(subItem)">{{ subItem.label }}</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-
   </el-menu>
 </template>
 
@@ -66,10 +65,8 @@ export default {
   },
   methods: {
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
     },
     clickMenu(item) {
       if (this.$store.state.user.roleName === 'admin') {
@@ -102,7 +99,7 @@ export default {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
-
+  background-image: linear-gradient(to top, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
 }
 
 .el-menu {

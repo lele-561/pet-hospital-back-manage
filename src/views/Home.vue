@@ -16,12 +16,13 @@
       <el-card style="margin-top:15px;height:460px">
         <div style="font-weight:bold">我的发布</div>
         <el-table :data="tableData" max-height="440">
-          <el-table-column align="left" label="名称" prop="title" min-width="70%">
+          <el-table-column align="left" label="名称" min-width="70%" prop="title">
             <template slot-scope="scope">
               <span style="color: #409eff; cursor: pointer" @click="itemClick(scope.row)">{{ scope.row.title }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" label="类型" prop="type" min-width="30%" :filters="typeFilters">
+          <el-table-column :filter-method="filterHandler" :filters="typeFilters" align="left" label="类型" min-width="30%"
+                           prop="type">
             <template slot-scope="scope">
               {{ scope.row.type }}
             </template>
@@ -40,7 +41,7 @@
         <el-col :span="12">
           <el-card style="height:290px">
             <div style="font-weight:bold">每个标签下论文数量统计</div>
-            <div id="paperWithTag" style="width:350px;height:270px;text-align: center" ></div>
+            <div id="paperWithTag" style="width:350px;height:270px;text-align: center"></div>
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -97,6 +98,10 @@ export default {
         this.$router.push({name: "noteDetail", query: {noteId: row.id}})
       }
     },
+    filterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
     async drawChart() {
       await postRequest('/chart/getPaperTimeline').then((resp) => {
         this.dataTimeline = resp.data;
@@ -127,13 +132,11 @@ export default {
         })
       }
 
-
       chartTimeline.setOption({
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            // Use axis to trigger tooltip
-            type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+            type: 'shadow'
           }
         },
         legend: {},
@@ -200,13 +203,16 @@ export default {
       this.tableData = resp.data;
     });
     this.drawChart()
-    console.log(this.$store.state.user.userName)
   }
-
 }
 </script>
 
 <style lang="less" scoped>
+
+.home {
+  margin-top: 0px;
+}
+
 .user {
   // display: inline-block;
   display: flex;

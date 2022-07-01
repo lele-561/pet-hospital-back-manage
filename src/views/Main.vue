@@ -35,10 +35,12 @@ export default {
 
 <style lang="less" scoped>
 .el-header {
-  background-color: #333;
+  background-image: linear-gradient(to left, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
 }
+
 
 .el-main {
   padding-top: 0;
 }
+
 </style>

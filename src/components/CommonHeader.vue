@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="l-content">
-      <el-button icon="el-icon-back" plain size="mini" @click="back"></el-button>
+      <el-button icon="el-icon-back" plain round size="mini" type="info" @click="back"></el-button>
     </div>
     <div class="r-content">
       <el-dropdown size="mini" trigger="click">
@@ -9,7 +9,6 @@
           <img :src="userImg" class="user"/>
         </span>
         <el-dropdown-menu>
-          <!-- <el-dropdown-item common="a">个人中心</el-dropdown-item> -->
           <el-dropdown-item common="b" @click.native="logOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -55,7 +54,6 @@ header {
 
   .el-button {
     margin-right: 20px;
-
   }
 }
 

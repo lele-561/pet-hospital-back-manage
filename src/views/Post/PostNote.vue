@@ -50,6 +50,16 @@ export default {
     if (!this.isCreate) {
       this.noteInfo = this.$route.query.noteInfo;
     } else {
+      this.noteInfo = {
+        paperId: "",
+        paperTitle: "",
+        noteId: "",
+        noteTitle: "",
+        content: "",
+        userId: "",
+        releaseTime: "",
+        updateTime: "",
+      }
       this.noteInfo.paperId = this.$route.query.paperId;
       this.noteInfo.paperTitle = this.$route.query.paperTitle;
       this.noteInfo.userId = this.$store.state.user.token;
@@ -73,7 +83,7 @@ export default {
           noteId: this.noteInfo.noteId,
           noteTitle: this.noteInfo.noteTitle,
           content: this.noteInfo.content,
-          userId:this.noteInfo.userId
+          userId: this.noteInfo.userId
         }
       }).then((resp) => {
         this.$confirm("成功上传，继续编辑还是返回论文详情页？", "提示", {

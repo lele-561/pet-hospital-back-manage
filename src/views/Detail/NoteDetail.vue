@@ -66,7 +66,7 @@ export default {
       noteInfo: {
         paperId: "",
         paperTitle: "",
-        noteId: "",
+        noteId: this.$route.query.noteId,
         noteTitle: "",
         content: "",
         publishUser: {
@@ -81,9 +81,8 @@ export default {
   activated() {
     postRequest('/note/getNoteInfo', {id: this.$route.query.noteId}).then((resp) => {
       this.noteInfo = resp.data;
-      console.log(this.noteInfo)
     })
-    if (this.$store.state.user.roleName === 'admin' || this.noteInfo.publishUser.id === this.$store.state.user.token) {
+    if (this.noteInfo.publishUser.id === this.$store.state.user.token || this.$store.state.user.roleName === 'admin') {
       this.isShow = "";
     }
   },
@@ -105,8 +104,8 @@ export default {
       }).then(() => {
         postRequest('/note/deleteNote', {id: this.noteInfo.noteId}).then((resp) => {
           this.$message({
-            message:"删除成功",
-            type:"success"
+            message: "删除成功",
+            type: "success"
           })
           this.$router.back()
         })
@@ -116,6 +115,21 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    clear() {
+      this.noteInfo = {
+        paperId: "",
+        paperTitle: "",
+        noteId: "",
+        noteTitle: "",
+        content: "",
+        publishUser: {
+          id: "",
+          name: ""
+        },
+        releaseTime: "",
+        updateTime: "",
+      }
     }
   }
 }

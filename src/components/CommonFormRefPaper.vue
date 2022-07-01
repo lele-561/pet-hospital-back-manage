@@ -32,10 +32,10 @@ export default {
         cb(results);
       } else {
         postRequest('/paper/remoteSearch',
-          {
-            searchType: 'title',
-            input: queryString
-          }
+            {
+              searchType: 'title',
+              input: queryString
+            }
         ).then((resp) => {
           // 把标题提取出来，paper先不变
           results = resp.data;

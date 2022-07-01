@@ -101,7 +101,7 @@
           <!-- 引用文献表格 -->
           <div>
             <el-table :data="tableData">
-              <el-table-column min-width="50%" label="论文标题">
+              <el-table-column label="论文标题" min-width="50%">
                 <template slot-scope="scope">
                   <span style="margin-left:10px">
                     <el-link hover="" type="primary" @click="gotoRefPaper(scope.row)">{{
@@ -109,7 +109,7 @@
                       }}</el-link>
                   </span></template>
               </el-table-column>
-              <el-table-column min-width="50%" label="备注">
+              <el-table-column label="备注" min-width="50%">
                 <template slot-scope="scope"><span style="margin-left:10px">
                                         {{ scope.row.refNote }}
                                     </span></template>
@@ -129,7 +129,7 @@
           <el-button circle icon="el-icon-edit" type="primary" @click="addNote">写笔记</el-button>
         </div>
       </div>
-      <common-table-note :notes="notes" :paperId="paperInfo.id" :currentPage="currentPage"></common-table-note>
+      <common-table-note :currentPage="currentPage" :notes="notes" :paperId="paperInfo.id"></common-table-note>
       <!-- 底部跳转 -->
       <div style="text-align: center;margin-top: 10px">
         <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count="7" background
@@ -196,9 +196,11 @@ export default {
   },
   methods: {
     search() {
-      postRequest('/note/getNoteList', {paperId: this.$route.query.paperId,currentPage:this.currentPage}).then((resp) => {
+      postRequest('/note/getNoteList', {
+        paperId: this.$route.query.paperId,
+        currentPage: this.currentPage
+      }).then((resp) => {
         this.notes = resp.data.content;
-        console.log(this.notes)
         this.totalPages = resp.data.totalPages;
         this.currentPage = resp.data.currentPage;
       });
@@ -217,8 +219,8 @@ export default {
       }).then(() => {
         postRequest('/paper/deletePaper', {id: this.paperInfo.id}).then((resp) => {
           this.$message({
-            message:"删除成功",
-            type:"success"
+            message: "删除成功",
+            type: "success"
           })
           this.$router.replace({name: 'paperList'})
         })

@@ -81,10 +81,8 @@ export default {
     }
   },
   activated() {
-    console.log(this.$route.query.datasetId)
     postRequest('/dataset/getDatasetInfo', {id: this.$route.query.datasetId}).then((resp) => {
       this.datasetInfo = resp.data
-      console.log(this.datasetInfo)
     });
     if (this.$store.state.user.roleName === 'admin' || this.datasetInfo.publishUser.id === this.$store.state.user.token) {
       this.isShow = "";
@@ -106,8 +104,8 @@ export default {
       }).then(() => {
         postRequest('/dataset/deleteDataset', {id: this.datasetInfo.id}).then((resp) => {
           this.$message({
-            message:"删除成功",
-            type:"success"
+            message: "删除成功",
+            type: "success"
           })
           this.$router.replace({name: 'datasetList'})
         })

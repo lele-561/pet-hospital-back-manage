@@ -12,12 +12,10 @@ export default {
   components: {comment},
   props: ["noteId"],
   activated() {
-    console.log("noteId是"+this.noteId)
+    this.commentList = []
     postRequest('/comment/getCommentList', {id: this.noteId}).then((resp) => {
-      console.log(resp.data)
       this.commentList = resp.data
     })
-
     this.user.id = this.$store.state.user.token
     this.user.nickName = this.$store.state.user.userName
   },
@@ -55,7 +53,7 @@ export default {
         //     createDate: "2022-02-22",
         //   }]
         // }
-        ]
+      ]
     }
   },
   methods: {
@@ -65,7 +63,6 @@ export default {
         userId: this.user.id,
         content: text
       }).then((resp) => {
-        console.log(resp.data)
         this.commentList = resp.data
       })
     },
@@ -77,7 +74,6 @@ export default {
         parentId: parentId,
         content: text
       }).then((resp) => {
-        console.log(resp.data)
         this.commentList = resp.data
       })
     }

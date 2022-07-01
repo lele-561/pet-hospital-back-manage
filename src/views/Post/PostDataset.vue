@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>数据集发布</h3>
-    <el-form ref="datasetInfo" :model="datasetInfo" label-width="120px" style="margin-top: 10px" :rules="rules">
+    <el-form ref="datasetInfo" :model="datasetInfo" :rules="rules" label-width="120px" style="margin-top: 10px">
       <el-form-item label="名称" prop="title">
         <el-input v-model="datasetInfo.title"></el-input>
       </el-form-item>
@@ -50,7 +50,7 @@ export default {
       options: ["关系抽取", "命名实体识别", "文本分类", "情感分析", "小样本学习", "知识问答", "阅读理解", "文本摘要", "文本生成", "其他"],
       rules: {
         title: [{required: true, message: "请输入数据集标题", trigger: "blur"}],
-        type: [{required: true, message: "请设置数据集类型", trigger: ["blur","change"]}],
+        type: [{required: true, message: "请设置数据集类型", trigger: ["blur", "change"]}],
         link: [{required: true, message: "请设置获取链接", trigger: "blur"},],
       }
     };
@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.$refs)
       this.$refs.datasetInfo.validate((valid) => {
         if (valid) {
           postRequest("/dataset/updateDataset", {

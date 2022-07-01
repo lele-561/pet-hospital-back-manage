@@ -5,7 +5,6 @@ module.exports = {
             '/api': {
                 target: 'http://localhost:8080/',
                 // target: 'http://127.0.0.1:4523/mock/931654',
-
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
@@ -15,5 +14,4 @@ module.exports = {
         },
     },
     lintOnSave: false,
-
 }

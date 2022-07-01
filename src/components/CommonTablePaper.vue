@@ -2,34 +2,34 @@
   <div>
     <el-table ref="multipleTable" :data="papers" :stripe="true" max-height="600"
               style="width: 100%; overflow-x: hidden; overflow-y: hidden" tooltip-effect="dark">
-      <el-table-column align="left" label="标题" prop="title" min-width="38%">
+      <el-table-column align="left" label="标题" min-width="38%" prop="title">
         <template slot-scope="scope"><span style="color: #409eff; cursor: pointer" @click="itemClick(scope.row)">{{
             scope.row.title
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column :filter-method="filterHandler" :filters="meetingFilters" align="left" label="会议" prop="meeting"
-                       min-width="10%">
+      <el-table-column :filter-method="filterHandler" :filters="meetingFilters" align="left" label="会议" min-width="10%"
+                       prop="meeting">
         <template slot-scope="scope">
-          {{ scope.row.meeting + " "+scope.row.year }}
+          {{ scope.row.meeting + " " + scope.row.year }}
         </template>
       </el-table-column>
-      <el-table-column :filter-method="filterHandler" :filters="typeFilters" align="left" label="类型" prop="type"
-                       min-width="7%">
+      <el-table-column :filter-method="filterHandler" :filters="typeFilters" align="left" label="类型" min-width="7%"
+                       prop="type">
         <template slot-scope="scope">
           {{ scope.row.type }}
         </template>
       </el-table-column>
-      <el-table-column align="left" label="标签" prop="tags" min-width="15%">
+      <el-table-column align="left" label="标签" min-width="15%" prop="tags">
         <template slot-scope="scope">
           <el-tag v-for="tag in scope.row.tags" :key="tag">{{ tag }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="left" label="发布时间" prop="publishTime" sortable min-width="15%">
+      <el-table-column align="left" label="发布时间" min-width="15%" prop="publishTime" sortable>
         <template slot-scope="scope">{{ scope.row.publishTime }}
         </template>
       </el-table-column>
-      <el-table-column align="left" label="更新时间" prop="updateTime" sortable min-width="15%">
+      <el-table-column align="left" label="更新时间" min-width="15%" prop="updateTime" sortable>
         <template slot-scope="scope">{{ scope.row.updateTime }}
         </template>
       </el-table-column>
@@ -109,7 +109,6 @@ export default {
   },
   methods: {
     itemClick(row) {
-
       this.$router.push({name: "paperDetail", query: {paperId: row.id}});
     },
     filterHandler(value, row, column) {

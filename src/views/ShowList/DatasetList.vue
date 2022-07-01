@@ -47,11 +47,10 @@ export default {
   },
   methods: {
     search: function () {
-      postRequest('/dataset/getDatasetList', {input:this.form.input,currentPage:this.currentPage}).then((resp) => {
-        console.log(resp.data)
+      postRequest('/dataset/getDatasetList', {input: this.form.input, currentPage: this.currentPage}).then((resp) => {
         this.datasets = resp.data.content;
         this.totalPages = resp.data.totalPages;
-        this.currentPage= resp.data.currentPage;
+        this.currentPage = resp.data.currentPage;
       })
     },
     handleCurrentChange: function (currentPage) {

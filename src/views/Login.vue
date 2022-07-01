@@ -1,7 +1,7 @@
 <template>
   <div class="login-background">
     <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
-      <h3 class="login-title">系统登录</h3>
+      <h3 class="login-title">论文管理系统 登录</h3>
       <el-form-item class="username" label="id" label-width="80px" prop="id">
         <el-input v-model="form.id" auto-complete="off" placeholder="请输入账号" type="input"></el-input>
       </el-form-item>
@@ -10,7 +10,7 @@
       </el-form-item>
       <div style="text-align: center;margin-bottom: 20px">
         <el-button class="login-submit" type="primary" @click="login">登录</el-button>
-        <el-button class="login-submit" type="primary" @click="register" style="margin-left: 30px">注册</el-button>
+        <el-button class="login-submit" style="margin-left: 30px" type="primary" @click="register">注册</el-button>
       </div>
     </el-form>
   </div>
@@ -54,15 +54,12 @@ export default {
   },
   methods: {
     login: function () {
-      // 传送给后端校验，如果符合就跳转
-
       this.$refs.form.validate((valid) => {
         if (valid) {
           postRequest("/user/login", {
             id: this.form.id,
             password: this.$md5(this.form.password)
           }).then((resp) => {
-            console.log(resp.data)
             if (resp.data.userId != null) {
               this.$store.commit('setToken', resp.data.userId)
               this.$store.commit('setRoleName', resp.data.roleName)
@@ -96,9 +93,7 @@ export default {
   width: 350px;
   padding: 35px 35px 15px 35px;
   background-color: #fff;
-  border: 1px solid #eaeaea;
-  box-shadow: 0 0 25px #cac6c6;
-  left: 50%
+  left: 50%;
 }
 
 .login-title {
@@ -112,10 +107,11 @@ export default {
 }
 
 .login-background {
-  //background: url("../assets/background.jpg") no-repeat center;
+  background-image: linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
   height: 100%;
   width: 100%;
   background-size: cover;
   position: fixed;
 }
+
 </style>

@@ -24,7 +24,7 @@
                          @edit="editUser"></common-table-user>
     </div>
     <!-- 底部跳转 -->
-    <div  style="text-align: center;margin-top: 10px">
+    <div style="text-align: center;margin-top: 10px">
       <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count="7" background
                      layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
       </el-pagination>
@@ -74,9 +74,9 @@ export default {
         },
       ],
       operateFormData: {
-            userName: "",
-            roleName: "",
-          },
+        userName: "",
+        roleName: "",
+      },
       // 表格配置
       tableData: [],
       tableLabel: [{
@@ -107,7 +107,6 @@ export default {
       })
     },
     confirm() {
-      console.log(this.operateFormData)
       postRequest('/user/updateUser', this.operateFormData).then((resp) => {
         this.isShow = false;
       })

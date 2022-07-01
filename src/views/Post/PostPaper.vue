@@ -130,11 +130,11 @@ export default {
             refNote: "",
           },
       tableData: [
-      //     {
-      //   refId: 123,
-      //   refTitle: "aa",
-      //   refNote: "1123",
-      // }
+        //     {
+        //   refId: 123,
+        //   refTitle: "aa",
+        //   refNote: "1123",
+        // }
       ],
       tableLabel: [{
         prop: "refTitle",
@@ -148,7 +148,7 @@ export default {
       rules: {
         title: [{required: true, message: "请输入论文标题", trigger: "blur"}],
         meeting: [{required: true, message: "请选择会议", trigger: "blur"}],
-        year:[{required: true, message: "请选择会议", trigger: "change"}],
+        year: [{required: true, message: "请选择会议", trigger: "change"}],
         type: [{required: true, message: "请设置论文类型", trigger: "blur"}],
         pdfLink: [{required: true, message: "请设置论文链接", trigger: "blur"}],
       },
@@ -200,7 +200,6 @@ export default {
   },
   activated() {
     this.isCreate = this.$route.query.isCreate;
-    // console.log(this.$route.query.isCreate)
     if (!this.isCreate) {
       this.form = this.$route.query.paperInfo;
       this.operateType = 'edit';
@@ -341,31 +340,11 @@ export default {
       this.operateType = 'edit';
       this.isShow = true;
       this.operateFormData = row
-      console.log(this.tableData)
-
     },
     delRefPaper(row) {
       this.tableData = this.tableData.filter(item => item.refId !== row.refId)
     }
-  },
-  // watch: {
-  //     inputRefPaperValue: {
-  //         deep: true,
-  //         handler() {
-  //             console.log(this.inputRefPaperValue)
-  //         }
-  //     },
-  //     form: {
-  //         deep: true,
-  //         handler() {
-  //             console.log(this.form.tags)
-  //             console.log(this.form.refPapers)
-
-  //         }
-  //     },
-
-  // }
-
+  }
 }
 </script>
 

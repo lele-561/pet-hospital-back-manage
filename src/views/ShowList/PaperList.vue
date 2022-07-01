@@ -13,7 +13,7 @@
         <el-autocomplete v-model="form.input" :fetch-suggestions="querySearchAsync" placeholder="请输入内容"
                          @select="handleSelect"></el-autocomplete>
         <el-form-item label="">
-          <el-button type="primary" @click="search" style="margin-left: 5px">搜索</el-button>
+          <el-button style="margin-left: 5px" type="primary" @click="search">搜索</el-button>
         </el-form-item>
       </el-form-item>
     </el-form>
@@ -66,9 +66,8 @@ export default {
         searchType: this.form.searchType,
         input: this.form.input,
         currentPage: this.currentPage
-      },this.form.searchType,this.form.input,this.currentPage).then((resp) => {
+      }, this.form.searchType, this.form.input, this.currentPage).then((resp) => {
         // paper改变
-        // console.log(resp.data)
         this.papers = resp.data.content;
         this.totalPages = resp.data.totalPages;
         this.currentPage = resp.data.currentPage;
@@ -96,18 +95,8 @@ export default {
       }, 1000 * Math.random());
     },
     handleSelect(item) {
-      // console.log('哈哈这是' + item);
     }
   },
-  // watch: {
-  //   form: {
-  //     deep: true,
-  //     handler() {
-  //       console.log(this.form.input)
-  //     }
-  //   }
-
-  // }
 }
 
 </script>
@@ -121,7 +110,6 @@ export default {
 
 .search {
   display: inline;
-
   margin-top: 2%;
   float: right;
 }

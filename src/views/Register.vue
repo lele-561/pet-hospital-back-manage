@@ -1,24 +1,26 @@
 <template>
-  <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
-    <h3 class="login-title">系统注册</h3>
-    <el-form-item class="username" label="用户名" label-width="80px" prop="username">
-      <el-input v-model="form.username" auto-complete="off" placeholder="请输入用户名" type="input"></el-input>
-    </el-form-item>
-    <el-form-item label="密码" label-width="80px" prop="password">
-      <el-input v-model="form.password" auto-complete="off" placeholder="请输入密码" type="password"></el-input>
-    </el-form-item>
-    <div style="text-align: center;margin-bottom: 20px">
-      <el-button class="login-submit" type="primary" @click="back">返回登录</el-button>
-      <el-button class="login-submit" type="primary" @click="register" style="margin-left: 30px">注册</el-button>
-    </div>
-  </el-form>
+  <div class="login-background">
+    <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
+      <h3 class="login-title">论文管理系统 注册</h3>
+      <el-form-item class="username" label="用户名" label-width="80px" prop="username">
+        <el-input v-model="form.username" auto-complete="off" placeholder="请输入用户名" type="input"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" label-width="80px" prop="password">
+        <el-input v-model="form.password" auto-complete="off" placeholder="请输入密码" type="password"></el-input>
+      </el-form-item>
+      <div style="text-align: center;margin-bottom: 20px">
+        <el-button class="login-submit" type="primary" @click="register">注册</el-button>
+        <el-button class="login-submit" style="margin-left: 30px" type="primary" @click="back">返回登录</el-button>
+      </div>
+    </el-form>
+  </div>
 </template>
 
 <script>
-import {postRequest} from '@/utils/api.js'
+import {postRequest} from "../utils/api";
 
 export default {
-  name: 'Login',
+  name: 'Register',
   data() {
     return {
       form: {},
@@ -65,9 +67,8 @@ export default {
           }).then((resp) => {
             // 传到后端，如果ok则继续回到登陆页面登陆
             if (resp.data.success) {
-              this.$confirm("成功注册，返回登录", "提示", {
+              this.$confirm(resp.data.message, "提示", {
                 confirmButtonText: "返回",
-                cancelButtonText: "取消",
                 type: "success",
               })
                   .then(() => {
@@ -75,10 +76,8 @@ export default {
                   })
                   .catch(() => {
                   });
-              alert(resp.data.message)
-              this.$router.replace('/login')
             } else {
-              alert(resp.data.message)
+              this.$message.error(resp.data.message)
             }
           })
         } else {
@@ -86,8 +85,8 @@ export default {
         }
       });
     },
-    back(){
-      this.$router.push({name:'login'})
+    back() {
+      this.$router.push({name: 'login'})
     }
   },
 }
@@ -101,8 +100,8 @@ export default {
   width: 350px;
   padding: 35px 35px 15px 35px;
   background-color: #fff;
-  border: 1px solid #eaeaea;
-  box-shadow: 0 0 25px #cac6c6;
+  left: 50%
+
 }
 
 .login-title {
@@ -113,5 +112,13 @@ export default {
 
 .login-submit {
   margin: 10px auto 0 auto;
+}
+
+.login-background {
+  background-image: linear-gradient(to right, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  position: fixed;
 }
 </style>

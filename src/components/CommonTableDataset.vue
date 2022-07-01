@@ -7,7 +7,7 @@
       style="width: 100%; overflow-x: hidden; overflow-y: hidden"
       tooltip-effect="dark"
   >
-    <el-table-column align="left" label="名称" prop="title" min-width="50%">
+    <el-table-column align="left" label="名称" min-width="50%" prop="title">
       <template slot-scope="scope"
       ><span
           style="color: #409eff; cursor: pointer"
@@ -16,12 +16,12 @@
       >
       </template>
     </el-table-column>
-    <el-table-column align="left" label="类型" prop="type" min-width="20%">
+    <el-table-column align="left" label="类型" min-width="20%" prop="type">
       <template slot-scope="scope">
         {{ scope.row.type }}
       </template>
     </el-table-column>
-    <el-table-column align="left" label="链接" prop="link" min-width="30%">
+    <el-table-column align="left" label="链接" min-width="30%" prop="link">
       <template slot-scope="scope">
         <el-link
             :href="scope.row.link"
