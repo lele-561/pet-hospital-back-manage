@@ -1,4 +1,4 @@
-# gausspaper: front-end
+# pm-analysis: front-end
 
 ## Introduction
 A thesis managing project, based on gauss database. The front end is developed using _vue 2.0_.
