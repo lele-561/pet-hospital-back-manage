@@ -1,7 +1,7 @@
 <template>
   <div class="login-background">
     <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
-      <h3 class="login-title">论文管理系统 登录</h3>
+      <h3 class="login-title">颗粒物分析系统 登录</h3>
       <el-form-item class="username" label="id" label-width="80px" prop="id">
         <el-input v-model="form.id" auto-complete="off" placeholder="请输入账号" type="input"></el-input>
       </el-form-item>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {postRequest} from "../utils/api";
+import {postRequestJSON} from "../utils/api";
 
 export default {
   name: 'Login',
@@ -56,7 +56,7 @@ export default {
     login: function () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          postRequest("/user/login", {
+          postRequestJSON("/user/login", {
             id: this.form.id,
             password: this.$md5(this.form.password)
           }).then((resp) => {

@@ -1,0 +1,141 @@
+<template>
+  <!--  热力图-->
+  <!--  血泪教训：echart画图父子组件复用，如果是直接在子组件中处理的相同事件，请不要使用全局事件总线整事件谢谢！！！-->
+  <!--  组件复用导致的数据覆盖，使用不同id进行区分，或使用ref进行初始化-->
+  <div style="overflow:auto; margin-top: 10px">
+    <div :id="HeatMapId"
+         ref="Heat_Map"
+         :style="{width: heatMapDivWidth + 'px', height: heatMapDivHeight + 'px'}"></div>
+  </div>
+</template>
+
+<script>
+import {postRequestJSON} from "../../../utils/api";
+
+export default {
+  name: "HeatMap",
+  props: ["HeatMapId", "HeatMapInfo"],
+  data() {
+    return {
+      PM_name: [],            // 纵坐标：颗粒物名称
+      chemical_element: [],   // 横坐标：元素名称
+      unitData: [],           // 单元格数据：元素含量
+      raw_data: [],           // 热力图原始数据
+      heatMapFileId: '',
+      heatMapDivWidth: '',    // 热力图宽度
+      heatMapDivHeight: '',   // 热力图高度
+      heatMapColor: [         // 后端传过来
+        '#000085',
+        '#002cff',
+        '#009bff',
+        '#00e5ff',
+        '#8dff72',
+        '#fffe00',
+        '#ff8900',
+        '#ff3700',
+        '#830000',
+      ],
+    }
+  },
+  watch: {
+    'HeatMapInfo': {
+      handler() {
+        this.drawHeatMap(this.HeatMapInfo)
+      }
+    }
+  },
+  methods: {
+    async getHeatMapInfo(data) {
+      this.PM_name = []
+      this.chemical_element = []
+      this.unitData = []
+      this.raw_data = []
+      this.heatMapDivWidth = ''
+      this.heatMapDivHeight = ''
+      await postRequestJSON('/chart/getHeatMapInfo', {
+        id: data.type === 'pure' ? data.groupId : data.fileId,
+        sampleType: data.type,
+        substanceType: data.heatMapType
+      }).then((resp) => {
+        this.raw_data = resp.data.result.raw_data;
+        this.heatMapFileId = resp.data.result.fileId;
+      });
+
+      // 横坐标：元素名
+      for (let key in this.raw_data[0])
+        this.chemical_element.push(key)
+      this.chemical_element.pop()
+      // 数据：元素含量
+      for (var x = 0; x < this.raw_data.length; x++) {
+        var y = 0;
+        for (var key in this.raw_data[x]) {
+          // 纵坐标：颗粒名称
+          let tmpArray = ""
+          if (key === "components") this.PM_name.push(this.raw_data[x][key])
+          else tmpArray = [y, x, this.raw_data[x][key]]
+          this.unitData.push(tmpArray);
+          y++;
+        }
+      }
+      this.heatMapDivWidth = this.chemical_element.length * 65;
+      this.heatMapDivHeight = this.PM_name.length * 20;
+    },
+    async drawHeatMap(data) {
+      await this.getHeatMapInfo(data);
+      let heatMap = this.$echarts.init(document.getElementById(this.HeatMapId), null, {renderer: 'svg'});
+      // let heatMap = this.$echarts.init(this.$refs.Heat_Map, null, {renderer: 'svg'});
+      heatMap.setOption({
+        tooltip: {
+          trigger: 'item',
+        },
+        xAxis: {
+          type: 'category',
+          data: this.chemical_element,
+          splitLine: {show: false,},
+          splitArea: {
+            show: true,
+            areaStyle: {color: '#000085'}
+          }
+        },
+        yAxis: {
+          type: 'category',
+          data: this.PM_name,
+          splitLine: {show: false,}
+        },
+        visualMap: {
+          min: 0,
+          max: 6,
+          calculable: true,
+          realtime: false,
+          inRange: {color: this.heatMapColor}
+        },
+        series: [
+          {
+            type: 'heatmap',
+            data: this.unitData,
+            emphasis: {itemStyle: {borderColor: '#ffffff', borderWidth: 2}},
+            progressive: 1000,
+            animation: false,
+          }
+        ],
+        toolbox: {
+          show: true,
+          feature: {
+            dataView: {show: true},
+            restore: {show: true},
+            dataZoom: {show: true},
+            saveAsImage: {show: true, name: this.heatMapName}
+          }
+        },
+        grid: {
+          left: '4%', right: '0%', bottom: '0%', top: '0%', containLabel: true,
+        },
+      });
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

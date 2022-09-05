@@ -1,0 +1,45 @@
+<template>
+  <div class="common-table">
+    <el-table ref="singleTable"
+              :data="tableData"
+              highlight-current-row
+              @current-change="handleCurrentChange"
+              style="width: 100%">
+      <el-table-column
+          v-for="item in tableLabel"
+          :key="item.prop"
+          :label="item.label"
+          min-width="25%"
+          show-overflow-tooltip>
+        <template slot-scope="scope"><span>{{ scope.row[item.prop] }}</span></template>
+      </el-table-column>
+    </el-table>
+    <!--    <el-button style="margin-top: 20px" @click="setCurrent()">取消选择</el-button>-->
+  </div>
+</template>
+
+<script>
+export default {
+  name: "CommonTableSingle",
+  props: {
+    tableData: Array,
+    tableLabel: Array,
+    function: String,
+  },
+  data() {
+    return {}
+  },
+  methods: {
+    // 单选列表
+    setCurrent(row) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+      this.$bus.$emit('returnSampleId', {"function": this.function, "sample": this.currentRow});
+    }
+  }
+}
+
+
+</script>

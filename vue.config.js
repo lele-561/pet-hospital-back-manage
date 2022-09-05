@@ -4,7 +4,7 @@ module.exports = {
         proxy: {
             '/api': {
                 target: 'http://localhost:8080/',
-                // target: 'http://127.0.0.1:4523/mock/931654',
+                // target: 'http://127.0.0.1:4523/mock/1428114',
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

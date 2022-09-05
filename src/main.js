@@ -16,29 +16,33 @@ Vue.use(MavonEditor);
 Vue.prototype.$md5 = md5;
 Vue.prototype.$echarts = echarts;
 
-router.beforeEach((to, from, next) => {
-  store.commit('getToken')
-  store.commit('getUserName')
-  store.commit('getRoleName')
-  const token = store.state.user.token
-  if (!token && to.name === 'register') {
-    next()
-  }
-  else if (!token && to.name !== 'login') {
-    next({
-      name: 'login'
-    })
-  }
-  else if (token && (to.name === 'login'||to.name === 'register')) {
-    next({name:"home"})
-  }
-  else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   store.commit('getToken')
+//   store.commit('getUserName')
+//   store.commit('getRoleName')
+//   const token = store.state.user.token
+//   if (!token && to.name === 'register') {
+//     next()
+//   }
+//   else if (!token && to.name !== 'login') {
+//     next({
+//       name: 'login'
+//     })
+//   }
+//   else if (token && (to.name === 'login'||to.name === 'register')) {
+//     next({name:"home"})
+//   }
+//   else {
+//     next()
+//   }
+// })
 
 new Vue({
-  store,
-  router,
-  render: h => h(App),
+    store,
+    router,
+    // 全局事件总线
+    beforeCreate() {
+        Vue.prototype.$bus = this
+    },
+    render: h => h(App),
 }).$mount('#app')

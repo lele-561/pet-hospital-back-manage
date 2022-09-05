@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {postRequest} from "@/utils/api";
+import {postRequestJSON} from "@/utils/api";
 import CommonFormUser from "@/components/CommonFormUser.vue";
 import CommonTableUser from "@/components/CommonTableUser.vue"
 
@@ -99,7 +99,7 @@ export default {
       this.search()
     },
     search: function () {
-      postRequest('/user/getUserList', {input: this.input, currentPage: this.currentPage}).then((resp) => {
+      postRequestJSON('/user/getUserList', {input: this.input, currentPage: this.currentPage}).then((resp) => {
         // paper改变
         this.tableData = resp.data.content;
         this.totalPages = resp.data.totalPages;
@@ -107,7 +107,7 @@ export default {
       })
     },
     confirm() {
-      postRequest('/user/updateUser', this.operateFormData).then((resp) => {
+      postRequestJSON('/user/updateUser', this.operateFormData).then((resp) => {
         this.isShow = false;
       })
     },
@@ -122,7 +122,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        postRequest('/user/deleteUser', {id: row.userId}).then((resp) => {
+        postRequestJSON('/user/deleteUser', {id: row.userId}).then((resp) => {
           this.$message({
             type: 'success',
             message: '删除成功'

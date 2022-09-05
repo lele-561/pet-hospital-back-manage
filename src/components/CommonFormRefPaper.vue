@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {postRequest} from '@/utils/api'
+import {postRequestJSON} from '@/utils/api'
 
 export default {
   name: 'CommonForm',
@@ -31,7 +31,7 @@ export default {
       if (queryString === '') {
         cb(results);
       } else {
-        postRequest('/paper/remoteSearch',
+        postRequestJSON('/paper/remoteSearch',
             {
               searchType: 'title',
               input: queryString

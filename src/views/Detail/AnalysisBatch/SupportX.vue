@@ -1,0 +1,154 @@
+<template>
+  <div>
+    <h4>已经产生的频繁项文件</h4>
+    <el-select v-model="supportX.sampleType" placeholder="请选择样品类型">
+      <el-option v-for="item in options" :key="item.value" :label="item.label"
+                 :value="item.value">
+      </el-option>
+    </el-select>
+    <common-table :table-data="supportX.xSampleList"
+                  :table-label="supportX.xSampleLabel"></common-table>
+    <h4>生成频繁项文件</h4>
+    <el-input v-model="supportX.x" style="width: 200px" placeholder="请输入x"></el-input>
+    <el-select v-model="supportX.sampleType" placeholder="请选择样品类型">
+      <el-option v-for="item in options" :key="item.value" :label="item.label"
+                 :value="item.value">
+      </el-option>
+    </el-select>
+    <common-table-single :table-data="supportX.sampleList"
+                         :table-label="supportX.sampleLabel"
+                         function="supportX"></common-table-single>
+    <el-button style="margin-top: 15px" type="primary" @click="runSupportX()">生成文件</el-button>
+  </div>
+</template>
+
+<script>
+import CommonTableSingle from "../../../components/CommonTableSingle";
+import CommonTable from "../../../components/CommonTable";
+import {postRequestJSON} from "../../../utils/api";
+
+export default {
+  name: "SupportX",
+  components: {CommonTableSingle, CommonTable},
+  props: ["sampleList", "xSampleList"],
+  data() {
+    return {
+      supportX: {
+        x: "",
+        sampleType: "",
+        xSampleList: [],
+        sampleList: [],
+        xSampleLabel: [],
+        sampleLabel: [],
+        sampleId: "",   // 选中的样品id
+        selectRow: ""
+      },
+      options: [
+        {value: 'PureSample', label: '纯样品'},
+        {value: 'TrueSample', label: '真实样品'},
+        {value: 'ConfigSample', label: '配置样品'},
+      ],
+      tableLabel: {
+        normal: [
+          {prop: "sampleName", label: '样品名'},
+          {prop: "fileName", label: '样品文件名'},
+          {prop: "type", label: '样品类型'},
+        ],
+        config: [
+          {prop: "sampleName", label: '样品名'},
+          {prop: "substanceMass", label: '煤灰 土壤 尾气（单位：mg）'},
+          {prop: "fileName", label: '样品文件名'},
+          {prop: "type", label: '样品类型'},
+        ],
+        supportX_normal: [
+          {prop: "sampleName", label: '样品名'},
+          {prop: "type", label: '样品类型'},
+          {prop: "support", label: '支持度 x'},
+          {prop: "fileName", label: '样品文件名'},
+        ],
+        supportX_config: [
+          {prop: "sampleName", label: '样品名'},
+          {prop: "type", label: '样品类型'},
+          {prop: "support", label: '支持度 x'},
+          {prop: "substanceMass", label: '煤灰 土壤 尾气（单位：mg）'},
+          {prop: "fileName", label: '样品文件名'},
+        ],
+      }
+    }
+  },
+  mounted() {
+    this.$bus.$on('returnSampleId', (data) => {
+      if (data.function === 'supportX') {
+        this.supportX.sampleId = data.sample.id;
+        this.supportX.selectRow = data.sample;
+      }
+    })
+  },
+  async activated() {
+  },
+  watch: {
+    'supportX.sampleType': {
+      handler() {
+        if (this.supportX.sampleType === "PureSample") {
+          this.supportX.xSampleList = this.xSampleList.pureSampleList;
+          this.supportX.sampleList = this.sampleList.pureSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
+          this.supportX.sampleLabel = this.tableLabel.normal;
+        } else if (this.supportX.sampleType === "TrueSample") {
+          this.supportX.xSampleList = this.xSampleList.trueSampleList;
+          this.supportX.sampleList = this.sampleList.trueSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
+          this.supportX.sampleLabel = this.tableLabel.normal;
+        } else if (this.supportX.sampleType === "ConfigSample") {
+          this.supportX.xSampleList = this.xSampleList.configSampleList;
+          this.supportX.sampleList = this.sampleList.configSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_config;
+          this.supportX.sampleLabel = this.tableLabel.config;
+        }
+      }
+    },
+    'xSampleList': {
+      handler() {
+        if (this.supportX.sampleType === "PureSample") {
+          this.supportX.xSampleList = this.xSampleList.pureSampleList;
+          this.supportX.sampleList = this.sampleList.pureSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
+          this.supportX.sampleLabel = this.tableLabel.normal;
+        } else if (this.supportX.sampleType === "TrueSample") {
+          this.supportX.xSampleList = this.xSampleList.trueSampleList;
+          this.supportX.sampleList = this.sampleList.trueSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
+          this.supportX.sampleLabel = this.tableLabel.normal;
+        } else if (this.supportX.sampleType === "ConfigSample") {
+          this.supportX.xSampleList = this.xSampleList.configSampleList;
+          this.supportX.sampleList = this.sampleList.configSampleList;
+          this.supportX.xSampleLabel = this.tableLabel.supportX_config;
+          this.supportX.sampleLabel = this.tableLabel.config;
+        }
+      }
+    }
+  },
+  methods: {
+    // 生成支持度x文件
+    runSupportX() {
+      postRequestJSON('/analysis/generateSupportXFile', {
+        sampleId: this.supportX.sampleId,
+        sampleType: this.supportX.sampleType,
+        support: this.supportX.x,
+      }).then((resp) => {
+        if (resp.data.code === 0) {
+          // 全局事件总线，更新内容
+          this.$message.success(resp.data.message)
+          this.$bus.$emit("updateSupportXList");
+        } else if (resp.data.code === 1)
+          this.$message.info(resp.data.message)
+        else this.$message.error(resp.data.message)
+      });
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

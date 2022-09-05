@@ -5,16 +5,13 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 
-import DatasetList from '@/views/ShowList/DatasetList'
-import PaperList from '@/views/ShowList/PaperList'
+import BatchList from '@/views/ShowList/BatchList'
 
-import PaperDetail from '@/views/Detail/PaperDetail'
-import DatasetDetail from '@/views/Detail/DatasetDetail'
-import NoteDetail from '@/views/Detail/NoteDetail'
+import DetailBatch from '@/views/Detail/DetailBatch'
+import DetailSample from '@/views/Detail/DetailSample'
 
-import PostPaper from '@/views/Post/PostPaper'
-import PostDataset from '@/views/Post/PostDataset'
-import PostNote from '@/views/Post/PostNote'
+import PostBatch from '@/views/Post/PostBatch'
+import PostSample from '@/views/Post/PostSample'
 
 import UserManage from '@/views/SystemSetting/UserManage'
 
@@ -24,7 +21,7 @@ const routes = [{
         path: '/',
         name: 'Main',
         component: Main,
-        redirect: '/login',
+        redirect: '/batchList',     // 后面改成增加注册，要改成/login
         meta: {
             login: true
         },
@@ -37,48 +34,32 @@ const routes = [{
                 }
             },
             {
-                path: 'paperList',
-                name: 'paperList',
-                component: PaperList,
+                path: 'batchList',
+                name: 'batchList',
+                component: BatchList,
                 meta: {
                     login: true
                 }
             },
             {
-                path: 'datasetList',
-                name: 'datasetList',
-                component: DatasetList,
-                meta: {
-                    login: true
-                }
+                path: 'detailBatch',
+                name: 'detailBatch',
+                component: DetailBatch
             },
             {
-                path: 'paperDetail',
-                name: 'paperDetail',
-                component: PaperDetail
-            }, {
-                path: 'datasetDetail',
-                name: 'datasetDetail',
-                component: DatasetDetail
+                path: 'DetailSample',
+                name: 'DetailSample',
+                component: DetailSample
             },
             {
-                path: 'noteDetail',
-                name: 'noteDetail',
-                component: NoteDetail
+                path: 'postBatch',
+                name: 'postBatch',
+                component: PostBatch
             },
             {
-                path: 'postPaper',
-                name: 'postPaper',
-                component: PostPaper
-            }, {
-                path: 'postDataset',
-                name: 'postDataset',
-                component: PostDataset
-            },
-            {
-                path: 'postNote',
-                name: 'postNote',
-                component: PostNote
+                path: 'postSample',
+                name: 'postSample',
+                component: PostSample
             },
              {
                 path: 'systemSetting/userManage',
