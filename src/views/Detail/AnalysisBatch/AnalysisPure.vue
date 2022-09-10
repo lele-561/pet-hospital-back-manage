@@ -206,7 +206,7 @@ export default {
         let tempMsg = "煤灰：" + resp.data.result.meihui +
             "  土壤：" + resp.data.result.turang +
             "  尾气：" + resp.data.result.weiqi
-        this.$alert(tempMsg, '每种物质的单位质量颗粒数：', {
+        this.$alert(tempMsg, '每种物质单位质量颗粒数：', {
           confirmButtonText: '确定',
           // callback: action => {
           //   this.$message({
