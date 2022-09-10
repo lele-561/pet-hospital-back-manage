@@ -41,7 +41,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">每种物质单位质量颗粒数</template>
-        <el-button type="primary" @click="downloadMassDensity" size="mini" plain>下载文件</el-button>
+        <el-button type="primary" @click="downloadMassDensity" size="mini" plain>显示内容</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">配置样品物质数量比</template>
@@ -203,7 +203,18 @@ export default {
       postRequestJSON('/download/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
-        downloadCSV(resp, "mass_density")
+        let tempMsg = "煤灰：" + resp.data.result.meihui +
+            "  土壤：" + resp.data.result.turang +
+            "  尾气：" + resp.data.result.weiqi
+        this.$alert(tempMsg, '每种物质的单位质量颗粒数：', {
+          confirmButtonText: '确定',
+          // callback: action => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: `action: ${action}`
+          //   });
+          // }
+        });
       });
     },
     // 下载纯物质某分组的train.csv

@@ -9,19 +9,16 @@ import {postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "TE",
-  props: ["batchId"],
+  props: ["sampleId"],
   data() {
     return {}
   },
   mounted() {
-    console.log("TE的id")
-    console.log(this.batchId)
-
   },
   watch: {},
   methods: {
     runTE() {
-      postRequestJSON('/analysis/TE', {batchId: this.batchId}).then((resp) => {
+      postRequestJSON('/analysis/TE', {sampleId: this.sampleId[0].id}).then((resp) => {
         if (resp.data.code === 0) {
           this.$message.success(resp.data.message)
         } else if (resp.data.code === 1)

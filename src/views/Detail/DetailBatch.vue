@@ -81,7 +81,7 @@
             <Particle :sample-list="sampleList"></Particle>
           </el-collapse-item>
           <el-collapse-item title="计算TE" name="2">
-            <TE :batch-id="batchInfo.id"></TE>
+            <TE :sample-id="sampleList.standardSampleList"></TE>
           </el-collapse-item>
           <el-collapse-item title="同位素计数" name="3">
             <IsotopeCount :sample-list="sampleList"></IsotopeCount>
