@@ -55,10 +55,10 @@
         <template slot="label">传输效率 TE</template>
         {{ batchInfo.parameters.TE }}
       </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label"><i class="el-icon-paperclip"></i>同位素单位强度文件</template>
-        <el-button type="primary" plain size="mini">下载文件</el-button>
-      </el-descriptions-item>
+<!--      <el-descriptions-item>-->
+<!--        <template slot="label"><i class="el-icon-paperclip"></i>同位素单位强度文件</template>-->
+<!--        <el-button type="primary" plain size="mini">下载文件</el-button>-->
+<!--      </el-descriptions-item>-->
     </el-descriptions>
     <!-- Tab -->
     <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
