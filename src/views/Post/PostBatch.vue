@@ -226,7 +226,7 @@ export default {
             console.log(a, b, '--------------');
           }
 
-          postRequestFormData('/paper/postBatchInfo', uploadData).then((resp) => {
+          postRequestFormData('/batch/postBatchInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
               this.$router.push({path: "/batchList"});
