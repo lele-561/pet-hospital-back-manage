@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>上传样品文件</h3>
-    <el-form ref="paperForm" :model="sampleInfo" :rules="rules" label-width="100px">
+    <el-form ref="sampleForm" :model="sampleInfo" :rules="rules" label-width="100px">
       <el-form-item label="批次名" prop="batch">
         {{ sampleInfo.batchName }}
       </el-form-item>
@@ -15,14 +15,15 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :style="{ display: configShow }" label="煤灰" prop="sampleName">
-        <el-input v-model="sampleInfo.substanceMass.meihui" placeholder="请输入煤灰质量（单位：mg）"></el-input>
+<!--      表单校验：prop和v-model的值要相同-->
+      <el-form-item :style="{ display: configShow }" label="煤灰" prop="substanceMass_meihui">
+        <el-input v-model="sampleInfo.substanceMass_meihui" placeholder="请输入煤灰质量（单位：mg）"></el-input>
       </el-form-item>
-      <el-form-item :style="{ display: configShow }" label="土壤" prop="sampleName">
-        <el-input v-model="sampleInfo.substanceMass.turang" placeholder="请输入土壤质量（单位：mg）"></el-input>
+      <el-form-item :style="{ display: configShow }" label="土壤" prop="substanceMass_turang">
+        <el-input v-model="sampleInfo.substanceMass_turang" placeholder="请输入土壤质量（单位：mg）"></el-input>
       </el-form-item>
-      <el-form-item :style="{ display: configShow }" label="尾气" prop="sampleName">
-        <el-input v-model="sampleInfo.substanceMass.weiqi" placeholder="请输入尾气质量（单位：mg）"></el-input>
+      <el-form-item :style="{ display: configShow }" label="尾气" prop="substanceMass_weiqi">
+        <el-input v-model="sampleInfo.substanceMass_weiqi" placeholder="请输入尾气质量（单位：mg）"></el-input>
       </el-form-item>
       <el-form-item label="样品名" prop="sampleName">
         <el-input v-model="sampleInfo.sampleName"></el-input>
@@ -66,11 +67,9 @@ export default {
         batchName: "",
         sampleName: "",
         type: "",
-        substanceMass: {
-          meihui: "",
-          turang: "",
-          weiqi: ""
-        },
+        substanceMass_meihui: "",
+        substanceMass_turang: "",
+        substanceMass_weiqi: ""
       },
       fileList: [],
       options: [
@@ -81,6 +80,9 @@ export default {
       ],
       rules: {
         sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
+        substanceMass_meihui: [{required: true, message: "请输入煤灰质量", trigger: "blur"}],
+        substanceMass_turang: [{required: true, message: "请输入土壤质量", trigger: "blur"}],
+        substanceMass_weiqi: [{required: true, message: "请输入尾气质量", trigger: "blur"}],
         type: [{required: true, message: "请选择样品类型", trigger: "blur"}],
       },
     }
@@ -128,7 +130,7 @@ export default {
         this.$message.error("请选择文件！！")
         return
       }
-      await this.$refs.paperForm.validate((valid) => {
+      await this.$refs.sampleForm.validate((valid) => {
         if (valid) {
           let uploadData = new FormData(); // 用FormData存放上传文件
           this.fileList.forEach(file => {
@@ -136,9 +138,9 @@ export default {
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
           uploadData.append('sampleName', this.sampleInfo.sampleName)
-          uploadData.append('substanceMass_meihui', this.sampleInfo.substanceMass.meihui)
-          uploadData.append('substanceMass_turang', this.sampleInfo.substanceMass.turang)
-          uploadData.append('substanceMass_weiqi', this.sampleInfo.substanceMass.weiqi)
+          uploadData.append('substanceMass_meihui', this.sampleInfo.substanceMass_meihui)
+          uploadData.append('substanceMass_turang', this.sampleInfo.substanceMass_turang)
+          uploadData.append('substanceMass_weiqi', this.sampleInfo.substanceMass_weiqi)
           uploadData.append('type', this.sampleInfo.type)
 
           postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
