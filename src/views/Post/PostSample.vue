@@ -112,7 +112,7 @@ export default {
       if (this.$refs.upload.uploadFiles.length > 1)
         this.$refs.upload.uploadFiles.shift()
       if (this.$refs.upload.uploadFiles.length > 0)
-        this.fileList = this.$refs.upload2.uploadFiles
+        this.fileList = this.$refs.upload.uploadFiles
     },
     handleRemove(file, fileList) {
       this.fileList = fileList;
