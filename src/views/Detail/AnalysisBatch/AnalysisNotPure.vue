@@ -15,7 +15,7 @@
     <el-descriptions :column="2" border title="">
       <el-descriptions-item>
         <template slot="label">频繁项信息文件（测试集）</template>
-        <el-form :inline="true" ref="groupForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
+        <el-form :inline="true" ref="logBaseForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
                  :rules="rules">
           <el-form-item label="底数" prop="logBase">
             <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数"></el-input>
@@ -109,18 +109,24 @@ export default {
   },
   methods: {
     // 非纯物质，在该x下生成并下载test.csv文件
-    generateTestCSV() {
-      postRequestJSON('/analysis/generateTestCSV', {
-        fileId: this.notPure_fp.fileId,
-        sampleType: this.notPure_fp.sampleType,
-        logBase: this.notPure_fp.logBase,
-      }).then((resp) => {
-        if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
-        } else if (resp.data.code === 1)
-          this.$message.info(resp.data.message)
-        else this.$message.error(resp.data.message)
-      });
+    async generateTestCSV() {
+      await this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          postRequestJSON('/analysis/generateTestCSV', {
+            fileId: this.notPure_fp.fileId,
+            sampleType: this.notPure_fp.sampleType,
+            logBase: this.notPure_fp.logBase,
+          }).then((resp) => {
+            if (resp.data.code === 0) {
+              this.$message.success(resp.data.message)
+            } else if (resp.data.code === 1)
+              this.$message.info(resp.data.message)
+            else this.$message.error(resp.data.message)
+          });
+        } else {
+          return false
+        }
+      })
     },
     downloadTestCSV() {
       postRequestJSON('/download/testCSV', {

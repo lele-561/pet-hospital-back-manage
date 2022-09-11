@@ -155,12 +155,6 @@ export default {
     async generatePureGroup() {
       await this.$refs.groupForm.validate((valid) => {
         if (valid) {
-          console.log("分组哈哈哈哈哈哈")
-          console.log(this.pure_fp.input_meihui_x)
-          console.log(this.pure_fp.input_turang_x)
-          console.log(this.pure_fp.input_weiqi_x)
-          console.log(this.pure_fp.input_logBase)
-
           postRequestJSON('/analysis/generatePureGroup', {
             batchId: this.batchId,
             meihui: this.pure_fp.input_meihui_x,
