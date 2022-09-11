@@ -1,19 +1,19 @@
 <template>
   <div>
     <h3>创建分组并生成相应文件</h3>
-    <el-form :inline="true" ref="groupForm" :model="pure_fp.input" label-width="55px" style="margin-top: 10px"
+    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="55px" style="margin-top: 10px"
              :rules="rules">
-      <el-form-item label="煤灰" prop="meihui_x">
-        <el-input class="input-box" v-model="pure_fp.input.meihui" placeholder="请输入x"></el-input>
+      <el-form-item label="煤灰" prop="input_meihui_x">
+        <el-input class="input-box" v-model="pure_fp.input_meihui_x" placeholder="请输入x"></el-input>
       </el-form-item>
-      <el-form-item label="土壤" prop="turang_x">
-        <el-input class="input-box" v-model="pure_fp.input.turang" placeholder="请输入x"></el-input>
+      <el-form-item label="土壤" prop="input_turang_x">
+        <el-input class="input-box" v-model="pure_fp.input_turang_x" placeholder="请输入x"></el-input>
       </el-form-item>
-      <el-form-item label="尾气" prop="weiqi_x">
-        <el-input class="input-box" v-model="pure_fp.input.weiqi" placeholder="请输入x"></el-input>
+      <el-form-item label="尾气" prop="input_weiqi_x">
+        <el-input class="input-box" v-model="pure_fp.input_weiqi_x" placeholder="请输入x"></el-input>
       </el-form-item>
-      <el-form-item label="底数" prop="logBase">
-        <el-input class="input-box" v-model="pure_fp.input.logBase" placeholder="请输入log的底数"></el-input>
+      <el-form-item label="底数" prop="input_logBase">
+        <el-input class="input-box" v-model="pure_fp.input_logBase" placeholder="请输入log的底数"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="generatePureGroup">生成</el-button>
@@ -100,22 +100,20 @@ export default {
       tabActiveName: "HeatMap",
       HeatMapInfo: "",
       pure_fp: {
-        input: {
-          meihui: "",
-          turang: "",
-          weiqi: "",
-          logBase: "",
-        },
+        input_meihui_x: "",
+        input_turang_x: "",
+        input_weiqi_x: "",
+        input_logBase: "",
         groupList: [],
         groupId: "",    // 选中的组id
         heatMapType: "",
         selectRow: ""
       },
       rules: {
-        meihui_x: [{required: true, message: "请输入x", trigger: "blur"}],
-        turang_x: [{required: true, message: "请输入x", trigger: "blur"}],
-        weiqi_x: [{required: true, message: "请输入x", trigger: "blur"}],
-        logBase: [{required: true, message: "请输入log底数", trigger: "blur"}],
+        input_meihui_x: [{required: true, message: "请输入x", trigger: "blur"}],
+        input_turang_x: [{required: true, message: "请输入x", trigger: "blur"}],
+        input_weiqi_x: [{required: true, message: "请输入x", trigger: "blur"}],
+        input_logBase: [{required: true, message: "请输入log底数", trigger: "blur"}],
       },
       tableLabel: {
         group: [
@@ -157,12 +155,18 @@ export default {
     async generatePureGroup() {
       await this.$refs.groupForm.validate((valid) => {
         if (valid) {
+          console.log("分组哈哈哈哈哈哈")
+          console.log(this.pure_fp.input_meihui_x)
+          console.log(this.pure_fp.input_turang_x)
+          console.log(this.pure_fp.input_weiqi_x)
+          console.log(this.pure_fp.input_logBase)
+
           postRequestJSON('/analysis/generatePureGroup', {
-            batchId: this.batchInfo.id,
-            meihui: this.pure_fp.input.meihui,
-            turang: this.pure_fp.input.turang,
-            weiqi: this.pure_fp.input.weiqi,
-            logBase: this.pure_fp.input.logBase
+            batchId: this.batchId,
+            meihui: this.pure_fp.input_meihui_x,
+            turang: this.pure_fp.input_turang_x,
+            weiqi: this.pure_fp.input_weiqi_x,
+            logBase: this.pure_fp.input_logBase
           }).then((resp) => {
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
