@@ -62,7 +62,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">生成模型</template>
-        <el-button type="primary" @click="generateModel" size="mini" plain>下载文件</el-button>
+        <el-button type="primary" @click="generateModel" size="mini" plain>生成文件</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">溯源样品</template>
@@ -76,7 +76,7 @@
     <!--绘图区-->
     <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
       <el-tab-pane label="热力图" name="HeatMap">
-        <HeatMapPure heat-map-id="heatMapPure" :heat-map-info="HeatMapInfo"></HeatMapPure>
+        <HeatMapPure heat-map-id="heatMapPure" :heat-map-info="heatMapInfo"></HeatMapPure>
       </el-tab-pane>
       <el-tab-pane label="柱状图" name="BarChart">
         <BarChart></BarChart>
@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       tabActiveName: "HeatMap",
-      HeatMapInfo: "",
+      heatMapInfo: "",
       pure_fp: {
         input_meihui_x: "",
         input_turang_x: "",
@@ -234,7 +234,7 @@ export default {
     // 生成热力图
     generateHeatMap() {
       this.tabActiveName = "HeatMap"
-      this.HeatMapInfo = {
+      this.heatMapInfo = {
         type: 'pure',
         groupId: this.pure_fp.groupId,
         fileId: "",
@@ -246,7 +246,7 @@ export default {
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
-        substanceType: this.heatMapType
+        substanceType: this.pure_fp.heatMapType
       }).then((resp) => {
         downloadCSV(resp, "HeatMap_" + this.heatMapType)
       });
