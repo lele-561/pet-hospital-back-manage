@@ -238,7 +238,8 @@ export default {
         type: 'pure',
         groupId: this.pure_fp.groupId,
         fileId: "",
-        heatMapType: this.pure_fp.heatMapType
+        heatMapType: this.pure_fp.heatMapType,
+        logBase: "",
       }
     },
     // 下载热力图数据文件
@@ -246,7 +247,8 @@ export default {
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
-        substanceType: this.pure_fp.heatMapType
+        substanceType: this.pure_fp.heatMapType,
+        logBase: "",
       }).then((resp) => {
         downloadCSV(resp, "HeatMap_" + this.heatMapType)
       });

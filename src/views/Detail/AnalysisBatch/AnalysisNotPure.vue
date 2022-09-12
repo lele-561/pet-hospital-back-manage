@@ -11,20 +11,17 @@
     <h3>您当前选择的样品类型是：
       {{ notPure_fp.selectRow.type + "，x为" + notPure_fp.selectRow.support }}
     </h3>
-
+    <el-form :inline="true" ref="logBaseForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
+             :rules="rules">
+      <el-form-item label="底数" prop="logBase">
+        <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数"></el-input>
+      </el-form-item>
+    </el-form>
     <el-descriptions :column="2" border title="">
       <el-descriptions-item>
         <template slot="label">频繁项信息文件（测试集）</template>
-        <el-form :inline="true" ref="logBaseForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
-                 :rules="rules">
-          <el-form-item label="底数" prop="logBase">
-            <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" size="mini" @click="generateTestCSV">生成文件</el-button>
-            <el-button type="primary" size="mini" plain @click="downloadTestCSV">下载test.csv</el-button>
-          </el-form-item>
-        </el-form>
+        <el-button type="primary" size="mini" @click="generateTestCSV">生成文件</el-button>
+        <el-button type="primary" size="mini" plain @click="downloadTestCSV">下载test.csv</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
@@ -36,7 +33,7 @@
         </el-button>
       </el-descriptions-item>
     </el-descriptions>
-    <HeatMapNotPure heat-map-id="heatMapNotPure" :heat-map-info="HeatMapInfo"></HeatMapNotPure>
+    <HeatMapNotPure heat-map-id="heatMapNotPure" :heat-map-info="heatMapInfo"></HeatMapNotPure>
   </div>
 </template>
 
@@ -51,7 +48,7 @@ export default {
   props: ["xSampleList"],
   data() {
     return {
-      HeatMapInfo: "",
+      heatMapInfo: "",
       notPure_fp: {
         logBase: "",
         sampleType: "",
@@ -87,7 +84,8 @@ export default {
   mounted() {
     this.$bus.$on('returnSampleId', (data) => {
       if (data.function === 'notPure') {
-        this.notPure_fp.fileId = data.sample.id;
+        console.log(data)
+        this.notPure_fp.fileId = data.sample.fileId;
         this.notPure_fp.selectRow = data.sample;
       }
     })
@@ -139,11 +137,12 @@ export default {
     },
     // 生成热力图
     generateHeatMap() {
-      this.HeatMapInfo = {
+      this.heatMapInfo = {
         type: 'notPure',
         groupId: "",
         fileId: this.notPure_fp.fileId,
-        heatMapType: ""
+        heatMapType: "",
+        logBase:this.notPure_fp.logBase
       }
     },
     // 下载热力图数据文件
@@ -151,7 +150,8 @@ export default {
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.notPure_fp.fileId,
         sampleType: "notPure",
-        substanceType: ""
+        substanceType: "",
+        logBase: this.notPure_fp.logBase
       }).then((resp) => {
         downloadCSV(resp, "HeatMap_" + this.heatMapType)
       });

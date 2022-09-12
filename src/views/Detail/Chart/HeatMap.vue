@@ -55,7 +55,8 @@ export default {
       await postRequestJSON('/chart/getHeatMapInfo', {
         id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,
-        substanceType: data.heatMapType
+        substanceType: data.heatMapType,
+        logBase:data.logBase
       }).then((resp) => {
         this.raw_data = resp.data.result.raw_data;
         this.heatMapFileId = resp.data.result.fileId;
@@ -71,7 +72,7 @@ export default {
         for (var key in this.raw_data[x]) {
           // 纵坐标：颗粒名称
           let tmpArray = ""
-          if (key === "components") this.PM_name.push(this.raw_data[x][key])
+          if (key === "component") this.PM_name.push(this.raw_data[x][key])
           else tmpArray = [y, x, this.raw_data[x][key]]
           this.unitData.push(tmpArray);
           y++;
