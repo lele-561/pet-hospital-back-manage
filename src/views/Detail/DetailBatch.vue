@@ -55,10 +55,10 @@
         <template slot="label">传输效率 TE</template>
         {{ batchInfo.parameters.TE }}
       </el-descriptions-item>
-<!--      <el-descriptions-item>-->
-<!--        <template slot="label"><i class="el-icon-paperclip"></i>同位素单位强度文件</template>-->
-<!--        <el-button type="primary" plain size="mini">下载文件</el-button>-->
-<!--      </el-descriptions-item>-->
+      <!--      <el-descriptions-item>-->
+      <!--        <template slot="label"><i class="el-icon-paperclip"></i>同位素单位强度文件</template>-->
+      <!--        <el-button type="primary" plain size="mini">下载文件</el-button>-->
+      <!--      </el-descriptions-item>-->
     </el-descriptions>
     <!-- Tab -->
     <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
@@ -93,7 +93,7 @@
             <AnalysisPure :batch-id="batchInfo.id"></AnalysisPure>
           </el-collapse-item>
           <el-collapse-item title="👉 非纯物质分析" name="6">
-            <AnalysisNotPure :x-sample-list="xSampleList"></AnalysisNotPure>
+            <AnalysisNotPure :x-sample-list="xSampleList" :batch-id="batchInfo.id"></AnalysisNotPure>
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
@@ -125,7 +125,8 @@ export default {
         position: "",
         sampleNum: "",
         analysisType: "",
-        parameters: {Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "", TE: ""}
+        parameters: {Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "", TE: ""},
+        modelList: []
       },
       // 其他信息
       perUnitMassParticleNum: "",
@@ -177,6 +178,7 @@ export default {
         this.xSampleList = resp.data.result.sampleList;
       });
     },
+
     /* 普通页面函数 */
     back() {
       this.$router.back()

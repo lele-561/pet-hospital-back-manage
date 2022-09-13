@@ -32,22 +32,45 @@
           下载热力图数据文件
         </el-button>
       </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">溯源样品</template>
+        <div style="display: flex; margin-top: 5px">
+          <el-select v-model="notPure_fp.selectModel" placeholder="请选择模型">
+            <el-option v-for="item in notPure_fp.modelList" :key="item.value" :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini">生成柱状图</el-button>
+          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>下载溯源结果文件
+          </el-button>
+        </div>
+      </el-descriptions-item>
     </el-descriptions>
-    <HeatMapNotPure heat-map-id="heatMapNotPure" :heat-map-info="heatMapInfo"></HeatMapNotPure>
+
+    <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
+      <el-tab-pane label="热力图" name="HeatMap">
+        <HeatMapNotPure heat-map-id="heatMapNotPure" :heat-map-info="heatMapInfo"></HeatMapNotPure>
+      </el-tab-pane>
+      <el-tab-pane label="柱状图" name="BarChart">
+        <BarChart></BarChart>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
 import CommonTableSingle from "../../../components/CommonTableSingle";
 import HeatMapNotPure from "../Chart/HeatMap";
+import BarChart from "../Chart/BarChart";
 import {downloadCSV, postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "AnalysisNotPure",
-  components: {CommonTableSingle, HeatMapNotPure},
-  props: ["xSampleList"],
+  components: {CommonTableSingle, HeatMapNotPure, BarChart},
+  props: ["xSampleList", "batchId"],
   data() {
     return {
+      tabActiveName: "HeatMap",
       heatMapInfo: "",
       notPure_fp: {
         logBase: "",
@@ -55,7 +78,9 @@ export default {
         xSampleList: [],
         xSampleLabel: [],
         fileId: "",   // 选中的supportX文件id
-        selectRow: ""
+        selectRow: "",
+        selectModel: "",
+        modelList:[]
       },
       sampleTypeOptions: [
         {value: 'TrueSample', label: '真实样品'},
@@ -91,6 +116,7 @@ export default {
     })
   },
   async activated() {
+    this.getModelList()
   },
   watch: {
     'notPure_fp.sampleType': {
@@ -135,14 +161,23 @@ export default {
         downloadCSV("test")
       });
     },
+    // 获取模型列表
+    getModelList() {
+      postRequestJSON('/batch/getModelList', {
+        batchId:this.batchId,
+      }).then((resp) => {
+        this.notPure_fp.modelList = resp.data.result.modelList;
+      });
+    },
     // 生成热力图
     generateHeatMap() {
+      this.tabActiveName = "HeatMap"
       this.heatMapInfo = {
         type: 'notPure',
         groupId: "",
         fileId: this.notPure_fp.fileId,
         heatMapType: "",
-        logBase:this.notPure_fp.logBase
+        logBase: this.notPure_fp.logBase
       }
     },
     // 下载热力图数据文件
@@ -154,6 +189,20 @@ export default {
         logBase: this.notPure_fp.logBase
       }).then((resp) => {
         downloadCSV(resp, "HeatMap_" + this.heatMapType)
+      });
+    },
+    // 生成柱状图
+    generateBarChart() {
+      this.tabActiveName = "BarChart"
+      this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchId})
+    },
+    // 下载溯源文件
+    downloadTraceResult() {
+      postRequestJSON('/download/traceResultCSV', {
+        groupId: this.notPure_fp.selectModel,
+        batchId: this.batchId,
+      }).then((resp) => {
+        downloadCSV(resp, "trace_result")
       });
     },
   }

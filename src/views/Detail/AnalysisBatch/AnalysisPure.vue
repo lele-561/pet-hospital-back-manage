@@ -30,7 +30,7 @@
         "尾气 " + pure_fp.selectRow.weiqi
       }}
     </h4>
-    <el-descriptions :column="4" border title="">
+    <el-descriptions :column="3" border title="">
       <el-descriptions-item>
         <template slot="label">指纹文件fp.csv</template>
         <el-button type="primary" @click="downloadFp" size="mini" plain>下载文件</el-button>
@@ -64,40 +64,23 @@
         <template slot="label">生成模型</template>
         <el-button type="primary" @click="generateModel" size="mini" plain>生成文件</el-button>
       </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">溯源样品</template>
-        <div style="display: flex;margin-top: 5px">
-          <el-button type="primary" @click="generateBarChart" size="mini">生成柱状图</el-button>
-          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>下载溯源结果文件
-          </el-button>
-        </div>
-      </el-descriptions-item>
     </el-descriptions>
     <!--绘图区-->
-    <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
-      <el-tab-pane label="热力图" name="HeatMap">
-        <HeatMapPure heat-map-id="heatMapPure" :heat-map-info="heatMapInfo"></HeatMapPure>
-      </el-tab-pane>
-      <el-tab-pane label="柱状图" name="BarChart">
-        <BarChart></BarChart>
-      </el-tab-pane>
-    </el-tabs>
+    <HeatMapPure heat-map-id="heatMapPure" :heat-map-info="heatMapInfo"></HeatMapPure>
   </div>
 </template>
 
 <script>
 import CommonTableSingle from "../../../components/CommonTableSingle";
 import HeatMapPure from "../Chart/HeatMap";
-import BarChart from "../Chart/BarChart";
 import {downloadCSV, postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "AnalysisPure",
-  components: {BarChart, CommonTableSingle, HeatMapPure},
+  components: {CommonTableSingle, HeatMapPure},
   props: ["batchId",],
   data() {
     return {
-      tabActiveName: "HeatMap",
       heatMapInfo: "",
       pure_fp: {
         input_meihui_x: "",
@@ -233,7 +216,6 @@ export default {
     },
     // 生成热力图
     generateHeatMap() {
-      this.tabActiveName = "HeatMap"
       this.heatMapInfo = {
         type: 'pure',
         groupId: this.pure_fp.groupId,
@@ -266,19 +248,7 @@ export default {
         else this.$message.error(resp.data.message)
       });
     },
-    // 生成柱状图
-    generateBarChart() {
-      this.tabActiveName = "BarChart"
-      this.$bus.$emit("drawBarChart", {groupId: this.pure_fp.groupId})
-    },
-    // 下载溯源文件
-    downloadTraceResult() {
-      postRequestJSON('/download/traceResultCSV', {
-        groupId: this.pure_fp.groupId,
-      }).then((resp) => {
-        downloadCSV(resp, "trace_result")
-      });
-    },
+
   }
 }
 </script>
