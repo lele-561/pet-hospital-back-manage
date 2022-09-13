@@ -40,6 +40,7 @@ export default {
   watch: {
     'HeatMapInfo': {
       handler() {
+        console.log(this.HeatMapInfo)
         this.drawHeatMap(this.HeatMapInfo)
       }
     }
@@ -52,6 +53,7 @@ export default {
       this.raw_data = []
       this.heatMapDivWidth = ''
       this.heatMapDivHeight = ''
+      console.log(data)
       await postRequestJSON('/chart/getHeatMapInfo', {
         id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,

@@ -15,7 +15,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      表单校验：prop和v-model的值要相同-->
+      <!--      表单校验：prop和v-model的值要相同-->
       <el-form-item :style="{ display: configShow }" label="煤灰" prop="substanceMass_meihui">
         <el-input v-model="sampleInfo.substanceMass_meihui" placeholder="请输入煤灰质量（单位：mg）"></el-input>
       </el-form-item>
@@ -78,7 +78,12 @@ export default {
         {value: 'ConfigSample', label: '配置样品'},
         {value: 'TrueSample', label: '真实样品'},
       ],
-      rules: {
+      rules: {},
+      rules1: {
+        sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
+        type: [{required: true, message: "请选择样品类型", trigger: "blur"}],
+      },
+      rules2: {
         sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
         substanceMass_meihui: [{required: true, message: "请输入煤灰质量", trigger: "blur"}],
         substanceMass_turang: [{required: true, message: "请输入土壤质量", trigger: "blur"}],
@@ -90,11 +95,15 @@ export default {
   watch: {
     'sampleInfo.type': {
       handler() {
-        if (this.sampleInfo.type === "ConfigSample")
+        if (this.sampleInfo.type === "ConfigSample") {
           this.configShow = "";
-        else this.configShow = "none"
+          this.rules = this.rules2;
+        } else {
+          this.configShow = "none";
+          this.rules = this.rules1;
+        }
       }
-    }
+    },
   },
   activated() {
     this.sampleInfo.batchId = this.$route.query.batchId;
@@ -142,6 +151,10 @@ export default {
           uploadData.append('substanceMass_turang', this.sampleInfo.substanceMass_turang)
           uploadData.append('substanceMass_weiqi', this.sampleInfo.substanceMass_weiqi)
           uploadData.append('type', this.sampleInfo.type)
+
+          for (let [a, b] of uploadData.entries()) {
+            console.log(a, b, '--------------');
+          }
 
           postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {
