@@ -62,7 +62,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">生成模型</template>
-        <el-button type="primary" @click="generateModel" size="mini" plain>生成文件</el-button>
+        <el-button type="primary" @click="generateModel" size="mini" plain>生成</el-button>
       </el-descriptions-item>
     </el-descriptions>
     <!--绘图区-->
@@ -243,6 +243,8 @@ export default {
         if (resp.data.code === 0) {
           this.$message.success(resp.data.message)
           this.getPureGroupList();
+          this.$bus.$emit("updateSupportXList");
+          this.$bus.$emit("updateModelList")
         } else if (resp.data.code === 1)
           this.$message.info(resp.data.message)
         else this.$message.error(resp.data.message)

@@ -107,6 +107,7 @@ export default {
     }
   },
   mounted() {
+    this.$bus.$on("updateModelList", this.getModelList)
     this.$bus.$on('returnSampleId', (data) => {
       if (data.function === 'notPure') {
         console.log(data)
