@@ -80,7 +80,7 @@ export default {
         fileId: "",   // 选中的supportX文件id
         selectRow: "",
         selectModel: "",
-        modelList:[]
+        modelList: []
       },
       sampleTypeOptions: [
         {value: 'TrueSample', label: '真实样品'},
@@ -158,13 +158,13 @@ export default {
         sampleType: this.notPure_fp.sampleType,
         logBase: this.notPure_fp.logBase,
       }).then((resp) => {
-        downloadCSV("test")
+        downloadCSV(resp, "test")
       });
     },
     // 获取模型列表
     getModelList() {
       postRequestJSON('/batch/getModelList', {
-        batchId:this.batchId,
+        batchId: this.batchId,
       }).then((resp) => {
         this.notPure_fp.modelList = resp.data.result.modelList;
       });
