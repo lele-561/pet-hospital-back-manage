@@ -110,7 +110,6 @@ export default {
     this.$bus.$on("updateModelList", this.getModelList)
     this.$bus.$on('returnSampleId', (data) => {
       if (data.function === 'notPure') {
-        console.log(data)
         this.notPure_fp.fileId = data.sample.fileId;
         this.notPure_fp.selectRow = data.sample;
       }

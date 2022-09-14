@@ -193,7 +193,6 @@ export default {
       batchName: this.$route.query.batchName,
       type: this.$route.query.type
     }
-    console.log(this.xyzShow)
   },
   components: {},
   methods: {

@@ -17,6 +17,7 @@ export default {
   props: ["HeatMapId", "HeatMapInfo"],
   data() {
     return {
+      heatMap:"",
       PM_name: [],            // 纵坐标：颗粒物名称
       chemical_element: [],   // 横坐标：元素名称
       unitData: [],           // 单元格数据：元素含量
@@ -84,12 +85,17 @@ export default {
       }
       this.heatMapDivWidth = this.chemical_element.length * 40 + 50;
       this.heatMapDivHeight = this.PM_name.length * 20 + 50;
+      console.log(this.heatMapDivHeight)
+      console.log(this.heatMapDivWidth)
     },
     async drawHeatMap(data) {
       await this.getHeatMapInfo(data);
-      let heatMap = this.$echarts.init(document.getElementById(this.HeatMapId), null, {renderer: 'svg'});
+      if(this.heatMap!=null && this.heatMap!="" && this.heatMap!=undefined)
+        this.heatMap.dispose();//销毁
+
+      this.heatMap = this.$echarts.init(document.getElementById(this.HeatMapId), null, {renderer: 'svg'});
       // let heatMap = this.$echarts.init(this.$refs.Heat_Map, null, {renderer: 'svg'});
-      heatMap.setOption({
+      this.heatMap.setOption({
         tooltip: {
           trigger: 'item',
         },
