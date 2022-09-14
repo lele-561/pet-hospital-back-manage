@@ -84,8 +84,6 @@ export default {
       }
       this.heatMapDivWidth = this.chemical_element.length * 40 + 50;
       this.heatMapDivHeight = this.PM_name.length * 20 + 50;
-      console.log(this.raw_data)
-      console.log(this.unitData)
     },
     async drawHeatMap(data) {
       await this.getHeatMapInfo(data);
@@ -135,7 +133,7 @@ export default {
           }
         },
         grid: {
-          left: '4%', right: '0%', bottom: '0%', top: '0%', containLabel: true,
+          left: '4%', right: '0%', bottom: '2%', top: '2%', containLabel: true,
         },
       });
     }
