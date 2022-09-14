@@ -58,30 +58,34 @@ export default {
         id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,
         substanceType: data.heatMapType,
-        logBase:data.logBase
+        logBase: data.logBase
       }).then((resp) => {
         this.raw_data = resp.data.result.raw_data;
         this.heatMapFileId = resp.data.result.fileId;
       });
 
       // 横坐标：元素名
-      for (let key in this.raw_data[0])
-        this.chemical_element.push(key)
-      this.chemical_element.pop()
+      for (let key in this.raw_data[0]) {
+        if (key !== "component")
+          this.chemical_element.push(key)
+      }
+
       // 数据：元素含量
       for (var x = 0; x < this.raw_data.length; x++) {
         var y = 0;
         for (var key in this.raw_data[x]) {
           // 纵坐标：颗粒名称
-          let tmpArray = ""
           if (key === "component") this.PM_name.push(this.raw_data[x][key])
-          else tmpArray = [y, x, this.raw_data[x][key]]
-          this.unitData.push(tmpArray);
-          y++;
+          else {
+            this.unitData.push([y, x, this.raw_data[x][key]]);
+            y++;
+          }
         }
       }
-      this.heatMapDivWidth = this.chemical_element.length * 65;
-      this.heatMapDivHeight = this.PM_name.length * 20;
+      this.heatMapDivWidth = this.chemical_element.length * 40 + 50;
+      this.heatMapDivHeight = this.PM_name.length * 20 + 50;
+      console.log(this.raw_data)
+      console.log(this.unitData)
     },
     async drawHeatMap(data) {
       await this.getHeatMapInfo(data);
@@ -107,7 +111,7 @@ export default {
         },
         visualMap: {
           min: 0,
-          max: 6,
+          max: 10,    // 这里要确定范围
           calculable: true,
           realtime: false,
           inRange: {color: this.heatMapColor}
