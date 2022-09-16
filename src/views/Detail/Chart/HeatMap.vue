@@ -41,7 +41,6 @@ export default {
   watch: {
     'HeatMapInfo': {
       handler() {
-        console.log(this.HeatMapInfo)
         this.drawHeatMap(this.HeatMapInfo)
       }
     }
@@ -54,7 +53,6 @@ export default {
       this.raw_data = []
       this.heatMapDivWidth = ''
       this.heatMapDivHeight = ''
-      console.log(data)
       await postRequestJSON('/chart/getHeatMapInfo', {
         id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,
@@ -85,8 +83,6 @@ export default {
       }
       this.heatMapDivWidth = this.chemical_element.length * 40 + 50;
       this.heatMapDivHeight = this.PM_name.length * 20 + 50;
-      console.log(this.heatMapDivHeight)
-      console.log(this.heatMapDivWidth)
     },
     async drawHeatMap(data) {
       await this.getHeatMapInfo(data);

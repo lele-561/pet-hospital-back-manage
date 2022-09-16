@@ -1,5 +1,14 @@
 <template>
   <div>
+    <div class="div">
+      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+        <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <!--      这里的getBatchInfo可改成getGroupList-->
+      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+    </div>
     <h3>创建分组并生成相应文件</h3>
     <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="55px" style="margin-top: 10px"
              :rules="rules">
@@ -30,7 +39,7 @@
         "尾气 " + pure_fp.selectRow.weiqi
       }}
     </h4>
-    <el-descriptions :column="3" border title="">
+    <el-descriptions :column="4" border title="">
       <el-descriptions-item>
         <template slot="label">指纹文件fp.csv</template>
         <el-button type="primary" @click="downloadFp" size="mini" plain>下载文件</el-button>
@@ -48,21 +57,22 @@
         <el-button type="primary" @click="downloadConfigSamplesLabel" size="mini" plain>下载文件</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
+        <template slot="label">生成模型</template>
+        <el-button type="primary" @click="generateModel" size="mini" plain>生成</el-button>
+      </el-descriptions-item>
+      <el-descriptions-item>
         <template slot="label">热力图</template>
         <el-select v-model="pure_fp.heatMapType" placeholder="请选择样品类型">
           <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        <div style="display: flex;margin-top: 5px">
-          <el-button type="primary" size="mini" @click="generateHeatMap()">生成热力图</el-button>
-          <el-button style="margin-left: 5px" type="primary" size="mini" plain @click="downloadHeatMapData('pure')">
-            下载热力图数据文件
-          </el-button>
-        </div>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">生成模型</template>
-        <el-button type="primary" @click="generateModel" size="mini" plain>生成</el-button>
+        <!--        <div style="display: flex;margin-top: 5px">-->
+        <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="generateHeatMap()">生成热力图
+        </el-button>
+        <el-button style="margin-left: 5px" type="primary" size="mini" plain @click="downloadHeatMapData('pure')">
+          下载热力图数据文件
+        </el-button>
+        <!--        </div>-->
       </el-descriptions-item>
     </el-descriptions>
     <!--绘图区-->
@@ -78,9 +88,14 @@ import {downloadCSV, postRequestJSON} from "../../../utils/api";
 export default {
   name: "AnalysisPure",
   components: {CommonTableSingle, HeatMapPure},
-  props: ["batchId",],
   data() {
     return {
+      batchListStandard: [],
+      batchInfo: {
+        batchId: "",
+        sampleList: {},
+        xSampleList: {}
+      },
       heatMapInfo: "",
       pure_fp: {
         input_meihui_x: "",
@@ -123,13 +138,28 @@ export default {
     })
   },
   async activated() {
-    await this.getPureGroupList();
+    await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
+      this.batchListStandard = resp.data.result.batchList
+    })
+  },
+  watch: {
+    // 'batchInfo.batchId': {
+    //   async handler() {
+    //     // await this.getPureGroupList();
+    //   }
+    // }
   },
   methods: {
+    // 获取某一批次信息
+    async getBatchInfo() {
+      await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        this.getPureGroupList();
+      });
+    },
     // 获取纯物质分组列表
     getPureGroupList() {
       postRequestJSON('/batch/getPureGroupList', {
-        batchId: this.batchId
+        batchId: this.batchInfo.batchId
       }).then((resp) => {
         this.pure_fp.groupList = resp.data.result.groupList;
       });
@@ -139,7 +169,7 @@ export default {
       await this.$refs.groupForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/analysis/generatePureGroup', {
-            batchId: this.batchId,
+            batchId: this.batchInfo.batchId,
             meihui: this.pure_fp.input_meihui_x,
             turang: this.pure_fp.input_turang_x,
             weiqi: this.pure_fp.input_weiqi_x,

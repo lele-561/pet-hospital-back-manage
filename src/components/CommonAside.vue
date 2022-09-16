@@ -11,6 +11,17 @@
       <i :class="'el-icon-' + item.icon"></i>
       <span slot="title">{{ item.label }}</span>
     </el-menu-item>
+    <el-submenu v-for="item in hasChildren" :key="item.path" :index="item.path">
+      <template slot="title">
+        <i :class="'el-icon-' + item.icon"></i>
+        <span slot="title">{{ item.label }}</span>
+      </template>
+      <!-- 二级菜单 -->
+      <el-menu-item-group class="el-menu-vertical-demo" v-for="subItem in item.children" :key="subItem.path"
+                          :index="subItem.path">
+        <el-menu-item :index="subItem.path" @click="clickMenu(subItem)">{{ subItem.label }}</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
   </el-menu>
 </template>
 
@@ -29,9 +40,58 @@ export default {
         {
           path: '/batchList',
           name: 'batchList',
-          label: '文件列表',
+          label: '批次列表',
           icon: 's-grid',
-          url: 'UserManage/UserManage'
+          url: 'batchList/batchList'
+        },
+        {
+          path: '/function',
+          label: '分析功能',
+          icon: 'setting',
+          children: [
+            {
+              path: 'function/particle',
+              name: 'function_particle',
+              label: '颗粒态分析',
+              icon: 'collection-tag',
+              url: 'particle/particle'
+            },
+            {
+              path: 'function/TE',
+              name: 'function_TE',
+              label: '计算TE',
+              icon: 'collection-tag',
+              url: 'TE/TE'
+            },
+            {
+              path: 'function/isotopeCount',
+              name: 'function_isotopeCount',
+              label: '同位素计数',
+              icon: 'collection-tag',
+              url: 'isotopeCount/isotopeCount'
+            },
+            {
+              path: 'function/supportX',
+              name: 'function_supportX',
+              label: '频繁项提取',
+              icon: 'collection-tag',
+              url: 'supportX/supportX'
+            },
+            {
+              path: 'function/analysisPure',
+              name: 'function_analysisPure',
+              label: '纯物质分析',
+              icon: 'collection-tag',
+              url: 'analysisPure/analysisPure'
+            },
+            {
+              path: 'function/analysisNotPure',
+              name: 'function_analysisNotPure',
+              label: '非纯物质分析',
+              icon: 'collection-tag',
+              url: 'analysisNotPure/analysisNotPure'
+            },
+          ]
         },
       ]
     };
@@ -56,7 +116,7 @@ export default {
 <style lang="less" scoped>
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-  min-height: 400px;
+  min-height: 20px;
   background-color: #1e2d40;
 }
 

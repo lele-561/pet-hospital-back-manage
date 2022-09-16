@@ -1,15 +1,26 @@
 <template>
   <!--颗粒态分析-->
   <div>
-    <el-select v-model="particle.sampleType" placeholder="请选择样品类型">
-      <el-option v-for="item in options" :key="item.value" :label="item.label"
-                 :value="item.value">
-      </el-option>
-    </el-select>
-    <common-table-single :table-data="particle.sampleList"
-                         :table-label="particle.sampleLabel"
-                         function="particle"></common-table-single>
-    <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
+    <div class="div">
+      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+        <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+    </div>
+    <div class="div">
+      <el-select v-model="particle.sampleType" placeholder="请选择样品类型">
+        <el-option v-for="item in options" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <common-table-single style="margin-top: 10px"
+                           :table-data="particle.sampleList"
+                           :table-label="particle.sampleLabel"
+                           function="particle"></common-table-single>
+      <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
+    </div>
   </div>
 </template>
 
@@ -20,9 +31,13 @@ import CommonTableSingle from "../../../components/CommonTableSingle";
 export default {
   components: {CommonTableSingle},
   name: "Particle",
-  props: ["sampleList"],
   data() {
     return {
+      batchListStandard: [],
+      batchInfo: {
+        batchId: "",
+        sampleList: {}
+      },
       particle: {
         sampleType: "",
         sampleList: [],
@@ -58,26 +73,44 @@ export default {
       }
     })
   },
+  async activated() {
+    await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
+      this.batchListStandard = resp.data.result.batchList
+    })
+  },
   watch: {
     'particle.sampleType': {
       handler() {
         if (this.particle.sampleType === "PureSample") {
-          this.particle.sampleList = this.sampleList.pureSampleList;
+          this.particle.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.particle.sampleLabel = this.tableLabel.normal;
         } else if (this.particle.sampleType === "StandardSample") {
-          this.particle.sampleList = this.sampleList.standardSampleList;
+          this.particle.sampleList = this.batchInfo.sampleList.standardSampleList;
           this.particle.sampleLabel = this.tableLabel.normal;
         } else if (this.particle.sampleType === "TrueSample") {
-          this.particle.sampleList = this.sampleList.trueSampleList;
+          this.particle.sampleList = this.batchInfo.sampleList.trueSampleList;
           this.particle.sampleLabel = this.tableLabel.normal;
         } else if (this.particle.sampleType === "ConfigSample") {
-          this.particle.sampleList = this.sampleList.configSampleList;
+          this.particle.sampleList = this.batchInfo.sampleList.configSampleList;
           this.particle.sampleLabel = this.tableLabel.config;
         }
       }
     },
+    'batchInfo.batchId': {
+      handler() {
+        this.particle.sampleList = [];
+        this.particle.sampleLabel = []
+      }
+    }
   },
   methods: {
+    // 获取某一批次信息
+    getBatchInfo() {
+      postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        this.batchInfo.sampleList = resp.data.result.sampleList;
+        console.log(this.batchInfo.sampleList)
+      });
+    },
     runParticle() {
       postRequestJSON('/analysis/particle', {
         sampleId: this.particle.sampleId,
@@ -94,6 +127,8 @@ export default {
 }
 </script>
 
-<style  lang="less" scoped>
-
+<style lang="less" scoped>
+.div {
+  margin-top: 10px;
+}
 </style>

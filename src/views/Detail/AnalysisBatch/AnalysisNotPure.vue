@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="div">
+      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+        <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+    </div>
     <el-select v-model="notPure_fp.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label"
                  :value="item.value">
@@ -20,12 +28,12 @@
     <el-descriptions :column="2" border title="">
       <el-descriptions-item>
         <template slot="label">频繁项信息文件（测试集）</template>
-        <el-button type="primary" size="mini" @click="generateTestCSV">生成文件</el-button>
+        <el-button type="primary" size="mini" plain @click="generateTestCSV">生成文件</el-button>
         <el-button type="primary" size="mini" plain @click="downloadTestCSV">下载test.csv</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
-        <el-button style="margin-left: 10px" type="primary" size="mini" @click="generateHeatMap">
+        <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="generateHeatMap">
           生成热力图
         </el-button>
         <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="downloadHeatMapData">
@@ -40,7 +48,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini">生成柱状图</el-button>
+          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini" plain>生成柱状图</el-button>
           <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>下载溯源结果文件
           </el-button>
         </div>
@@ -70,6 +78,12 @@ export default {
   props: ["xSampleList", "batchId"],
   data() {
     return {
+      batchListStandard: [],
+      batchInfo: {
+        batchId: "",
+        sampleList: {},
+        xSampleList: {}
+      },
       tabActiveName: "HeatMap",
       heatMapInfo: "",
       notPure_fp: {
@@ -116,22 +130,48 @@ export default {
     })
   },
   async activated() {
+    await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
+      this.batchListStandard = resp.data.result.batchList
+    })
     this.getModelList()
   },
   watch: {
     'notPure_fp.sampleType': {
       handler() {
         if (this.notPure_fp.sampleType === "TrueSample") {
-          this.notPure_fp.xSampleList = this.xSampleList.trueSampleList;
+          this.notPure_fp.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.notPure_fp.xSampleLabel = this.tableLabel.supportX_normal;
         } else if (this.notPure_fp.sampleType === "ConfigSample") {
-          this.notPure_fp.xSampleList = this.xSampleList.configSampleList;
+          this.notPure_fp.xSampleList = this.batchInfo.xSampleList.configSampleList;
           this.notPure_fp.xSampleLabel = this.tableLabel.supportX_config;
         }
+      }
+    },
+    'batchInfo.batchId': {
+      handler() {
+        this.notPure_fp.sampleList = [];
+        this.notPure_fp.sampleLabel = []
+        this.notPure_fp.xSampleList = [];
+        this.notPure_fp.xSampleLabel = []
       }
     }
   },
   methods: {
+    // 获取某一批次信息
+    async getBatchInfo() {
+      await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        this.batchInfo.sampleList = resp.data.result.sampleList;
+      });
+      this.getSupportXList()
+    },
+    // 获取该批次下已经使用x生成的频繁项文件
+    getSupportXList() {
+      postRequestJSON('/batch/getSupportXList', {
+        batchId: this.batchInfo.batchId
+      }).then((resp) => {
+        this.batchInfo.xSampleList = resp.data.result.sampleList;
+      });
+    },
     // 非纯物质，在该x下生成并下载test.csv文件
     async generateTestCSV() {
       await this.$refs.logBaseForm.validate((valid) => {

@@ -56,6 +56,7 @@ export default {
         groupId: data.groupId,
       }).then((resp) => {
         this.barChartData = resp.data.result.raw_data;
+        console.log(this.barChartData)
       });
     },
     async drawBarChart(data) {

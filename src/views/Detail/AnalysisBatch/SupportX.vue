@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="div">
+      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+        <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+    </div>
     <h4>已经产生的频繁项文件</h4>
     <el-select v-model="supportX.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
@@ -30,9 +38,14 @@ import {postRequestJSON} from "../../../utils/api";
 export default {
   name: "SupportX",
   components: {CommonTableSingle, CommonTable},
-  props: ["sampleList", "xSampleList"],
   data() {
     return {
+      batchListStandard: [],
+      batchInfo: {
+        batchId: "",
+        sampleList: {},
+        xSampleList:{}
+      },
       supportX: {
         x: "",
         sampleType: "",
@@ -85,23 +98,26 @@ export default {
     })
   },
   async activated() {
+    await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
+      this.batchListStandard = resp.data.result.batchList
+    })
   },
   watch: {
     'supportX.sampleType': {
       handler() {
         if (this.supportX.sampleType === "PureSample") {
-          this.supportX.xSampleList = this.xSampleList.pureSampleList;
-          this.supportX.sampleList = this.sampleList.pureSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
           this.supportX.sampleLabel = this.tableLabel.normal;
         } else if (this.supportX.sampleType === "TrueSample") {
-          this.supportX.xSampleList = this.xSampleList.trueSampleList;
-          this.supportX.sampleList = this.sampleList.trueSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.trueSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
           this.supportX.sampleLabel = this.tableLabel.normal;
         } else if (this.supportX.sampleType === "ConfigSample") {
-          this.supportX.xSampleList = this.xSampleList.configSampleList;
-          this.supportX.sampleList = this.sampleList.configSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.configSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.configSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_config;
           this.supportX.sampleLabel = this.tableLabel.config;
         }
@@ -110,25 +126,48 @@ export default {
     'xSampleList': {
       handler() {
         if (this.supportX.sampleType === "PureSample") {
-          this.supportX.xSampleList = this.xSampleList.pureSampleList;
-          this.supportX.sampleList = this.sampleList.pureSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
           this.supportX.sampleLabel = this.tableLabel.normal;
         } else if (this.supportX.sampleType === "TrueSample") {
-          this.supportX.xSampleList = this.xSampleList.trueSampleList;
-          this.supportX.sampleList = this.sampleList.trueSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.trueSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
           this.supportX.sampleLabel = this.tableLabel.normal;
         } else if (this.supportX.sampleType === "ConfigSample") {
-          this.supportX.xSampleList = this.xSampleList.configSampleList;
-          this.supportX.sampleList = this.sampleList.configSampleList;
+          this.supportX.xSampleList = this.batchInfo.xSampleList.configSampleList;
+          this.supportX.sampleList = this.batchInfo.sampleList.configSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_config;
           this.supportX.sampleLabel = this.tableLabel.config;
         }
       }
+    },
+    'batchInfo.batchId': {
+      handler() {
+        this.supportX.sampleList = [];
+        this.supportX.sampleLabel = []
+        this.supportX.xSampleList = [];
+        this.supportX.xSampleLabel = []
+      }
     }
   },
   methods: {
+    // 获取某一批次信息
+    async getBatchInfo() {
+     await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        this.batchInfo.sampleList = resp.data.result.sampleList;
+      });
+      this.getSupportXList()
+    },
+    // 获取该批次下已经使用x生成的频繁项文件
+    getSupportXList() {
+      postRequestJSON('/batch/getSupportXList', {
+        batchId: this.batchInfo.batchId
+      }).then((resp) => {
+        this.batchInfo.xSampleList = resp.data.result.sampleList;
+      });
+    },
     // 生成支持度x文件
     runSupportX() {
       postRequestJSON('/analysis/generateSupportXFile', {

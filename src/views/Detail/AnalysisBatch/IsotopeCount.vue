@@ -1,15 +1,25 @@
 <template>
   <div>
-    <el-select v-model="isotopeCount.sampleType" placeholder="请选择样品类型">
-      <el-option v-for="item in options" :key="item.value" :label="item.label"
-                 :value="item.value">
-      </el-option>
-    </el-select>
-    <common-table-single :table-data="isotopeCount.sampleList"
-                         :table-label="isotopeCount.sampleLabel"
-                         function="isotopeCount"></common-table-single>
-    <el-button style="margin-top: 15px" type="primary" @click="runIsotopeCount()">确认执行分析并下载文件number.csv
-    </el-button>
+    <div class="div">
+      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+        <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+    </div>
+    <div>
+      <el-select v-model="isotopeCount.sampleType" placeholder="请选择样品类型">
+        <el-option v-for="item in options" :key="item.value" :label="item.label"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+      <common-table-single :table-data="isotopeCount.sampleList"
+                           :table-label="isotopeCount.sampleLabel"
+                           function="isotopeCount"></common-table-single>
+      <el-button style="margin-top: 15px" type="primary" @click="runIsotopeCount()">确认执行分析并下载文件number.csv
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -20,9 +30,13 @@ import {downloadCSV, postRequestJSON} from "../../../utils/api";
 export default {
   name: "IsotopeCount",
   components: {CommonTableSingle},
-  props: ["sampleList"],
   data() {
     return {
+      batchListStandard: [],
+      batchInfo: {
+        batchId: "",
+        sampleList: {}
+      },
       isotopeCount: {
         sampleType: "",
         sampleList: [],
@@ -58,23 +72,41 @@ export default {
       }
     })
   },
+  async activated() {
+    await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
+      this.batchListStandard = resp.data.result.batchList
+    })
+  },
   watch: {
     'isotopeCount.sampleType': {
       handler() {
         if (this.isotopeCount.sampleType === "PureSample") {
-          this.isotopeCount.sampleList = this.sampleList.pureSampleList;
+          this.isotopeCount.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.isotopeCount.sampleLabel = this.tableLabel.normal;
         } else if (this.isotopeCount.sampleType === "TrueSample") {
-          this.isotopeCount.sampleList = this.sampleList.trueSampleList;
+          this.isotopeCount.sampleList = this.batchInfo.sampleList.trueSampleList;
           this.isotopeCount.sampleLabel = this.tableLabel.normal;
         } else if (this.isotopeCount.sampleType === "ConfigSample") {
-          this.isotopeCount.sampleList = this.sampleList.configSampleList;
+          this.isotopeCount.sampleList = this.batchInfo.sampleList.configSampleList;
           this.isotopeCount.sampleLabel = this.tableLabel.config;
         }
       }
     },
+    'batchInfo.batchId': {
+      handler() {
+        this.isotopeCount.sampleList = [];
+        this.isotopeCount.sampleLabel = []
+      }
+    }
   },
   methods: {
+    // 获取某一批次信息
+    getBatchInfo() {
+      postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        this.batchInfo.sampleList = resp.data.result.sampleList;
+        console.log(this.batchInfo.sampleList)
+      });
+    },
     runIsotopeCount() {
       postRequestJSON('/download/isotopeCount', {
         sampleId: this.isotopeCount.sampleId,
@@ -87,6 +119,6 @@ export default {
 }
 </script>
 
-<style  lang="less" scoped>
+<style lang="less" scoped>
 
 </style>

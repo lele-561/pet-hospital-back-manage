@@ -14,6 +14,12 @@ import PostBatch from '@/views/Post/PostBatch'
 import PostSample from '@/views/Post/PostSample'
 
 import UserManage from '@/views/SystemSetting/UserManage'
+import Particle from "../views/Detail/AnalysisBatch/Particle";
+import TE from "../views/Detail/AnalysisBatch/TE";
+import SupportX from "../views/Detail/AnalysisBatch/SupportX";
+import IsotopeCount from "../views/Detail/AnalysisBatch/IsotopeCount";
+import AnalysisPure from "../views/Detail/AnalysisBatch/AnalysisPure";
+import AnalysisNotPure from "../views/Detail/AnalysisBatch/AnalysisNotPure";
 
 Vue.use(VueRouter)
 
@@ -61,6 +67,38 @@ const routes = [{
                 name: 'postSample',
                 component: PostSample
             },
+            // 功能管理
+            {
+              path:'function/particle',
+                name:'function_particle',
+                component: Particle
+            },
+            {
+                path:'function/TE',
+                name:'function_TE',
+                component: TE
+            },
+            {
+                path:'function/isotopeCount',
+                name:'function_isotopeCount',
+                component: IsotopeCount
+            },
+            {
+                path:'function/supportX',
+                name:'function_supportX',
+                component: SupportX
+            },
+            {
+                path:'function/analysisPure',
+                name:'function_analysisPure',
+                component: AnalysisPure
+            },
+            {
+                path:'function/analysisNotPure',
+                name:'function_analysisNotPure',
+                component: AnalysisNotPure
+            },
+            // 用户管理
              {
                 path: 'systemSetting/userManage',
                 name: 'systemSetting_userManage',
