@@ -1,24 +1,23 @@
 <template>
   <div>
     <div class="div">
-      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
-    <h4>已经产生的频繁项文件</h4>
-    <el-select v-model="supportX.sampleType" placeholder="请选择样品类型">
+    <h3>已经产生的频繁项文件</h3>
+    <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
     </el-select>
     <common-table :table-data="supportX.xSampleList"
                   :table-label="supportX.xSampleLabel"></common-table>
-    <h4>生成频繁项文件</h4>
-    <el-input v-model="supportX.x" style="width: 200px" placeholder="请输入x"></el-input>
-    <el-select v-model="supportX.sampleType" placeholder="请选择样品类型">
+    <h3>生成频繁项文件</h3>
+    <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -26,7 +25,13 @@
     <common-table-single :table-data="supportX.sampleList"
                          :table-label="supportX.sampleLabel"
                          function="supportX"></common-table-single>
-    <el-button style="margin-top: 15px" type="primary" @click="runSupportX()">生成文件</el-button>
+    <el-form :inline="true" ref="logBaseForm" :model="supportX" label-width="80px" style="margin-top: 10px"
+             :rules="rules">
+      <el-form-item label="支持度" prop="x">
+        <el-input v-model="supportX.x" style="width: 200px" placeholder="请输入支持度x"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="runSupportX()">生成文件</el-button>
+    </el-form>
   </div>
 </template>
 
@@ -39,12 +44,35 @@ export default {
   name: "SupportX",
   components: {CommonTableSingle, CommonTable},
   data() {
+    //包含小数的数字
+    let valiNumDotPass = (rule, value, callback) => {
+      let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入数字'));
+      } else {
+        if (this.supportX.sampleType === "PureSample") {
+          if (value < 0.003 || value > 0.009) {
+            callback(new Error('纯样品请输入范围[0.003, 0.009]内数字'))
+          } else {
+            callback();
+          }
+        } else if (this.supportX.sampleType !== "") {
+          if (value !== 0.01) {
+            callback(new Error('非纯样品请输入0.01'))
+          } else {
+            callback();
+          }
+        }
+      }
+    };
     return {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
         sampleList: {},
-        xSampleList:{}
+        xSampleList: {}
       },
       supportX: {
         x: "",
@@ -56,6 +84,10 @@ export default {
         sampleId: "",   // 选中的样品id
         selectRow: ""
       },
+      rules: {
+        x: [{required: true, validator: valiNumDotPass, trigger: "blur"}]
+      },
+      placeHolder: "",
       options: [
         {value: 'PureSample', label: '纯样品'},
         {value: 'TrueSample', label: '真实样品'},
@@ -148,15 +180,21 @@ export default {
         this.supportX.sampleList = [];
         this.supportX.sampleLabel = []
         this.supportX.xSampleList = [];
-        this.supportX.xSampleLabel = []
+        this.supportX.xSampleLabel = [];
+        this.supportX.sampleType = ""
       }
     }
   },
   methods: {
     // 获取某一批次信息
     async getBatchInfo() {
-     await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
-        this.batchInfo.sampleList = resp.data.result.sampleList;
+      await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+        if (resp.data.code === 0) {
+          this.batchInfo.sampleList = resp.data.result.sampleList;
+          this.$message.success(resp.data.message)
+        } else {
+          this.$message.warning(resp.data.message)
+        }
       });
       this.getSupportXList()
     },
@@ -170,24 +208,30 @@ export default {
     },
     // 生成支持度x文件
     runSupportX() {
-      postRequestJSON('/analysis/generateSupportXFile', {
-        sampleId: this.supportX.sampleId,
-        sampleType: this.supportX.sampleType,
-        support: this.supportX.x,
-      }).then((resp) => {
-        if (resp.data.code === 0) {
-          // 全局事件总线，更新内容
-          this.$message.success(resp.data.message)
-          this.$bus.$emit("updateSupportXList");
-        } else if (resp.data.code === 1)
-          this.$message.info(resp.data.message)
-        else this.$message.error(resp.data.message)
-      });
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          postRequestJSON('/analysis/generateSupportXFile', {
+            sampleId: this.supportX.sampleId,
+            sampleType: this.supportX.sampleType,
+            support: this.supportX.x,
+          }).then((resp) => {
+            if (resp.data.code === 0) {
+              // 全局事件总线，更新内容
+              this.$message.success(resp.data.message)
+              this.$bus.$emit("updateSupportXList");
+            } else if (resp.data.code === 1)
+              this.$message.info(resp.data.message)
+            else this.$message.error(resp.data.message)
+          });
+        } else return false
+      })
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-
+.div {
+  margin-top: 10px;
+}
 </style>

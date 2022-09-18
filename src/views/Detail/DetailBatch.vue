@@ -62,27 +62,21 @@
     </el-descriptions>
     <h4>标准样品</h4>
     <common-table :table-data="sampleList.standardSampleList" :table-label="tableLabel.normal"></common-table>
-    <h4>纯样品（煤灰、土壤、尾气的一种）</h4>
+    <h4>纯样品</h4>
     <common-table :table-data="sampleList.pureSampleList" :table-label="tableLabel.normal"></common-table>
-    <h4>真实样品（煤灰、土壤、尾气的混合物，比例未知）</h4>
+    <h4>真实样品</h4>
     <common-table :table-data="sampleList.trueSampleList" :table-label="tableLabel.normal"></common-table>
-    <h4>配置样品（煤灰、土壤、尾气的混合物，比例已知）</h4>
+    <h4>配置样品</h4>
     <common-table :table-data="sampleList.configSampleList" :table-label="tableLabel.config"></common-table>
   </div>
 </template>
 
 <script>
 import CommonTable from "../../components/CommonTable";
-import Particle from "./AnalysisBatch/Particle";
-import TE from "./AnalysisBatch/TE";
-import IsotopeCount from "./AnalysisBatch/IsotopeCount";
-import SupportX from "./AnalysisBatch/SupportX";
-import AnalysisPure from "./AnalysisBatch/AnalysisPure";
-import AnalysisNotPure from "./AnalysisBatch/AnalysisNotPure";
 import {postRequestJSON} from "../../utils/api";
 
 export default {
-  components: {CommonTable, Particle, TE, IsotopeCount, SupportX, AnalysisPure, AnalysisNotPure},
+  components: {CommonTable},
   name: 'DetailBatch',
   data() {
     return {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="div">
-      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -62,7 +62,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
-        <el-select v-model="pure_fp.heatMapType" placeholder="请选择样品类型">
+        <el-select clearable v-model="pure_fp.heatMapType" placeholder="请选择样品类型"  size="mini">
           <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -89,6 +89,28 @@ export default {
   name: "AnalysisPure",
   components: {CommonTableSingle, HeatMapPure},
   data() {
+    //包含小数的数字
+    let valiNumDotPass = (rule, value, callback) => {
+      let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入数字'));
+      } else {
+        callback();
+      }
+    };
+    //正整数
+    let valiNumPositivePass = (rule, value, callback) => {
+      let reg = /^[+]{0,1}(\d+)$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入0及0以上的整数'));
+      } else {
+        callback();
+      }
+    };
     return {
       batchListStandard: [],
       batchInfo: {
@@ -153,7 +175,12 @@ export default {
     // 获取某一批次信息
     async getBatchInfo() {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
-        this.getPureGroupList();
+        if (resp.data.code === 0) {
+          this.getPureGroupList();
+          this.$message.success(resp.data.message)
+        } else {
+          this.$message.warning(resp.data.message)
+        }
       });
     },
     // 获取纯物质分组列表
@@ -286,4 +313,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.div {
+  margin-top: 10px;
+}
 </style>

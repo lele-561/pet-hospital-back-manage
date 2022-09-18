@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="div">
-      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -9,7 +9,7 @@
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
     <div>
-      <el-select v-model="isotopeCount.sampleType" placeholder="请选择样品类型">
+      <el-select clearable v-model="isotopeCount.sampleType" placeholder="请选择样品类型" style="margin-top: 10px">
         <el-option v-for="item in options" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -95,7 +95,8 @@ export default {
     'batchInfo.batchId': {
       handler() {
         this.isotopeCount.sampleList = [];
-        this.isotopeCount.sampleLabel = []
+        this.isotopeCount.sampleLabel = [];
+        this.isotopeCount.sampleType = ""
       }
     }
   },
@@ -103,8 +104,12 @@ export default {
     // 获取某一批次信息
     getBatchInfo() {
       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
-        this.batchInfo.sampleList = resp.data.result.sampleList;
-        console.log(this.batchInfo.sampleList)
+        if (resp.data.code === 0) {
+          this.batchInfo.sampleList = resp.data.result.sampleList;
+          this.$message.success(resp.data.message)
+        } else {
+          this.$message.warning(resp.data.message)
+        }
       });
     },
     runIsotopeCount() {
@@ -120,5 +125,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.div {
+  margin-top: 10px;
+}
 </style>

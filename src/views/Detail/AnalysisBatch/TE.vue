@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="div">
-      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -33,7 +33,7 @@ export default {
   },
   async activated() {
     await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
-      this.batchListStandard = resp.data.result.batchList
+      this.batchListStandard = resp.data.result.batchList;
     })
   },
   watch: {
@@ -47,7 +47,12 @@ export default {
     // 获取某一批次信息
     getBatchInfo() {
       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
-        this.batchInfo.sampleList = resp.data.result.sampleList;
+        if (resp.data.code === 0) {
+          this.batchInfo.sampleList = resp.data.result.sampleList;
+          this.$message.success(resp.data.message)
+        } else {
+          this.$message.warning(resp.data.message)
+        }
       });
     },
     runTE() {
@@ -65,5 +70,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.div {
+  margin-top: 10px;
+}
 </style>

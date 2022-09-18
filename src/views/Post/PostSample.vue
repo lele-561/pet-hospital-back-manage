@@ -6,7 +6,7 @@
         {{ sampleInfo.batchName }}
       </el-form-item>
       <el-form-item label="样品类型" prop="type">
-        <el-select v-model="sampleInfo.type" clearable placeholder="请选择样品类型">
+        <el-select clearable v-model="sampleInfo.type" placeholder="请选择样品类型">
           <el-option
               v-for="item in options"
               :key="item.value"
@@ -16,15 +16,25 @@
         </el-select>
       </el-form-item>
       <!--      表单校验：prop和v-model的值要相同-->
-      <el-form-item :style="{ display: configShow }" label="煤灰" prop="substanceMass_meihui">
-        <el-input v-model="sampleInfo.substanceMass_meihui" placeholder="请输入煤灰质量（单位：mg）"></el-input>
-      </el-form-item>
-      <el-form-item :style="{ display: configShow }" label="土壤" prop="substanceMass_turang">
-        <el-input v-model="sampleInfo.substanceMass_turang" placeholder="请输入土壤质量（单位：mg）"></el-input>
-      </el-form-item>
-      <el-form-item :style="{ display: configShow }" label="尾气" prop="substanceMass_weiqi">
-        <el-input v-model="sampleInfo.substanceMass_weiqi" placeholder="请输入尾气质量（单位：mg）"></el-input>
-      </el-form-item>
+      <div v-for="(item,index) in sampleInfo.dynamicItem" :key="index" style="display: flex">
+        <el-form-item label="物质名"
+                      :prop="'dynamicItem.'+index+'.substanceName'"
+                      :rules="{required:true, message:'物质名不能为空',trigger:'blur'}"
+                      :style="{ display: configShow}">
+          <el-input v-model="item.substanceName"></el-input>
+        </el-form-item>
+        <el-form-item label="物质质量"
+                      :prop="'dynamicItem.'+index+'.substanceMass'"
+                      :rules="{required:true, validator:vali,trigger:'blur'}"
+                      :style="{ display: configShow}">
+          <el-input v-model="item.substanceMass"></el-input>
+        </el-form-item>
+        <el-form-item :style="{ display: configShow}">
+          <el-button v-if="index+1===sampleInfo.dynamicItem.length" @click="addItem" type="primary" plain>增加
+          </el-button>
+          <el-button v-if="index!==0" @click="deleteItem(item,index)" type="danger" plain>删除</el-button>
+        </el-form-item>
+      </div>
       <el-form-item label="样品名" prop="sampleName">
         <el-input v-model="sampleInfo.sampleName"></el-input>
       </el-form-item>
@@ -60,6 +70,16 @@ import {postRequestFormData} from '../../utils/api';
 export default {
   name: 'PostSample',
   data() {
+    let valiNumDotPass = (rule, value, callback) => {
+      let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入数字'));
+      } else {
+        callback();
+      }
+    };
     return {
       configShow: "none",
       sampleInfo: {
@@ -67,9 +87,7 @@ export default {
         batchName: "",
         sampleName: "",
         type: "",
-        substanceMass_meihui: "",
-        substanceMass_turang: "",
-        substanceMass_weiqi: ""
+        dynamicItem: [],
       },
       fileList: [],
       options: [
@@ -78,18 +96,11 @@ export default {
         {value: 'ConfigSample', label: '配置样品'},
         {value: 'TrueSample', label: '真实样品'},
       ],
-      rules: {},
-      rules1: {
+      rules: {
         sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
         type: [{required: true, message: "请选择样品类型", trigger: "blur"}],
       },
-      rules2: {
-        sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
-        substanceMass_meihui: [{required: true, message: "请输入煤灰质量", trigger: "blur"}],
-        substanceMass_turang: [{required: true, message: "请输入土壤质量", trigger: "blur"}],
-        substanceMass_weiqi: [{required: true, message: "请输入尾气质量", trigger: "blur"}],
-        type: [{required: true, message: "请选择样品类型", trigger: "blur"}],
-      },
+      vali: valiNumDotPass
     }
   },
   watch: {
@@ -97,10 +108,18 @@ export default {
       handler() {
         if (this.sampleInfo.type === "ConfigSample") {
           this.configShow = "";
-          this.rules = this.rules2;
+          this.sampleInfo.dynamicItem = [];
+          this.sampleInfo.dynamicItem.push({
+            substanceName: "",
+            substanceMass: ""
+          })
         } else {
           this.configShow = "none";
-          this.rules = this.rules1;
+          this.sampleInfo.dynamicItem = [];
+          this.sampleInfo.dynamicItem.push({
+            substanceName: "temp",
+            substanceMass: "temp"
+          })
         }
       }
     },
@@ -110,6 +129,14 @@ export default {
     this.sampleInfo.batchName = this.$route.query.batchName;
   },
   methods: {
+    // 增加物质条目
+    addItem() {
+      this.sampleInfo.dynamicItem.push({substanceName: "", substanceMass: ""})
+    },
+    deleteItem(item, index) {
+      this.sampleInfo.dynamicItem.splice(index, 1)
+      console.log(this.sampleInfo.dynamicItem, "删除")
+    },
     // 文件上传
     httpRequest(param) { // submitUpload重复调用httpRequest，达到效果
     },
@@ -147,16 +174,14 @@ export default {
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
           uploadData.append('sampleName', this.sampleInfo.sampleName)
-          uploadData.append('substanceMass_meihui', this.sampleInfo.substanceMass_meihui)
-          uploadData.append('substanceMass_turang', this.sampleInfo.substanceMass_turang)
-          uploadData.append('substanceMass_weiqi', this.sampleInfo.substanceMass_weiqi)
+          uploadData.append('configSubstance', JSON.stringify(this.sampleInfo.dynamicItem))
           uploadData.append('type', this.sampleInfo.type)
 
           for (let [a, b] of uploadData.entries()) {
             console.log(a, b, '--------------');
           }
 
-          postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
+          postRequestFormData('/paper/postSampleInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
               this.$router.back();

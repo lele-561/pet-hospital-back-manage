@@ -1,5 +1,5 @@
 <template>
-  <div class="common-table">
+  <div class="common-table-single">
     <el-table ref="singleTable"
               :data="tableData"
               highlight-current-row
@@ -40,6 +40,10 @@ export default {
     }
   }
 }
-
-
 </script>
+
+<style lang="less" scoped>
+.common-table-single{
+  margin-top: 10px;
+}
+</style>

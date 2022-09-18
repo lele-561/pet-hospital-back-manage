@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span=6>
           <el-form-item label="分析类型" prop="analysisType">
-            <el-select v-model="batchInfo.analysisType" clearable placeholder="请选择分析类型">
+            <el-select clearable v-model="batchInfo.analysisType" clearable placeholder="请选择分析类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -128,6 +128,17 @@ export default {
   name: 'PostBatch',
   components: {},
   data() {
+    //包含小数的数字
+    let valiNumDotPass = (rule, value, callback) => {
+      let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入数字'));
+      } else {
+        callback();
+      }
+    };
     return {
       fileList1: [],
       fileList2: [],
@@ -143,13 +154,13 @@ export default {
         batchName: [{required: true, message: "请输入批次", trigger: "blur"}],
         experimentTime: [{required: true, message: "请输入实验时间", trigger: "blur"}],
         position: [{required: true, message: "请输入采样位置", trigger: "blur"}],
-        Cp: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        V: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        T: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        Vi: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        Vf: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        Df: [{required: true, message: "请输入实验参数", trigger: "blur"}],
-        m: [{required: true, message: "请输入实验参数", trigger: "blur"}],
+        Cp: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        V: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        T: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        Vi: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        Vf: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        Df: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        m: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         analysisType: [{required: true, message: "请选择分析类型", trigger: "blur"}],
       },
       options: [{label: '迭代法', value: 'iteration'},

@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="div">
-      <el-select v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
-    <el-select v-model="notPure_fp.sampleType" placeholder="请选择样品类型">
+    <el-select clearable v-model="notPure_fp.sampleType" placeholder="请选择样品类型" style="margin-top: 10px">
       <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -42,14 +42,21 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">溯源样品</template>
+        <div>当前最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
         <div style="display: flex; margin-top: 5px">
-          <el-select v-model="notPure_fp.selectModel" placeholder="请选择模型">
+          <el-select clearable v-model="notPure_fp.selectModel" placeholder="请选择模型" size="mini">
             <el-option v-for="item in notPure_fp.modelList" :key="item.value" :label="item.label"
                        :value="item.value">
             </el-option>
           </el-select>
-          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini" plain>生成柱状图</el-button>
-          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>下载溯源结果文件
+          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini" plain>
+            生成柱状图
+          </el-button>
+          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>
+            下载溯源结果文件
+          </el-button>
+          <el-button type="primary" style="margin-left: 5px" @click="updateBestModel" size="mini" plain>
+            更新其为最优模型
           </el-button>
         </div>
       </el-descriptions-item>
@@ -75,8 +82,29 @@ import {downloadCSV, postRequestJSON} from "../../../utils/api";
 export default {
   name: "AnalysisNotPure",
   components: {CommonTableSingle, HeatMapNotPure, BarChart},
-  props: ["xSampleList", "batchId"],
   data() {
+    //包含小数的数字
+    let valiNumDotPass = (rule, value, callback) => {
+      let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入数字'));
+      } else {
+        callback();
+      }
+    };
+    //正整数
+    var valiNumPositivePass = (rule, value, callback) => {
+      let reg = /^[+]{0,1}(\d+)$/g;
+      if (value === '') {
+        callback(new Error('请输入内容'));
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入0及0以上的整数'));
+      } else {
+        callback();
+      }
+    };
     return {
       batchListStandard: [],
       batchInfo: {
@@ -94,14 +122,15 @@ export default {
         fileId: "",   // 选中的supportX文件id
         selectRow: "",
         selectModel: "",
-        modelList: []
+        modelList: [],
+        bestModel: ""
       },
       sampleTypeOptions: [
         {value: 'TrueSample', label: '真实样品'},
         {value: 'ConfigSample', label: '配置样品'},
       ],
       rules: {
-        logBase: [{required: true, message: "请输入log底数", trigger: "blur"}],
+        logBase: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
       },
       tableLabel: {
         supportX_normal: [
@@ -152,7 +181,8 @@ export default {
         this.notPure_fp.sampleList = [];
         this.notPure_fp.sampleLabel = []
         this.notPure_fp.xSampleList = [];
-        this.notPure_fp.xSampleLabel = []
+        this.notPure_fp.xSampleLabel = [];
+        this.notPure_fp.sampleType = "";
       }
     }
   },
@@ -160,7 +190,12 @@ export default {
     // 获取某一批次信息
     async getBatchInfo() {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
-        this.batchInfo.sampleList = resp.data.result.sampleList;
+        if (resp.data.code === 0) {
+          this.batchInfo.sampleList = resp.data.result.sampleList;
+          this.$message.success(resp.data.message)
+        } else {
+          this.$message.warning(resp.data.message)
+        }
       });
       this.getSupportXList()
     },
@@ -207,6 +242,25 @@ export default {
         batchId: this.batchId,
       }).then((resp) => {
         this.notPure_fp.modelList = resp.data.result.modelList;
+        this.notPure_fp.bestModel = resp.data.result.bestModel;
+      });
+    },
+    // 更新最优模型
+    updateBestModel() {
+      if (this.notPure_fp.selectModel === "") {
+        this.$message.warning("未选择模型，无法更新")
+        return
+      }
+      postRequestJSON('/analysis/updateBestModel', {
+        batchId: this.batchId,
+        modelId: this.notPure_fp.selectModel
+      }).then((resp) => {
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          this.getModelList()
+        } else {
+          this.$message.error(resp.data.message)
+        }
       });
     },
     // 生成热力图
@@ -214,7 +268,7 @@ export default {
       this.tabActiveName = "HeatMap"
       this.heatMapInfo = {
         type: 'notPure',
-        groupId: "",
+        modelId: "",
         fileId: this.notPure_fp.fileId,
         heatMapType: "",
         logBase: this.notPure_fp.logBase
@@ -234,12 +288,12 @@ export default {
     // 生成柱状图
     generateBarChart() {
       this.tabActiveName = "BarChart"
-      this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchId})
+      this.$bus.$emit("drawBarChart", {modelId: this.notPure_fp.selectModel, batchId: this.batchId})
     },
     // 下载溯源文件
     downloadTraceResult() {
       postRequestJSON('/download/traceResultCSV', {
-        groupId: this.notPure_fp.selectModel,
+        modelId: this.notPure_fp.selectModel,
         batchId: this.batchId,
       }).then((resp) => {
         downloadCSV(resp, "trace_result")
@@ -250,5 +304,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.div {
+  margin-top: 10px;
+}
 </style>

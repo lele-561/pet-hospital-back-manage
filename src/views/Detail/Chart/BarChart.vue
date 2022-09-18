@@ -53,7 +53,7 @@ export default {
   methods: {
     async getBarChartInfo(data) {
       await postRequestJSON('/chart/getBarChartInfo', {
-        groupId: data.groupId,
+        modelId: data.modelId,
       }).then((resp) => {
         this.barChartData = resp.data.result.raw_data;
         console.log(this.barChartData)
