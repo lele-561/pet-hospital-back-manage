@@ -4,7 +4,7 @@
     <!-- 收集表单 -->
     <el-form :inline="true" class="search">
       <el-form-item label="">
-        <el-select clearable v-model="form.searchType"  placeholder="请选择搜索方式">
+        <el-select clearable v-model="form.searchType" placeholder="请选择搜索方式">
           <el-option
               v-for="item in options"
               :key="item.value"
@@ -40,9 +40,6 @@ export default {
   mounted() {
     this.search();
   },
-  // activated() {
-  //   this.search();
-  // },
   data() {
     return {
       options: [

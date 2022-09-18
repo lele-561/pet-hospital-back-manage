@@ -40,6 +40,7 @@
 <script>
 export default {
   name: 'CommonTableBatch',
+  props: ["batches"],
   data() {
     return {}
   },
@@ -48,7 +49,6 @@ export default {
       this.$router.push({name: "detailBatch", query: {id: row.id}});
     },
   },
-  props: ["batches"],
 }
 </script>
 

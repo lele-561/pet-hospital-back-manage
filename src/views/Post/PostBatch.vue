@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span=6>
           <el-form-item label="分析类型" prop="analysisType">
-            <el-select clearable v-model="batchInfo.analysisType" clearable placeholder="请选择分析类型">
+            <el-select clearable v-model="batchInfo.analysisType"  placeholder="请选择分析类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"

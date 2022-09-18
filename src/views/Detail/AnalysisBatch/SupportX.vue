@@ -101,7 +101,7 @@ export default {
         ],
         config: [
           {prop: "sampleName", label: '样品名'},
-          {prop: "substanceMass", label: '煤灰 土壤 尾气（单位：mg）'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
         ],
@@ -115,7 +115,7 @@ export default {
           {prop: "sampleName", label: '样品名'},
           {prop: "type", label: '样品类型'},
           {prop: "support", label: '支持度 x'},
-          {prop: "substanceMass", label: '煤灰 土壤 尾气（单位：mg）'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
           {prop: "fileName", label: '样品文件名'},
         ],
       }

@@ -19,13 +19,13 @@
       <div v-for="(item,index) in sampleInfo.dynamicItem" :key="index" style="display: flex">
         <el-form-item label="物质名"
                       :prop="'dynamicItem.'+index+'.substanceName'"
-                      :rules="{required:true, message:'物质名不能为空',trigger:'blur'}"
+                      :rules="{ required:true, message:'物质名不能为空',trigger:'blur'}"
                       :style="{ display: configShow}">
           <el-input v-model="item.substanceName"></el-input>
         </el-form-item>
         <el-form-item label="物质质量"
                       :prop="'dynamicItem.'+index+'.substanceMass'"
-                      :rules="{required:true, validator:vali,trigger:'blur'}"
+                      :rules="{ required:true, validator:vali, trigger:'blur'}"
                       :style="{ display: configShow}">
           <el-input v-model="item.substanceMass"></el-input>
         </el-form-item>

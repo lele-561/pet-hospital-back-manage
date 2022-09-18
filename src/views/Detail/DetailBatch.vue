@@ -90,7 +90,7 @@ export default {
         sampleNum: "",
         analysisType: "",
         parameters: {Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "", TE: ""},
-        modelList: []
+        modelList: [],
       },
       // 其他信息
       perUnitMassParticleNum: "",
@@ -104,7 +104,7 @@ export default {
         ],
         config: [
           {prop: "sampleName", label: '样品名'},
-          {prop: "substanceMass", label: '煤灰 土壤 尾气（单位：mg）'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
         ],
@@ -119,11 +119,11 @@ export default {
       }
     };
   },
+  created() {
+    this.getBatchInfo();
+  },
   mounted() {
     this.$bus.$on("updateSupportXList", this.getSupportXList)
-  },
-  async activated() {
-    await this.getBatchInfo();
   },
   methods: {
     // 获取某一批次信息

@@ -10,18 +10,16 @@
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
     <h3>创建分组并生成相应文件</h3>
-    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="55px" style="margin-top: 10px"
-             :rules="rules">
-      <el-form-item label="煤灰" prop="input_meihui_x">
-        <el-input class="input-box" v-model="pure_fp.input_meihui_x" placeholder="请输入x"></el-input>
-      </el-form-item>
-      <el-form-item label="土壤" prop="input_turang_x">
-        <el-input class="input-box" v-model="pure_fp.input_turang_x" placeholder="请输入x"></el-input>
-      </el-form-item>
-      <el-form-item label="尾气" prop="input_weiqi_x">
-        <el-input class="input-box" v-model="pure_fp.input_weiqi_x" placeholder="请输入x"></el-input>
-      </el-form-item>
-      <el-form-item label="底数" prop="input_logBase">
+    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="80px" style="margin-top: 10px">
+      <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">
+        <el-form-item :label="item.substanceName"
+                      :prop="'dynamicItem.'+index+'.substanceX'"
+                      :rules="{required:true, validator:vali, trigger:'blur'}">
+          <el-input v-model="item.substanceX" placeholder="请输入x"></el-input>
+        </el-form-item>
+      </div>
+      <el-form-item label="底数" prop="input_logBase"
+                    :rules="{required:true, validator:vali, trigger:'blur'}">
         <el-input class="input-box" v-model="pure_fp.input_logBase" placeholder="请输入log的底数"></el-input>
       </el-form-item>
       <el-form-item>
@@ -33,12 +31,7 @@
     <common-table-single :table-data="pure_fp.groupList"
                          :table-label="tableLabel.group"
                          function="pure"></common-table-single>
-    <h4>您当前选择的分组是： {{
-        "煤灰 " + pure_fp.selectRow.meihui + " " +
-        "土壤 " + pure_fp.selectRow.turang + " " +
-        "尾气 " + pure_fp.selectRow.weiqi
-      }}
-    </h4>
+    <h4>您当前选择的分组是：{{ show.groupString }}</h4>
     <el-descriptions :column="4" border title="">
       <el-descriptions-item>
         <template slot="label">指纹文件fp.csv</template>
@@ -62,7 +55,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
-        <el-select clearable v-model="pure_fp.heatMapType" placeholder="请选择样品类型"  size="mini">
+        <el-select clearable v-model="pure_fp.heatMapType" placeholder="请选择样品类型" size="mini">
           <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -120,9 +113,7 @@ export default {
       },
       heatMapInfo: "",
       pure_fp: {
-        input_meihui_x: "",
-        input_turang_x: "",
-        input_weiqi_x: "",
+        dynamicItem: [],
         input_logBase: "",
         groupList: [],
         groupId: "",    // 选中的组id
@@ -130,25 +121,20 @@ export default {
         selectRow: ""
       },
       rules: {
-        input_meihui_x: [{required: true, message: "请输入x", trigger: "blur"}],
-        input_turang_x: [{required: true, message: "请输入x", trigger: "blur"}],
-        input_weiqi_x: [{required: true, message: "请输入x", trigger: "blur"}],
         input_logBase: [{required: true, message: "请输入log底数", trigger: "blur"}],
       },
+      vali: valiNumDotPass,
       tableLabel: {
         group: [
-          {prop: "meihui", label: '煤灰'},
-          {prop: "turang", label: '土壤'},
-          {prop: "weiqi", label: '尾气'},
+          {prop: "substance", label: '物质类型及支持度'},
           {prop: "logBase", label: 'log底数'},
           {prop: "isModel", label: '是否已经生成模型'},
         ]
       },
-      sampleTypeOptions: [
-        {value: 'meihui', label: '煤灰'},
-        {value: 'turang', label: '土壤'},
-        {value: 'weiqi', label: '尾气'},
-      ],
+      sampleTypeOptions: [],
+      show: {
+        groupString: ""
+      }
     }
   },
   mounted() {
@@ -165,17 +151,25 @@ export default {
     })
   },
   watch: {
-    // 'batchInfo.batchId': {
-    //   async handler() {
-    //     // await this.getPureGroupList();
-    //   }
-    // }
+    'pure_fp.selectRow': {
+      handler() {
+        this.show.groupString = this.pure_fp.selectRow.substance + "，log底数为" + this.pure_fp.selectRow.logBase;
+      }
+    }
   },
   methods: {
     // 获取某一批次信息
     async getBatchInfo() {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
+          this.pure_fp.dynamicItem=[]
+          for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
+            this.pure_fp.dynamicItem.push({
+              substanceName: resp.data.result.batchInfo.substanceList[i].label,
+              substanceX: "",
+            })
+          }
+          this.sampleTypeOptions = resp.data.result.batchInfo.substanceList;
           this.getPureGroupList();
           this.$message.success(resp.data.message)
         } else {
@@ -197,9 +191,7 @@ export default {
         if (valid) {
           postRequestJSON('/analysis/generatePureGroup', {
             batchId: this.batchInfo.batchId,
-            meihui: this.pure_fp.input_meihui_x,
-            turang: this.pure_fp.input_turang_x,
-            weiqi: this.pure_fp.input_weiqi_x,
+            substanceList: this.pure_fp.dynamicItem,
             logBase: this.pure_fp.input_logBase
           }).then((resp) => {
             if (resp.data.code === 0) {
@@ -217,34 +209,21 @@ export default {
     // 下载三种物质的fp文件
     downloadFp() {
       // 每种物质单位质量颗粒数(列表)
-      postRequestJSON('/download/fpCSV', {
-        groupId: this.pure_fp.groupId,
-        substanceType: "meihui"
-      }).then((resp) => {
-        downloadCSV(resp, "meihui_fp")
-      });
-      postRequestJSON('/download/fpCSV', {
-        groupId: this.pure_fp.groupId,
-        substanceType: "turang"
-      }).then((resp) => {
-        downloadCSV(resp, "turang_fp")
-      });
-      postRequestJSON('/download/fpCSV', {
-        groupId: this.pure_fp.groupId,
-        substanceType: "weiqi"
-      }).then((resp) => {
-        downloadCSV(resp, "weiqi_fp")
-      });
+      for(let i=0;i<this.pure_fp.dynamicItem.length;i++){
+        postRequestJSON('/download/fpCSV', {
+          groupId: this.pure_fp.groupId,
+          substanceType: this.sampleTypeOptions[i].value
+        }).then((resp) => {
+          downloadCSV(resp, this.sampleTypeOptions[i].value+"_fp")
+        });
+      }
     },
     // 下载每种物质单位质量颗粒数
     downloadMassDensity() {
       postRequestJSON('/download/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
-        let tempMsg = "煤灰：" + resp.data.result.meihui +
-            "  土壤：" + resp.data.result.turang +
-            "  尾气：" + resp.data.result.weiqi
-        this.$alert(tempMsg, '每种物质单位质量颗粒数：', {
+        this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
           confirmButtonText: '确定',
           // callback: action => {
           //   this.$message({
