@@ -10,7 +10,7 @@
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
     <h3>创建分组并生成相应文件</h3>
-    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="80px" style="margin-top: 10px">
+    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="60px" style="margin-top: 10px">
       <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">
         <el-form-item :label="item.substanceName"
                       :prop="'dynamicItem.'+index+'.substanceX'"

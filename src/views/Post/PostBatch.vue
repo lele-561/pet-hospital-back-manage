@@ -1,16 +1,16 @@
 <template>
   <div>
     <h3>新建批次</h3>
-    <el-form ref="batchForm" :model="batchInfo" :rules="rules" label-width="100px">
+    <el-form ref="batchForm" :model="batchInfo" :rules="rules">
       <h4 style="margin-left:10px">基本信息</h4>
       <el-row>
         <el-col :span=6>
-          <el-form-item label="批次名" prop="batchName">
+          <el-form-item label="批次名" prop="batchName" label-width="100px">
             <el-input v-model="batchInfo.batchName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="实验时间" prop="experimentTime">
+          <el-form-item label="实验时间" prop="experimentTime" label-width="100px">
             <el-date-picker
                 v-model="batchInfo.experimentTime"
                 type="date"
@@ -19,13 +19,13 @@
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="采样位置" prop="position">
+          <el-form-item label="采样位置" prop="position" label-width="100px">
             <el-input v-model="batchInfo.position"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="分析类型" prop="analysisType">
-            <el-select clearable v-model="batchInfo.analysisType"  placeholder="请选择分析类型">
+          <el-form-item label="分析类型" prop="analysisType" label-width="100px">
+            <el-select clearable v-model="batchInfo.analysisType" placeholder="请选择分析类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -39,39 +39,60 @@
       <h4 style="margin-left:10px">实验参数</h4>
       <el-row>
         <el-col :span=6>
-          <el-form-item label="数浓度 Cp" prop="Cp">
+          <el-form-item label="数浓度 Cp" prop="Cp" label-width="100px">
             <el-input v-model="batchInfo.Cp" placeholder="单位：个/L"></el-input>
           </el-form-item>
-          <el-form-item label="流速 V" prop="V">
+          <el-form-item label="流速 V" prop="V" label-width="100px">
             <el-input v-model="batchInfo.V" placeholder="单位：ml/min"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="测试时间 T" prop="T">
+          <el-form-item label="测试时间 T" prop="T" label-width="100px">
             <el-input v-model="batchInfo.T" placeholder="单位：s"></el-input>
           </el-form-item>
-          <el-form-item label="进样体积 Vi" prop="Vi">
+          <el-form-item label="进样体积 Vi" prop="Vi" label-width="100px">
             <el-input v-model="batchInfo.Vi" placeholder="单位：ml"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="定容体积 Vf" prop="Vf">
+          <el-form-item label="定容体积 Vf" prop="Vf" label-width="100px">
             <el-input v-model="batchInfo.Vf" placeholder="单位：ml"></el-input>
           </el-form-item>
-          <el-form-item label="稀释倍数 Df" prop="Df">
+          <el-form-item label="稀释倍数 Df" prop="Df" label-width="100px">
             <el-input v-model="batchInfo.Df"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="称样质量 m" prop="m">
+          <el-form-item label="称样质量 m" prop="m" label-width="100px">
             <el-input v-model="batchInfo.m" placeholder="单位：mg"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <h4 style="margin-left:10px">上传文件</h4>
+      <h4 style="margin-left:10px">物质类型</h4>
       <el-row>
         <el-col :span=24>
-          <el-form-item label="同位素单位强度" prop="file">
+          <div v-for="(item,index) in batchInfo.dynamicItem" :key="index" style="display: flex">
+            <el-form-item label="物质名"
+                          :prop="'dynamicItem.'+index+'.substanceName'"
+                          :rules="{ required:true, message:'物质名不能为空',trigger:'blur'}"
+                          label-width="100px">
+              <el-input v-model="item.substanceName"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button v-if="index+1===batchInfo.dynamicItem.length" @click="addItem" type="primary" plain
+                         style="margin-left: 5px">增加
+              </el-button>
+              <el-button v-if="index!==0" @click="deleteItem(item,index)" type="danger" plain style="margin-left: 5px">
+                删除
+              </el-button>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      <h4 style="margin-left:10px">上传文件</h4>
+      <el-row>
+        <el-col :span=12>
+          <el-form-item label="同位素单位强度" prop="file" label-width="150px">
             <el-upload
                 class="upload-demo"
                 ref="upload1"
@@ -91,7 +112,9 @@
               <div slot="tip" class="el-upload__tip">只能上传csv文件，mass_factor.csv</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="配置样品质量配比" prop="file">
+        </el-col>
+        <el-col :span=12>
+          <el-form-item label="配置样品质量配比" prop="file" label-width="150px">
             <el-upload
                 class="upload-demo"
                 ref="upload2"
@@ -111,7 +134,9 @@
               <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>
             </el-upload>
           </el-form-item>
-          <el-form-item>
+        </el-col>
+        <el-col :span=24>
+          <el-form-item style="margin-left: 30px">
             <el-button type="primary" @click="submitUpload()">{{ '新建' }}</el-button>
             <el-button @click="cancel">取消</el-button>
           </el-form-item>
@@ -149,6 +174,7 @@ export default {
         position: "",
         analysisType: "",
         Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "",
+        dynamicItem: []
       },
       rules: {
         batchName: [{required: true, message: "请输入批次", trigger: "blur"}],
@@ -171,6 +197,14 @@ export default {
     this.clear();
   },
   methods: {
+    // 增加物质条目
+    addItem() {
+      this.batchInfo.dynamicItem.push({substanceName: ""})
+    },
+    deleteItem(item, index) {
+      this.batchInfo.dynamicItem.splice(index, 1)
+      console.log(this.batchInfo.dynamicItem, "删除")
+    },
     // 文件上传
     httpRequest(param) { // submitUpload重复调用httpRequest，达到效果
     },
@@ -226,6 +260,7 @@ export default {
           uploadData.append('experimentTime', this.batchInfo.experimentTime)
           uploadData.append('position', this.batchInfo.position)
           uploadData.append('analysisType', this.batchInfo.analysisType)
+          uploadData.append('substanceList', JSON.stringify(this.batchInfo.dynamicItem))
           uploadData.append('Cp', this.batchInfo.Cp)
           uploadData.append('V', this.batchInfo.V)
           uploadData.append('T', this.batchInfo.T)
@@ -271,6 +306,7 @@ export default {
         position: "",
         analysisType: "",
         Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "",
+        dynamicItem: [{substanceName: ""}]
       }
     },
   }

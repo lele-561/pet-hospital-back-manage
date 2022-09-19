@@ -53,10 +53,9 @@ export default {
   methods: {
     async getBarChartInfo(data) {
       await postRequestJSON('/chart/getBarChartInfo', {
-        modelId: data.modelId,
+        groupId: data.groupId,
       }).then((resp) => {
         this.barChartData = resp.data.result.raw_data;
-        console.log(this.barChartData)
       });
     },
     async drawBarChart(data) {

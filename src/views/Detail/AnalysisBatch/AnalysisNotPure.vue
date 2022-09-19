@@ -42,7 +42,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">溯源样品</template>
-        <div>当前最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
+        <div>当前全批次最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
         <div style="display: flex; margin-top: 5px">
           <el-select clearable v-model="notPure_fp.selectModel" placeholder="请选择模型" size="mini">
             <el-option v-for="item in notPure_fp.modelList" :key="item.value" :label="item.label"
@@ -252,8 +252,7 @@ export default {
         return
       }
       postRequestJSON('/analysis/updateBestModel', {
-        batchId: this.batchId,
-        modelId: this.notPure_fp.selectModel
+        groupId: this.notPure_fp.selectModel
       }).then((resp) => {
         if (resp.data.code === 0) {
           this.$message.success(resp.data.message)
@@ -268,7 +267,7 @@ export default {
       this.tabActiveName = "HeatMap"
       this.heatMapInfo = {
         type: 'notPure',
-        modelId: "",
+        groupId: "",
         fileId: this.notPure_fp.fileId,
         heatMapType: "",
         logBase: this.notPure_fp.logBase
@@ -288,12 +287,12 @@ export default {
     // 生成柱状图
     generateBarChart() {
       this.tabActiveName = "BarChart"
-      this.$bus.$emit("drawBarChart", {modelId: this.notPure_fp.selectModel, batchId: this.batchId})
+      this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchId})
     },
     // 下载溯源文件
     downloadTraceResult() {
       postRequestJSON('/download/traceResultCSV', {
-        modelId: this.notPure_fp.selectModel,
+        groupId: this.notPure_fp.selectModel,
         batchId: this.batchId,
       }).then((resp) => {
         downloadCSV(resp, "trace_result")

@@ -91,6 +91,13 @@ export default {
               icon: 'collection-tag',
               url: 'analysisNotPure/analysisNotPure'
             },
+            // {
+            //   path: 'function/bestModel',
+            //   name: 'function_bestModel',
+            //   label: '最优模型',
+            //   icon: 'collection-tag',
+            //   url: 'bestModel/bestModel'
+            // },
           ]
         },
       ]

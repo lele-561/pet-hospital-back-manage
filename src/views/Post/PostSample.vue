@@ -17,22 +17,11 @@
       </el-form-item>
       <!--      表单校验：prop和v-model的值要相同-->
       <div v-for="(item,index) in sampleInfo.dynamicItem" :key="index" style="display: flex">
-        <el-form-item label="物质名"
-                      :prop="'dynamicItem.'+index+'.substanceName'"
-                      :rules="{ required:true, message:'物质名不能为空',trigger:'blur'}"
-                      :style="{ display: configShow}">
-          <el-input v-model="item.substanceName"></el-input>
-        </el-form-item>
-        <el-form-item label="物质质量"
+        <el-form-item :label="item.substanceName"
                       :prop="'dynamicItem.'+index+'.substanceMass'"
-                      :rules="{ required:true, validator:vali, trigger:'blur'}"
+                      :rules="{required:true, validator:vali, trigger:'blur'}"
                       :style="{ display: configShow}">
-          <el-input v-model="item.substanceMass"></el-input>
-        </el-form-item>
-        <el-form-item :style="{ display: configShow}">
-          <el-button v-if="index+1===sampleInfo.dynamicItem.length" @click="addItem" type="primary" plain>增加
-          </el-button>
-          <el-button v-if="index!==0" @click="deleteItem(item,index)" type="danger" plain>删除</el-button>
+          <el-input v-model="item.substanceMass" placeholder="请输入质量（单位：mg）"></el-input>
         </el-form-item>
       </div>
       <el-form-item label="样品名" prop="sampleName">
@@ -65,7 +54,7 @@
 </template>
 
 <script>
-import {postRequestFormData} from '../../utils/api';
+import {postRequestFormData, postRequestJSON} from '../../utils/api';
 
 export default {
   name: 'PostSample',
@@ -88,6 +77,7 @@ export default {
         sampleName: "",
         type: "",
         dynamicItem: [],
+        substanceList:[]
       },
       fileList: [],
       options: [
@@ -106,36 +96,49 @@ export default {
   watch: {
     'sampleInfo.type': {
       handler() {
+        this.sampleInfo.sampleName=""
+        this.fileList=[]
         if (this.sampleInfo.type === "ConfigSample") {
           this.configShow = "";
           this.sampleInfo.dynamicItem = [];
-          this.sampleInfo.dynamicItem.push({
-            substanceName: "",
-            substanceMass: ""
-          })
+          for (let i = 0; i < this.sampleInfo.substanceList.length; i++) {
+            this.sampleInfo.dynamicItem.push({
+              substanceName: this.sampleInfo.substanceList[i].label,
+              substanceMass: "",
+            })
+          }
         } else {
           this.configShow = "none";
           this.sampleInfo.dynamicItem = [];
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
-            substanceMass: "temp"
+            substanceMass: 123
           })
         }
       }
     },
   },
-  activated() {
+  async activated() {
     this.sampleInfo.batchId = this.$route.query.batchId;
     this.sampleInfo.batchName = this.$route.query.batchName;
+    await this.getBatchInfo();
   },
   methods: {
-    // 增加物质条目
-    addItem() {
-      this.sampleInfo.dynamicItem.push({substanceName: "", substanceMass: ""})
-    },
-    deleteItem(item, index) {
-      this.sampleInfo.dynamicItem.splice(index, 1)
-      console.log(this.sampleInfo.dynamicItem, "删除")
+    async getBatchInfo() {
+      await postRequestJSON('/batch/getBatchInfo', {batchId: this.$route.query.batchId}).then((resp) => {
+        if (resp.data.code === 0) {
+          this.sampleInfo.dynamicItem = []
+          this.sampleInfo.substanceList=resp.data.result.batchInfo.substanceList
+          for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
+            this.sampleInfo.dynamicItem.push({
+              substanceName: resp.data.result.batchInfo.substanceList[i].label,
+              substanceMass: "",
+            })
+          }
+        } else {
+          this.$message.warning(resp.data.message)
+        }
+      });
     },
     // 文件上传
     httpRequest(param) { // submitUpload重复调用httpRequest，达到效果
@@ -174,14 +177,14 @@ export default {
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
           uploadData.append('sampleName', this.sampleInfo.sampleName)
-          uploadData.append('configSubstance', JSON.stringify(this.sampleInfo.dynamicItem))
+          uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
           uploadData.append('type', this.sampleInfo.type)
 
           for (let [a, b] of uploadData.entries()) {
             console.log(a, b, '--------------');
           }
 
-          postRequestFormData('/paper/postSampleInfo', uploadData).then((resp) => {
+          postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
               this.$router.back();
@@ -213,11 +216,8 @@ export default {
         batchName: "",
         sampleName: "",
         type: "",
-        substanceMass: {
-          meihui: "",
-          turang: "",
-          weiqi: ""
-        },
+        dynamicItem: [],
+        dynamicEmpty: []
       }
     }
   }

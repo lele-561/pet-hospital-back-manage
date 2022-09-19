@@ -54,7 +54,7 @@ export default {
       this.heatMapDivWidth = ''
       this.heatMapDivHeight = ''
       await postRequestJSON('/chart/getHeatMapInfo', {
-        id: data.type === 'pure' ? data.modelId : data.fileId,
+        id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,
         substanceType: data.heatMapType,
         logBase: data.logBase
