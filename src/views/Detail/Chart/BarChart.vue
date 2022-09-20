@@ -80,7 +80,14 @@ export default {
           },
           xAxis: {type: 'category'},
           yAxis: {},
-          series: [{type: 'bar'}, {type: 'bar'}],
+          series: [{
+            type: 'bar',
+            label: {normal: {show: true, position: 'top'}}
+          },
+            {
+              type: 'bar',
+              label: {normal: {show: true, position: 'top'}}
+            }],
           toolbox: {
             show: true,
             feature: {
