@@ -53,14 +53,14 @@ export default {
         callback(new Error('请输入数字'));
       } else {
         if (this.supportX.sampleType === "PureSample") {
-          if (value < 0.003 || value > 0.009) {
-            callback(new Error('纯样品请输入范围[0.003, 0.009]内数字'))
+          if (value < 0.001 || value > 0.009) {
+            callback(new Error('纯样品请输入范围[0.001, 0.009]内数字'))
           } else {
             callback();
           }
         } else if (this.supportX.sampleType !== "") {
-          if (value !== 0.01) {
-            callback(new Error('非纯样品请输入0.01'))
+          if (value < 0 || value > 1) {
+            callback(new Error('非纯样品请输入范围(0, 1)内数字'))
           } else {
             callback();
           }

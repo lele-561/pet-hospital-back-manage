@@ -228,13 +228,17 @@ export default {
       })
     },
     downloadTestCSV() {
-      postRequestJSON('/download/testCSV', {
-        fileId: this.notPure_fp.fileId,
-        sampleType: this.notPure_fp.sampleType,
-        logBase: this.notPure_fp.logBase,
-      }).then((resp) => {
-        downloadCSV(resp, "test")
-      });
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          postRequestJSON('/download/testCSV', {
+            fileId: this.notPure_fp.fileId,
+            sampleType: this.notPure_fp.sampleType,
+            logBase: this.notPure_fp.logBase,
+          }).then((resp) => {
+            downloadCSV(resp, "test")
+          });
+        } else return false;
+      })
     },
     // 获取模型列表
     getModelList() {
@@ -264,25 +268,33 @@ export default {
     },
     // 生成热力图
     generateHeatMap() {
-      this.tabActiveName = "HeatMap"
-      this.heatMapInfo = {
-        type: 'notPure',
-        groupId: "",
-        fileId: this.notPure_fp.fileId,
-        heatMapType: "",
-        logBase: this.notPure_fp.logBase
-      }
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          this.tabActiveName = "HeatMap"
+          this.heatMapInfo = {
+            type: 'notPure',
+            groupId: "",
+            fileId: this.notPure_fp.fileId,
+            heatMapType: "",
+            logBase: this.notPure_fp.logBase
+          }
+        } else return false;
+      })
     },
     // 下载热力图数据文件
     downloadHeatMapData() {
-      postRequestJSON('/download/heatMapDataCSV', {
-        id: this.notPure_fp.fileId,
-        sampleType: "notPure",
-        substanceType: "",
-        logBase: this.notPure_fp.logBase
-      }).then((resp) => {
-        downloadCSV(resp, "HeatMap_" + this.heatMapType)
-      });
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          postRequestJSON('/download/heatMapDataCSV', {
+            id: this.notPure_fp.fileId,
+            sampleType: "notPure",
+            substanceType: "",
+            logBase: this.notPure_fp.logBase
+          }).then((resp) => {
+            downloadCSV(resp, "HeatMap_" + this.heatMapType)
+          });
+        } else return false;
+      })
     },
     // 生成柱状图
     generateBarChart() {
