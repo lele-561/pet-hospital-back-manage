@@ -47,7 +47,7 @@ export default {
         {
           path: '/function',
           label: '分析功能',
-          icon: 'setting',
+          icon: 'data-board',
           children: [
             {
               path: 'function/particle',
@@ -100,7 +100,20 @@ export default {
             // },
           ]
         },
-      ]
+        {
+          path: '/fileManage',
+          label: '文件管理',
+          icon: 'files',
+          children: [
+            {
+              path: 'fileManage/supportXFile',
+              name: 'fileManage_supportXFile',
+              label: '频繁项支持度文件',
+              icon: 'collection-tag',
+              url: 'supportXFile/supportXFile'
+            }
+          ]
+        }],
     };
   },
   methods: {
@@ -120,10 +133,10 @@ export default {
 </script>
 
 
-<style lang="less" scoped>
+<style lang="less">
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-  min-height: 20px;
+  min-height: 8px;
   background-color: #1e2d40;
 }
 
@@ -137,7 +150,5 @@ export default {
     line-height: 48px;
   }
 }
-
-
 </style>
 

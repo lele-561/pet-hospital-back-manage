@@ -123,7 +123,6 @@ export default {
     this.getBatchInfo();
   },
   mounted() {
-    this.$bus.$on("updateSupportXList", this.getSupportXList)
   },
   methods: {
     // 获取某一批次信息

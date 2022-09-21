@@ -20,6 +20,8 @@ import SupportX from "../views/Detail/AnalysisBatch/SupportX";
 import IsotopeCount from "../views/Detail/AnalysisBatch/IsotopeCount";
 import AnalysisPure from "../views/Detail/AnalysisBatch/AnalysisPure";
 import AnalysisNotPure from "../views/Detail/AnalysisBatch/AnalysisNotPure";
+import BestModel from "../views/Detail/AnalysisBatch/BestModel";
+import SupportXFile from "../views/Detail/FileManage/SupportXFile";
 
 Vue.use(VueRouter)
 
@@ -97,6 +99,17 @@ const routes = [{
                 path:'function/analysisNotPure',
                 name:'function_analysisNotPure',
                 component: AnalysisNotPure
+            },
+            {
+                path:'function/bestModel',
+                name:'function_bestModel',
+                component: BestModel
+            },
+            // 数据管理
+            {
+                path:'fileManage/supportXFile',
+                name:'fileManage_supportXFile',
+                component: SupportXFile
             },
             // 用户管理
              {

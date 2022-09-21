@@ -279,7 +279,6 @@ export default {
         if (resp.data.code === 0) {
           this.$message.success(resp.data.message)
           this.getPureGroupList();
-          this.$bus.$emit("updateSupportXList");
           this.$bus.$emit("updateModelList")
         } else if (resp.data.code === 1)
           this.$message.info(resp.data.message)

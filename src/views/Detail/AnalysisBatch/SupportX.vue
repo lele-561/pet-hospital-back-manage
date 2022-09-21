@@ -14,7 +14,7 @@
                  :value="item.value">
       </el-option>
     </el-select>
-    <common-table :table-data="supportX.xSampleList"
+    <common-table v-if="isReloadData" :table-data="supportX.xSampleList"
                   :table-label="supportX.xSampleLabel"></common-table>
     <h3>生成频繁项文件</h3>
     <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
@@ -68,6 +68,7 @@ export default {
       }
     };
     return {
+      isReloadData: true,
       batchListStandard: [],
       batchInfo: {
         batchId: "",
@@ -155,7 +156,7 @@ export default {
         }
       }
     },
-    'xSampleList': {
+    "batchInfo.xSampleList":{
       handler() {
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
@@ -186,6 +187,13 @@ export default {
     }
   },
   methods: {
+    // 局部刷新当前页面
+    reloadPart() {
+      this.isReloadData = false;
+      this.$nextTick(() => {
+        this.isReloadData = true
+      })
+    },
     // 获取某一批次信息
     async getBatchInfo() {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
@@ -218,7 +226,8 @@ export default {
             if (resp.data.code === 0) {
               // 全局事件总线，更新内容
               this.$message.success(resp.data.message)
-              this.$bus.$emit("updateSupportXList");
+              // this.batchInfo.batchId=""
+              this.getSupportXList();   // 如果更新不好使则将id置空
             } else if (resp.data.code === 1)
               this.$message.info(resp.data.message)
             else this.$message.error(resp.data.message)
