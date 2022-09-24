@@ -77,7 +77,7 @@ export default {
         sampleName: "",
         type: "",
         dynamicItem: [],
-        substanceList:[]
+        substanceList: []
       },
       fileList: [],
       options: [
@@ -96,8 +96,8 @@ export default {
   watch: {
     'sampleInfo.type': {
       handler() {
-        this.sampleInfo.sampleName=""
-        this.fileList=[]
+        this.sampleInfo.sampleName = ""
+        this.fileList = []
         if (this.sampleInfo.type === "ConfigSample") {
           this.configShow = "";
           this.sampleInfo.dynamicItem = [];
@@ -119,6 +119,7 @@ export default {
     },
   },
   async activated() {
+    this.clear()
     this.sampleInfo.batchId = this.$route.query.batchId;
     this.sampleInfo.batchName = this.$route.query.batchName;
     await this.getBatchInfo();
@@ -128,7 +129,7 @@ export default {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.$route.query.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.sampleInfo.dynamicItem = []
-          this.sampleInfo.substanceList=resp.data.result.batchInfo.substanceList
+          this.sampleInfo.substanceList = resp.data.result.batchInfo.substanceList
           for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
             this.sampleInfo.dynamicItem.push({
               substanceName: resp.data.result.batchInfo.substanceList[i].label,
@@ -209,16 +210,17 @@ export default {
       });
     },
     clear() {
-      this.fileList = []
-      this.uploadData = ""
+      this.configShow = "none"
       this.sampleInfo = {
         batchId: "",
         batchName: "",
         sampleName: "",
         type: "",
         dynamicItem: [],
-        dynamicEmpty: []
+        substanceList: []
       }
+      this.fileList = []
+
     }
   }
 }
