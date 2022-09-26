@@ -5,10 +5,20 @@
       <el-form-item label="批次名" prop="batch">
         {{ sampleInfo.batchName }}
       </el-form-item>
-      <el-form-item label="样品类型" prop="type">
-        <el-select clearable v-model="sampleInfo.type" placeholder="请选择样品类型">
+      <el-form-item label="样品类型" prop="sampleType">
+        <el-select clearable v-model="sampleInfo.sampleType" placeholder="请选择样品类型">
           <el-option
-              v-for="item in options"
+              v-for="item in sampleOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="物质类型" prop="substanceType" :style="{ display: substanceTypeShow}">
+        <el-select clearable v-model="sampleInfo.substanceType" placeholder="请选择物质类型" @change="resolveBug">
+          <el-option
+              v-for="item in sampleInfo.substanceList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -41,7 +51,7 @@
             :on-change="handleChange"
             :file-list="fileList"
             :auto-upload="false">
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
           <div slot="tip" class="el-upload__tip">只能上传csv文件</div>
         </el-upload>
       </el-form-item>
@@ -71,16 +81,18 @@ export default {
     };
     return {
       configShow: "none",
+      substanceTypeShow: "none",
       sampleInfo: {
         batchId: "",
         batchName: "",
         sampleName: "",
-        type: "",
+        sampleType: "",
+        substanceType: "",
         dynamicItem: [],
         substanceList: []
       },
       fileList: [],
-      options: [
+      sampleOptions: [
         {value: 'StandardSample', label: '标准样品'},
         {value: 'PureSample', label: '纯样品'},
         {value: 'ConfigSample', label: '配置样品'},
@@ -88,18 +100,26 @@ export default {
       ],
       rules: {
         sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
-        type: [{required: true, message: "请选择样品类型", trigger: "blur"}],
+        sampleType: [{required: true, message: "请选择样品类型", trigger: "blur"}],
+        substanceType: [{required: true, message: "请选择物质类型", trigger: "blur"}],
       },
       vali: valiNumDotPass
     }
   },
   watch: {
-    'sampleInfo.type': {
+    'sampleInfo.substanceType':{
+      handler(){
+        console.log("6666点了")
+      }
+    },
+    'sampleInfo.sampleType': {
       handler() {
         this.sampleInfo.sampleName = ""
         this.fileList = []
-        if (this.sampleInfo.type === "ConfigSample") {
+        if (this.sampleInfo.sampleType === "ConfigSample") {
           this.configShow = "";
+          this.substanceTypeShow = "none"
+          this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = [];
           for (let i = 0; i < this.sampleInfo.substanceList.length; i++) {
             this.sampleInfo.dynamicItem.push({
@@ -107,9 +127,20 @@ export default {
               substanceMass: "",
             })
           }
+        } else if (this.sampleInfo.sampleType === "PureSample") {
+          this.configShow = "none"
+          this.substanceTypeShow = ""
+          this.sampleInfo.substanceType = ""
+          this.sampleInfo.dynamicItem = []
+          this.sampleInfo.dynamicItem.push({
+            substanceName: "temp",
+            substanceMass: 123
+          })
         } else {
-          this.configShow = "none";
-          this.sampleInfo.dynamicItem = [];
+          this.configShow = "none"
+          this.substanceTypeShow = "none"
+          this.sampleInfo.substanceType = "temp"
+          this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
             substanceMass: 123
@@ -178,8 +209,9 @@ export default {
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
           uploadData.append('sampleName', this.sampleInfo.sampleName)
+          uploadData.append('sampleType', this.sampleInfo.sampleType)
+          uploadData.append('substanceType', this.sampleInfo.substanceType)
           uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
-          uploadData.append('type', this.sampleInfo.type)
 
           for (let [a, b] of uploadData.entries()) {
             console.log(a, b, '--------------');
@@ -204,7 +236,7 @@ export default {
       this.$confirm("此操作将不会保存, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        sampleType: "warning",
       }).then(() => {
         this.$router.back();
       });
@@ -215,12 +247,15 @@ export default {
         batchId: "",
         batchName: "",
         sampleName: "",
-        type: "",
+        sampleType: "",
+        substanceType: "",
         dynamicItem: [],
         substanceList: []
       }
       this.fileList = []
-
+    },
+    resolveBug(){
+      this.$forceUpdate();
     }
   }
 }
