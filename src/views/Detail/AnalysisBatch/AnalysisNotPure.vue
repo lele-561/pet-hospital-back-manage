@@ -243,7 +243,7 @@ export default {
     // 获取模型列表
     getModelList() {
       postRequestJSON('/batch/getModelList', {
-        batchId: this.batchId,
+        batchId: this.batchInfo.batchId,
       }).then((resp) => {
         this.notPure_fp.modelList = resp.data.result.modelList;
         this.notPure_fp.bestModel = resp.data.result.bestModel;
