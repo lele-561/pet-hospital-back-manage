@@ -298,11 +298,19 @@ export default {
     },
     // 生成柱状图
     generateBarChart() {
+      if (this.notPure_fp.bestModel === "") {
+        this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
+        return
+      }
       this.tabActiveName = "BarChart"
       this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchId})
     },
     // 下载溯源文件
     downloadTraceResult() {
+      if (this.notPure_fp.bestModel === "") {
+        this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
+        return
+      }
       postRequestJSON('/download/traceResultCSV', {
         groupId: this.notPure_fp.selectModel,
         batchId: this.batchId,
