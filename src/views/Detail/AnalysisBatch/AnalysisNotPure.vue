@@ -162,7 +162,6 @@ export default {
     await postRequestJSON('/batch/getBatchListStandard').then((resp) => {
       this.batchListStandard = resp.data.result.batchList
     })
-    this.getModelList()
   },
   watch: {
     'notPure_fp.sampleType': {
@@ -183,6 +182,7 @@ export default {
         this.notPure_fp.xSampleList = [];
         this.notPure_fp.xSampleLabel = [];
         this.notPure_fp.sampleType = "";
+        this.getModelList()
       }
     }
   },
