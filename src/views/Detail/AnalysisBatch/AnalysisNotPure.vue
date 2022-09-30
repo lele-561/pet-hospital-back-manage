@@ -217,6 +217,10 @@ export default {
     },
     // 非纯物质，在该x下生成并下载test.csv文件
     async generateTestCSV() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       await this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/analysis/generateTestCSV', {
@@ -244,6 +248,10 @@ export default {
       })
     },
     downloadTestCSV() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/download/testCSV', {
@@ -284,6 +292,10 @@ export default {
     },
     // 生成热力图
     generateHeatMap() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           this.tabActiveName = "HeatMap"
@@ -299,6 +311,10 @@ export default {
     },
     // 下载热力图数据文件
     downloadHeatMapData() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/download/heatMapDataCSV', {
@@ -314,6 +330,10 @@ export default {
     },
     // 生成柱状图
     generateBarChart() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       if (this.notPure_fp.bestModel === "") {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return
@@ -327,6 +347,10 @@ export default {
     },
     // 下载溯源文件
     downloadTraceResult() {
+      if (this.notPure_fp.fileId === "") {
+        this.$message.error("请选择样品")
+        return
+      }
       if (this.notPure_fp.bestModel === "") {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return

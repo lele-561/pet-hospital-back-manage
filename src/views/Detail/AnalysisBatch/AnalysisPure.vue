@@ -192,6 +192,7 @@ export default {
       postRequestJSON('/batch/getPureGroupList', {
         batchId: this.batchInfo.batchId
       }).then((resp) => {
+        console.log(this.pure_fp.groupList)
         this.pure_fp.groupList = resp.data.result.groupList;
       });
     },
@@ -233,6 +234,10 @@ export default {
     },
     // 下载三种物质的fp文件
     downloadFp() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       // 每种物质单位质量颗粒数(列表)
       for (let i = 0; i < this.pure_fp.dynamicItem.length; i++) {
         postRequestJSON('/download/fpCSV', {
@@ -245,6 +250,10 @@ export default {
     },
     // 下载每种物质单位质量颗粒数
     downloadMassDensity() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       postRequestJSON('/download/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
@@ -255,6 +264,10 @@ export default {
     },
     // 下载纯物质某分组的train.csv
     downloadTrain() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       postRequestJSON('/download/trainCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
@@ -263,6 +276,10 @@ export default {
     },
     // 下载配置样品中物质数量比
     downloadConfigSamplesLabel() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       postRequestJSON('/download/configSamplesLabelCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
@@ -271,6 +288,10 @@ export default {
     },
     // 生成热力图
     generateHeatMap() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       this.heatMapInfo = {
         type: 'pure',
         groupId: this.pure_fp.groupId,
@@ -281,6 +302,10 @@ export default {
     },
     // 下载热力图数据文件
     downloadHeatMapData() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
@@ -292,6 +317,10 @@ export default {
     },
     // 生成模型
     generateModel() {
+      if(this.pure_fp.groupId===""){
+        this.$message.error("请选择分组")
+        return
+      }
       postRequestJSON('/analysis/model', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
