@@ -50,13 +50,6 @@ export default {
           icon: 'data-board',
           children: [
             {
-              path: 'function/particle',
-              name: 'function_particle',
-              label: '颗粒态分析',
-              icon: 'collection-tag',
-              url: 'particle/particle'
-            },
-            {
               path: 'function/TE',
               name: 'function_TE',
               label: '计算TE',
@@ -64,16 +57,24 @@ export default {
               url: 'TE/TE'
             },
             {
+              path: 'function/particle',
+              name: 'function_particle',
+              label: '颗粒态分析',
+              icon: 'collection-tag',
+              url: 'particle/particle'
+            },
+
+            {
               path: 'function/isotopeCount',
               name: 'function_isotopeCount',
-              label: '同位素计数',
+              label: '纳米颗粒计数',
               icon: 'collection-tag',
               url: 'isotopeCount/isotopeCount'
             },
             {
               path: 'function/supportX',
               name: 'function_supportX',
-              label: '频繁项提取',
+              label: '指纹提取',
               icon: 'collection-tag',
               url: 'supportX/supportX'
             },
@@ -102,13 +103,13 @@ export default {
         },
         {
           path: '/fileManage',
-          label: '文件管理',
+          label: '生成信息管理',
           icon: 'files',
           children: [
             {
               path: 'fileManage/supportXFile',
               name: 'fileManage_supportXFile',
-              label: '频繁项支持度文件',
+              label: '指纹管理',
               icon: 'collection-tag',
               url: 'supportXFile/supportXFile'
             }

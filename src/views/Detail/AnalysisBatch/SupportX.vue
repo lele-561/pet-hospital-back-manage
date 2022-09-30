@@ -8,7 +8,7 @@
       </el-select>
       <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
     </div>
-    <h3>已经产生的频繁项文件</h3>
+    <h3>已经产生的指纹文件</h3>
     <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
@@ -16,7 +16,7 @@
     </el-select>
     <common-table v-if="isReloadData" :table-data="supportX.xSampleList"
                   :table-label="supportX.xSampleLabel"></common-table>
-    <h3>生成频繁项文件</h3>
+    <h3>生成指纹文件</h3>
     <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
@@ -156,7 +156,7 @@ export default {
         }
       }
     },
-    "batchInfo.xSampleList":{
+    "batchInfo.xSampleList": {
       handler() {
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
@@ -178,6 +178,8 @@ export default {
     },
     'batchInfo.batchId': {
       handler() {
+        this.supportX.sampleId = ""
+        this.supportX.selectRow = ""
         this.supportX.sampleList = [];
         this.supportX.sampleLabel = []
         this.supportX.xSampleList = [];
@@ -196,6 +198,10 @@ export default {
     },
     // 获取某一批次信息
     async getBatchInfo() {
+      if (this.batchInfo.batchId === "") {
+        this.$message.error("请选择批次")
+        return
+      }
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.batchInfo.sampleList = resp.data.result.sampleList;
@@ -216,6 +222,10 @@ export default {
     },
     // 生成支持度x文件
     runSupportX() {
+      if (this.supportX.sampleId === "" || this.supportX.sampleType === "") {
+        this.$message.error("请选择信息")
+        return
+      }
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/analysis/generateSupportXFile', {
@@ -225,12 +235,24 @@ export default {
           }).then((resp) => {
             if (resp.data.code === 0) {
               // 全局事件总线，更新内容
-              this.$message.success(resp.data.message)
-              // this.batchInfo.batchId=""
-              this.getSupportXList();   // 如果更新不好使则将id置空
-            } else if (resp.data.code === 1)
-              this.$message.info(resp.data.message)
-            else this.$message.error(resp.data.message)
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'success'
+              }).then(() => {
+                // this.batchInfo.batchId=""
+                this.getSupportXList();   // 如果更新不好使则将id置空
+              })
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
         } else return false
       })

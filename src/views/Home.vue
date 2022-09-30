@@ -1,7 +1,12 @@
 <template>
   <div>
-    <input type="text" v-for="(item,i) of items" v-model="items[i]" :key="i">
-    <el-button @click="onAdd">添加</el-button>
+    <el-row>
+      <el-col :span=24>
+        <el-card class="card">
+
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -14,9 +19,6 @@ export default {
     }
   },
   methods: {
-    onAdd() {
-      this.items.push('')
-    }
   },
   mounted() {
   }
@@ -25,5 +27,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.card{
+  margin-top: 10px;
+  height: 500px;
 
+}
 </style>

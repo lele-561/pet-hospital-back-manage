@@ -108,8 +108,6 @@ export default {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
-        sampleList: {},
-        xSampleList: {}
       },
       heatMapInfo: "",
       pure_fp: {
@@ -151,6 +149,14 @@ export default {
     })
   },
   watch: {
+    'batchInfo.batchId': {
+      handler() {
+        this.pure_fp.groupList = []
+        this.pure_fp.dynamicItem = []
+        this.pure_fp.groupId = ""
+        this.pure_fp.selectRow = ""
+      }
+    },
     'pure_fp.selectRow': {
       handler() {
         this.show.groupString = this.pure_fp.selectRow.substance + "，log底数为" + this.pure_fp.selectRow.logBase;
@@ -160,9 +166,13 @@ export default {
   methods: {
     // 获取某一批次信息
     async getBatchInfo() {
+      if (this.batchInfo.batchId === "") {
+        this.$message.error("请选择批次")
+        return
+      }
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
-          this.pure_fp.dynamicItem=[]
+          this.pure_fp.dynamicItem = []
           for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
             this.pure_fp.dynamicItem.push({
               substanceName: resp.data.result.batchInfo.substanceList[i].label,
@@ -187,6 +197,10 @@ export default {
     },
     // 生成纯物质分组
     async generatePureGroup() {
+      if (this.batchInfo.batchId === "" || this.pure_fp.dynamicItem.length === 0) {
+        this.$message.error("请选择信息")
+        return
+      }
       await this.$refs.groupForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/analysis/generatePureGroup', {
@@ -195,11 +209,22 @@ export default {
             logBase: this.pure_fp.input_logBase
           }).then((resp) => {
             if (resp.data.code === 0) {
-              this.$message.success(resp.data.message)
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'success'
+              })
               this.getPureGroupList();
-            } else if (resp.data.code === 1)
-              this.$message.info(resp.data.message)
-            else this.$message.error(resp.data.message)
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
         } else {
           return false
@@ -209,12 +234,12 @@ export default {
     // 下载三种物质的fp文件
     downloadFp() {
       // 每种物质单位质量颗粒数(列表)
-      for(let i=0;i<this.pure_fp.dynamicItem.length;i++){
+      for (let i = 0; i < this.pure_fp.dynamicItem.length; i++) {
         postRequestJSON('/download/fpCSV', {
           groupId: this.pure_fp.groupId,
           substanceType: this.sampleTypeOptions[i].value
         }).then((resp) => {
-          downloadCSV(resp, this.sampleTypeOptions[i].value+"_fp")
+          downloadCSV(resp, this.sampleTypeOptions[i].value + "_fp")
         });
       }
     },
@@ -225,12 +250,6 @@ export default {
       }).then((resp) => {
         this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
           confirmButtonText: '确定',
-          // callback: action => {
-          //   this.$message({
-          //     type: 'info',
-          //     message: `action: ${action}`
-          //   });
-          // }
         });
       });
     },
@@ -277,12 +296,24 @@ export default {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'success'
+          }).then(() => {
+          })
           this.getPureGroupList();
           this.$bus.$emit("updateModelList")
-        } else if (resp.data.code === 1)
-          this.$message.info(resp.data.message)
-        else this.$message.error(resp.data.message)
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
     },
 

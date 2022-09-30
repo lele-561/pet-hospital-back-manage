@@ -56,13 +56,28 @@ export default {
       });
     },
     runTE() {
+      if (this.batchInfo.batchId === "") {
+        this.$message.error("请选择批次")
+        return
+      }
       postRequestJSON('/analysis/TE', {sampleId: this.batchInfo.sampleList.standardSampleList[0].id}).then(
           (resp) => {
             if (resp.data.code === 0) {
-              this.$message.success(resp.data.message)
-            } else if (resp.data.code === 1)
-              this.$message.info(resp.data.message)
-            else this.$message.error(resp.data.message)
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'success'
+              })
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
     },
   }

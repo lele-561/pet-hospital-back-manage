@@ -18,7 +18,8 @@
       <common-table-single style="margin-top: 10px"
                            :table-data="particle.sampleList"
                            :table-label="particle.sampleLabel"
-                           function="particle"></common-table-single>
+                           function="particle"
+                           @change="resolveBug"></common-table-single>
       <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
     </div>
   </div>
@@ -81,6 +82,7 @@ export default {
   watch: {
     'particle.sampleType': {
       handler() {
+        this.particle.sampleId = ""
         if (this.particle.sampleType === "PureSample") {
           this.particle.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.particle.sampleLabel = this.tableLabel.normal;
@@ -98,15 +100,22 @@ export default {
     },
     'batchInfo.batchId': {
       handler() {
+        this.particle.sampleId = ""
+        this.particle.selectRow = ""
         this.particle.sampleList = [];
         this.particle.sampleLabel = [];
         this.particle.sampleType = "";
+        this.batchInfo.sampleList = []
       }
     }
   },
   methods: {
     // 获取某一批次信息
     getBatchInfo() {
+      if (this.batchInfo.batchId === "") {
+        this.$message.error("请选择批次")
+        return
+      }
       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.batchInfo.sampleList = resp.data.result.sampleList;
@@ -117,17 +126,38 @@ export default {
       });
     },
     runParticle() {
+      if (this.particle.sampleId === "" || this.particle.sampleType === "") {
+        this.$message.error("请选择信息")
+        return
+      }
       postRequestJSON('/analysis/particle', {
         sampleId: this.particle.sampleId,
         sampleType: this.particle.sampleType,
       }).then((resp) => {
         if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
-        } else if (resp.data.code === 1)
-          this.$message.info(resp.data.message)
-        else this.$message.error(resp.data.message)
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'success'
+          })
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+          })
+        }
       });
     },
+    resolveBug() {
+      this.$forceUpdate();
+    }
   }
 }
 </script>

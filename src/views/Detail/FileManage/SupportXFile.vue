@@ -42,7 +42,6 @@ export default {
         selectRow: ""
       },
       options: [
-        {value: 'PureSample', label: '纯样品'},
         {value: 'TrueSample', label: '真实样品'},
         {value: 'ConfigSample', label: '配置样品'},
       ],
@@ -79,10 +78,7 @@ export default {
   watch: {
     'supportX.sampleType': {
       handler() {
-        if (this.supportX.sampleType === "PureSample") {
-          this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
-        } else if (this.supportX.sampleType === "TrueSample") {
+         if (this.supportX.sampleType === "TrueSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
         } else if (this.supportX.sampleType === "ConfigSample") {

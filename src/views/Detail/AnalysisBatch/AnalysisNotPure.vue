@@ -182,13 +182,21 @@ export default {
         this.notPure_fp.xSampleList = [];
         this.notPure_fp.xSampleLabel = [];
         this.notPure_fp.sampleType = "";
-        this.getModelList()
+        this.notPure_fp.fileId = "";
+        this.notPure_fp.selectRow = "";
+        if (this.batchInfo.batchId !== "") {
+          this.getModelList()
+        }
       }
     }
   },
   methods: {
     // 获取某一批次信息
     async getBatchInfo() {
+      if (this.batchInfo.batchId === "") {
+        this.$message.error("请选择批次")
+        return
+      }
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.batchInfo.sampleList = resp.data.result.sampleList;
@@ -218,9 +226,17 @@ export default {
           }).then((resp) => {
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
-            } else if (resp.data.code === 1)
-              this.$message.info(resp.data.message)
-            else this.$message.error(resp.data.message)
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
         } else {
           return false
@@ -302,8 +318,12 @@ export default {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return
       }
-      this.tabActiveName = "BarChart"
-      this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchId})
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          this.tabActiveName = "BarChart"
+          this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchInfo.batchId})
+        }
+      })
     },
     // 下载溯源文件
     downloadTraceResult() {
@@ -311,12 +331,16 @@ export default {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return
       }
-      postRequestJSON('/download/traceResultCSV', {
-        groupId: this.notPure_fp.selectModel,
-        batchId: this.batchId,
-      }).then((resp) => {
-        downloadCSV(resp, "trace_result")
-      });
+      this.$refs.logBaseForm.validate((valid) => {
+        if (valid) {
+          postRequestJSON('/download/traceResultCSV', {
+            groupId: this.notPure_fp.selectModel,
+            batchId: this.batchInfo.batchId,
+          }).then((resp) => {
+            downloadCSV(resp, "trace_result")
+          });
+        }
+      })
     },
   }
 }
