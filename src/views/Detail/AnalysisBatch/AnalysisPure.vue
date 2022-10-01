@@ -155,6 +155,7 @@ export default {
         this.pure_fp.dynamicItem = []
         this.pure_fp.groupId = ""
         this.pure_fp.selectRow = ""
+        this.show.groupString=""
       }
     },
     'pure_fp.selectRow': {
@@ -192,7 +193,6 @@ export default {
       postRequestJSON('/batch/getPureGroupList', {
         batchId: this.batchInfo.batchId
       }).then((resp) => {
-        console.log(this.pure_fp.groupList)
         this.pure_fp.groupList = resp.data.result.groupList;
       });
     },
@@ -331,6 +331,7 @@ export default {
           }).then(() => {
           })
           this.getPureGroupList();
+          this.show.groupString=""
           this.$bus.$emit("updateModelList")
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {
