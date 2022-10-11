@@ -1,5 +1,6 @@
 module.exports = {
     devServer: {
+        port: 8090,
         host: '0.0.0.0',
         proxy: {
             '/api': {
@@ -14,4 +15,5 @@ module.exports = {
         },
     },
     lintOnSave: false,
+    publicPath:"./"
 }
