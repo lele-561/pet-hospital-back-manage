@@ -2,7 +2,7 @@
   <div class="Home">
     <div class="content">
       <!-- v-for 遍历父级div-->
-      <div class="main" v-for="(item,index) in barChartData.title" :key="index">
+      <div v-for="(item,index) in barChartData.title" :key="index" class="main">
         <!--自定义宽高的dom，用于放置图表-->
         <div class="bar"></div>
       </div>

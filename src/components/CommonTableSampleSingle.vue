@@ -3,15 +3,15 @@
     <el-table ref="singleTable"
               :data="sampleList"
               highlight-current-row
-              @current-change="handleCurrentChange"
-              style="width: 100%">
-      <el-table-column property="sampleName" label="样品名" min-width="20%">
+              style="width: 100%"
+              @current-change="handleCurrentChange">
+      <el-table-column label="样品名" min-width="20%" property="sampleName">
         <template slot-scope="scope">{{ scope.row.sampleName }}</template>
       </el-table-column>
-      <el-table-column property="fileName" label="文件名" min-width="30%">
+      <el-table-column label="文件名" min-width="30%" property="fileName">
         <template slot-scope="scope">{{ scope.row.fileName }}</template>
       </el-table-column>
-      <el-table-column property="type" label="样品类型" min-width="15%">
+      <el-table-column label="样品类型" min-width="15%" property="type">
         <template slot-scope="scope">{{ scope.row.type }}</template>
       </el-table-column>
     </el-table>
@@ -35,9 +35,10 @@ export default {
         query: {
           id: row.id,
           type: row.type,
-          sampleName:row.name,
+          sampleName: row.name,
           batchName: this.batchName,
-        }});
+        }
+      });
     },
     // 单选列表
     setCurrent(row) {
@@ -47,7 +48,7 @@ export default {
       this.currentRow = val;
     }
   },
-  props: ["sampleList","batchName","url"],
+  props: ["sampleList", "batchName", "url"],
 }
 </script>
 

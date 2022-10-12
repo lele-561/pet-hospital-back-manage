@@ -3,8 +3,8 @@
     <el-table ref="singleTable"
               :data="tableData"
               highlight-current-row
-              @current-change="handleCurrentChange"
-              style="width: 100%">
+              style="width: 100%"
+              @current-change="handleCurrentChange">
       <el-table-column
           v-for="item in tableLabel"
           :key="item.prop"
@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.common-table-single{
+.common-table-single {
   margin-top: 10px;
 }
 </style>

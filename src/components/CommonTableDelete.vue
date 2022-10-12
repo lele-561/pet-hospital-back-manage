@@ -11,8 +11,8 @@
       </el-table-column>
       <el-table-column label="操作" min-width="25%">
         <template slot-scope="scope">
-<!--          <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>-->
-          <el-button size="mini" type="danger" plain @click="handleDelete(scope.row)">删除</el-button>
+          <!--          <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>-->
+          <el-button plain size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -27,7 +27,7 @@ export default {
     tableLabel: Array,
     function: String,
   },
-  methods:{
+  methods: {
     handleDelete(row) {
       this.$bus.$emit('deleteFile', {"function": this.function, "file": row});
     },
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style scoped>
-.common-table{
+.common-table {
   margin-top: 10px;
 }
 </style>

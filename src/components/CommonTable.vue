@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.common-table{
+.common-table {
   margin-top: 10px;
 }
 </style>

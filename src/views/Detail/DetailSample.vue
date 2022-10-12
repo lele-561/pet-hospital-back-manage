@@ -37,7 +37,7 @@
           <i class="el-icon-date"></i>
           文件
         </template>
-        <el-button type="primary" plain size="mini" @click="downloadSampleFile">下载文件</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadSampleFile">下载文件</el-button>
       </el-descriptions-item>
     </el-descriptions>
 
@@ -47,62 +47,62 @@
         <el-col :span="8" style="height:240px">
           <el-card style="height:75px">
             <b>颗粒态分析-迭代法</b>
-            <el-button style="float: right" type="primary" size="small" @click="runParticleAnalysisIteration()">运行
+            <el-button size="small" style="float: right" type="primary" @click="runParticleAnalysisIteration()">运行
             </el-button>
           </el-card>
           <el-card style="height:75px;margin-top: 5px">
             <b>颗粒态分析-泊松法</b>
-            <el-button style="float: right" type="primary" size="small" @click="runParticleAnalysisPoisson()">运行
+            <el-button size="small" style="float: right" type="primary" @click="runParticleAnalysisPoisson()">运行
             </el-button>
           </el-card>
           <el-card style="height:75px;margin-top: 5px">
             <b>计算颗粒数浓度</b>
-            <el-button style="float: right" type="primary" size="small" @click="runParticleConcentration()">运行
+            <el-button size="small" style="float: right" type="primary" @click="runParticleConcentration()">运行
             </el-button>
           </el-card>
         </el-col>
         <el-col :span="16" style="height:250px">
           <el-card style="height:240px">
             <div style="font-weight:bold">提取频繁项（组件渲染有延迟，参数个数如果有误请尝试刷新，正在解决中）</div>
-            <el-form :inline="true" ref="paperForm" :model="form" :rules="rules" label-width="30px">
-              <el-form-item size="mini" label="x1" prop="x1">
-                <el-input class="input-box" v-model="form.x1"></el-input>
+            <el-form ref="paperForm" :inline="true" :model="form" :rules="rules" label-width="30px">
+              <el-form-item label="x1" prop="x1" size="mini">
+                <el-input v-model="form.x1" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="y1" prop="y1">
-                <el-input class="input-box" v-model="form.y1"></el-input>
+              <el-form-item label="y1" prop="y1" size="mini">
+                <el-input v-model="form.y1" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="z1" prop="z1">
-                <el-input class="input-box" v-model="form.z1"></el-input>
+              <el-form-item label="z1" prop="z1" size="mini">
+                <el-input v-model="form.z1" class="input-box"></el-input>
               </el-form-item>
             </el-form>
-            <el-form :style="{ display: xyzShow }" :inline="true" ref="paperForm" :model="form" :rules="rules"
+            <el-form ref="paperForm" :inline="true" :model="form" :rules="rules" :style="{ display: xyzShow }"
                      label-width="30px">
-              <el-form-item size="mini" label="x2" prop="x2">
-                <el-input class="input-box" v-model="form.x2"></el-input>
+              <el-form-item label="x2" prop="x2" size="mini">
+                <el-input v-model="form.x2" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="y2" prop="y2">
-                <el-input class="input-box" v-model="form.y2"></el-input>
+              <el-form-item label="y2" prop="y2" size="mini">
+                <el-input v-model="form.y2" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="z2" prop="z2">
-                <el-input class="input-box" v-model="form.z2"></el-input>
+              <el-form-item label="z2" prop="z2" size="mini">
+                <el-input v-model="form.z2" class="input-box"></el-input>
               </el-form-item>
             </el-form>
-            <el-form :style="{ display: xyzShow }" :inline="true" ref="paperForm" :model="form" :rules="rules"
+            <el-form ref="paperForm" :inline="true" :model="form" :rules="rules" :style="{ display: xyzShow }"
                      label-width="30px">
-              <el-form-item size="mini" label="x3" prop="x3">
-                <el-input class="input-box" v-model="form.x3"></el-input>
+              <el-form-item label="x3" prop="x3" size="mini">
+                <el-input v-model="form.x3" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="y3" prop="y3">
-                <el-input class="input-box" v-model="form.y3"></el-input>
+              <el-form-item label="y3" prop="y3" size="mini">
+                <el-input v-model="form.y3" class="input-box"></el-input>
               </el-form-item>
-              <el-form-item size="mini" label="z3" prop="z3">
-                <el-input class="input-box" v-model="form.z3"></el-input>
+              <el-form-item label="z3" prop="z3" size="mini">
+                <el-input v-model="form.z3" class="input-box"></el-input>
               </el-form-item>
             </el-form>
-            <el-button type="primary" size="small" @click="runExtractFrequentItems()">运行</el-button>
+            <el-button size="small" type="primary" @click="runExtractFrequentItems()">运行</el-button>
             <el-button size="small" @click="clear">清空</el-button>
-            <el-button type="primary" size="small" style="float: right" @click="drawHeatMap">生成热力图</el-button>
-            <el-button plain type="primary" size="small" style="float: right" @click="downloadFi_analysis()">
+            <el-button size="small" style="float: right" type="primary" @click="drawHeatMap">生成热力图</el-button>
+            <el-button plain size="small" style="float: right" type="primary" @click="downloadFi_analysis()">
               下载fi_analysis.csv
             </el-button>
           </el-card>

@@ -1,14 +1,15 @@
 import Cookie from 'js-cookie'
+
 export default {
     state: {
         token: '',
         roleName: '',
-        userName:''
+        userName: ''
     },
     mutations: {
         setToken(state, val) {
             state.token = val
-            Cookie.set('token',val)
+            Cookie.set('token', val)
         },
         clearToken(state) {
             state.token = ""

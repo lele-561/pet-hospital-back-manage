@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
     <div>
       <el-button style="margin-top: 15px" type="primary" @click="runTE()">确认执行分析</el-button>
@@ -60,13 +60,13 @@ export default {
         this.$message.error("请选择批次")
         return
       }
+
       const loading = this.$loading({
         lock: true,
         text: '执行中，请等一会儿~',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-
       postRequestJSON('/analysis/TE', {sampleId: this.batchInfo.sampleList.standardSampleList[0].id}).then(
           (resp) => {
             loading.close();

@@ -17,8 +17,8 @@
         <span slot="title">{{ item.label }}</span>
       </template>
       <!-- 二级菜单 -->
-      <el-menu-item-group class="el-menu-vertical-demo" v-for="subItem in item.children" :key="subItem.path"
-                          :index="subItem.path">
+      <el-menu-item-group v-for="subItem in item.children" :key="subItem.path" :index="subItem.path"
+                          class="el-menu-vertical-demo">
         <el-menu-item :index="subItem.path" @click="clickMenu(subItem)">{{ subItem.label }}</el-menu-item>
       </el-menu-item-group>
     </el-submenu>

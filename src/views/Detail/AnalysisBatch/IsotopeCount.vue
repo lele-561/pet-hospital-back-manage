@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
     <div>
-      <el-select clearable v-model="isotopeCount.sampleType" placeholder="请选择样品类型" style="margin-top: 10px">
+      <el-select v-model="isotopeCount.sampleType" clearable placeholder="请选择样品类型" style="margin-top: 10px">
         <el-option v-for="item in options" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -80,6 +80,8 @@ export default {
   watch: {
     'isotopeCount.sampleType': {
       handler() {
+        this.isotopeCount.sampleId = ""
+        this.isotopeCount.selectRow = ""
         if (this.isotopeCount.sampleType === "PureSample") {
           this.isotopeCount.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.isotopeCount.sampleLabel = this.tableLabel.normal;

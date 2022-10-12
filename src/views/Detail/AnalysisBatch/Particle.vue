@@ -2,23 +2,23 @@
   <!--颗粒态分析-->
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
     <div class="div">
-      <el-select clearable v-model="particle.sampleType" placeholder="请选择样品类型">
+      <el-select v-model="particle.sampleType" clearable placeholder="请选择样品类型">
         <el-option v-for="item in options" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <common-table-single style="margin-top: 10px"
-                           :table-data="particle.sampleList"
+      <common-table-single :table-data="particle.sampleList"
                            :table-label="particle.sampleLabel"
                            function="particle"
+                           style="margin-top: 10px"
                            @change="resolveBug"></common-table-single>
       <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
     </div>
@@ -83,6 +83,7 @@ export default {
     'particle.sampleType': {
       handler() {
         this.particle.sampleId = ""
+        this.particle.selectRow = ""
         if (this.particle.sampleType === "PureSample") {
           this.particle.sampleList = this.batchInfo.sampleList.pureSampleList;
           this.particle.sampleLabel = this.tableLabel.normal;

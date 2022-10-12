@@ -6,7 +6,7 @@
         {{ sampleInfo.batchName }}
       </el-form-item>
       <el-form-item label="样品类型" prop="sampleType">
-        <el-select clearable v-model="sampleInfo.sampleType" placeholder="请选择样品类型">
+        <el-select v-model="sampleInfo.sampleType" clearable placeholder="请选择样品类型">
           <el-option
               v-for="item in sampleOptions"
               :key="item.value"
@@ -15,8 +15,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="物质类型" prop="substanceType" :style="{ display: substanceTypeShow}">
-        <el-select clearable v-model="sampleInfo.substanceType" placeholder="请选择物质类型" @change="resolveBug">
+      <el-form-item :style="{ display: substanceTypeShow}" label="物质类型" prop="substanceType">
+        <el-select v-model="sampleInfo.substanceType" clearable placeholder="请选择物质类型" @change="resolveBug">
           <el-option
               v-for="item in sampleInfo.substanceList"
               :key="item.value"
@@ -39,19 +39,19 @@
       </el-form-item>
       <el-form-item label="样品文件" prop="file">
         <el-upload
-            class="upload-demo"
             ref="upload"
-            action=""
+            :auto-upload="false"
+            :file-list="fileList"
+            :http-request="httpRequest"
             :limit="2"
             :multiple="false"
-            accept="text/csv"
-            :http-request="httpRequest"
+            :on-change="handleChange"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
-            :on-change="handleChange"
-            :file-list="fileList"
-            :auto-upload="false">
-          <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+            accept="text/csv"
+            action=""
+            class="upload-demo">
+          <el-button slot="trigger" plain size="small" type="primary">选取文件</el-button>
           <div slot="tip" class="el-upload__tip">只能上传csv文件</div>
         </el-upload>
       </el-form-item>
@@ -248,7 +248,7 @@ export default {
       }
       this.fileList = []
     },
-    resolveBug(){
+    resolveBug() {
       this.$forceUpdate();
     }
   }

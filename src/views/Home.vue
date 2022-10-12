@@ -21,8 +21,7 @@ export default {
       items: []
     }
   },
-  methods: {
-  },
+  methods: {},
   mounted() {
   }
 }
@@ -30,7 +29,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.card{
+.card {
   margin-top: 10px;
   height: 500px;
 

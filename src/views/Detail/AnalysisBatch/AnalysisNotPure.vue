@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
-    <el-select clearable v-model="notPure_fp.sampleType" placeholder="请选择样品类型" style="margin-top: 10px">
+    <el-select v-model="notPure_fp.sampleType" clearable placeholder="请选择样品类型" style="margin-top: 10px">
       <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -19,24 +19,24 @@
     <h3>您当前选择的样品类型是：
       {{ notPure_fp.selectRow.type + "，x为" + notPure_fp.selectRow.support }}
     </h3>
-    <el-form :inline="true" ref="logBaseForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
-             :rules="rules">
+    <el-form ref="logBaseForm" :inline="true" :model="notPure_fp" :rules="rules" label-width="55px"
+             style="margin-top: 10px">
       <el-form-item label="底数" prop="logBase">
-        <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数，默认为10"></el-input>
+        <el-input v-model="notPure_fp.logBase" class="input-box" placeholder="请输入log的底数，默认为10"></el-input>
       </el-form-item>
     </el-form>
     <el-descriptions :column="2" border title="">
       <el-descriptions-item>
         <template slot="label">频繁项信息文件（测试集）</template>
-        <el-button type="primary" size="mini" plain @click="generateTestCSV">生成文件</el-button>
-        <el-button type="primary" size="mini" plain @click="downloadTestCSV">下载test.csv</el-button>
+        <el-button plain size="mini" type="primary" @click="generateTestCSV">生成文件</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadTestCSV">下载test.csv</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
-        <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="generateHeatMap">
+        <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="generateHeatMap">
           生成热力图
         </el-button>
-        <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="downloadHeatMapData">
+        <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="downloadHeatMapData">
           下载热力图数据文件
         </el-button>
       </el-descriptions-item>
@@ -44,27 +44,27 @@
         <template slot="label">溯源样品</template>
         <div>当前全批次最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
         <div style="display: flex; margin-top: 5px">
-          <el-select clearable v-model="notPure_fp.selectModel" placeholder="请选择模型" size="mini">
+          <el-select v-model="notPure_fp.selectModel" clearable placeholder="请选择模型" size="mini">
             <el-option v-for="item in notPure_fp.modelList" :key="item.value" :label="item.label"
                        :value="item.value">
             </el-option>
           </el-select>
-          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>
+          <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="downloadTraceResult">
             生成并下载溯源结果文件
           </el-button>
-          <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini" plain>
+          <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="generateBarChart">
             生成柱状图
           </el-button>
-          <el-button type="primary" style="margin-left: 5px" @click="updateBestModel" size="mini" plain>
+          <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="updateBestModel">
             更新其为最优模型
           </el-button>
         </div>
       </el-descriptions-item>
     </el-descriptions>
 
-    <el-tabs v-model="tabActiveName" type="border-card" style="margin-top: 20px">
+    <el-tabs v-model="tabActiveName" style="margin-top: 20px" type="border-card">
       <el-tab-pane label="热力图" name="HeatMap">
-        <HeatMapNotPure heat-map-id="heatMapNotPure" :heat-map-info="heatMapInfo"></HeatMapNotPure>
+        <HeatMapNotPure :heat-map-info="heatMapInfo" heat-map-id="heatMapNotPure"></HeatMapNotPure>
       </el-tab-pane>
       <el-tab-pane label="柱状图" name="BarChart">
         <BarChart></BarChart>
@@ -166,6 +166,8 @@ export default {
   watch: {
     'notPure_fp.sampleType': {
       handler() {
+        this.notPure_fp.fileId = "";
+        this.notPure_fp.selectRow = "";
         if (this.notPure_fp.sampleType === "TrueSample") {
           this.notPure_fp.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.notPure_fp.xSampleLabel = this.tableLabel.supportX_normal;
@@ -221,14 +223,14 @@ export default {
         this.$message.error("请选择样品")
         return
       }
-      const loading = this.$loading({
-        lock: true,
-        text: '执行中，请等一会儿~',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
       await this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/analysis/generateTestCSV', {
             fileId: this.notPure_fp.fileId,
             sampleType: this.notPure_fp.sampleType,
@@ -259,14 +261,14 @@ export default {
         this.$message.error("请选择样品")
         return
       }
-      const loading = this.$loading({
-        lock: true,
-        text: '执行中，请等一会儿~',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/download/testCSV', {
             fileId: this.notPure_fp.fileId,
             sampleType: this.notPure_fp.sampleType,
@@ -336,14 +338,14 @@ export default {
         this.$message.error("请选择样品")
         return
       }
-      const loading = this.$loading({
-        lock: true,
-        text: '执行中，请等一会儿~',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/download/heatMapDataCSV', {
             id: this.notPure_fp.fileId,
             sampleType: "notPure",
@@ -384,13 +386,13 @@ export default {
         return
       }
       this.$refs.logBaseForm.validate((valid) => {
-        const loading = this.$loading({
-          lock: true,
-          text: '执行中，请等一会儿~',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/download/traceResultCSV', {
             groupId: this.notPure_fp.selectModel,
             batchId: this.batchInfo.batchId,

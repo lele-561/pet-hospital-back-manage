@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
     <h3>已经产生的指纹文件</h3>
-    <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
+    <el-select v-model="supportX.sampleType" clearable placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -17,7 +17,7 @@
     <common-table v-if="isReloadData" :table-data="supportX.xSampleList"
                   :table-label="supportX.xSampleLabel"></common-table>
     <h3>生成指纹文件</h3>
-    <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型">
+    <el-select v-model="supportX.sampleType" clearable placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -25,10 +25,10 @@
     <common-table-single :table-data="supportX.sampleList"
                          :table-label="supportX.sampleLabel"
                          function="supportX"></common-table-single>
-    <el-form :inline="true" ref="logBaseForm" :model="supportX" label-width="80px" style="margin-top: 10px"
-             :rules="rules">
+    <el-form ref="logBaseForm" :inline="true" :model="supportX" :rules="rules" label-width="80px"
+             style="margin-top: 10px">
       <el-form-item label="支持度" prop="x">
-        <el-input v-model="supportX.x" style="width: 200px" placeholder="请输入支持度x"></el-input>
+        <el-input v-model="supportX.x" placeholder="请输入支持度x" style="width: 200px"></el-input>
       </el-form-item>
       <el-button type="primary" @click="runSupportX()">生成文件</el-button>
     </el-form>
@@ -46,6 +46,7 @@ export default {
   data() {
     //包含小数的数字
     let valiNumDotPass = (rule, value, callback) => {
+      console.log("这是value" + value)
       let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
       if (value === '') {
         callback(new Error('请输入内容'));
@@ -58,9 +59,9 @@ export default {
           } else {
             callback();
           }
-        }
-        if (this.supportX.sampleType !== "PureSample") {
-          if (value !== 0.01) {
+        } else if (this.supportX.sampleType !== "") {
+          console.log("这里是外面" + value)
+          if (value < 0.01 || value > 0.01) {     // 关于为啥不能直接判断!===，我也不知道，哈哈
             callback(new Error('非纯样品默认为0.01'))
           } else {
             callback();
@@ -139,6 +140,8 @@ export default {
   watch: {
     'supportX.sampleType': {
       handler() {
+        this.supportX.sampleId = ""
+        this.supportX.selectRow = ""
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
@@ -227,7 +230,6 @@ export default {
         this.$message.error("请选择信息")
         return
       }
-
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           const loading = this.$loading({

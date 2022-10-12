@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" style="margin-left: 5px" @click="getSupportXList">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getSupportXList">确认</el-button>
     </div>
-    <el-select clearable v-model="supportX.sampleType" placeholder="请选择样品类型" style="margin-top: 5px">
+    <el-select v-model="supportX.sampleType" clearable placeholder="请选择样品类型" style="margin-top: 5px">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
       </el-option>
@@ -78,7 +78,7 @@ export default {
   watch: {
     'supportX.sampleType': {
       handler() {
-         if (this.supportX.sampleType === "TrueSample") {
+        if (this.supportX.sampleType === "TrueSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
         } else if (this.supportX.sampleType === "ConfigSample") {
@@ -87,7 +87,7 @@ export default {
         }
       }
     },
-    "batchInfo.xSampleList":{
+    "batchInfo.xSampleList": {
       handler() {
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;

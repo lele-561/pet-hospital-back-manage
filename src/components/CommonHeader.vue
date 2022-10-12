@@ -8,9 +8,9 @@
         <span>
           <img :src="userImg" class="user"/>
         </span>
-<!--        <el-dropdown-menu>-->
-<!--          <el-dropdown-item common="b" @click.native="logOut">退出</el-dropdown-item>-->
-<!--        </el-dropdown-menu>-->
+        <!--        <el-dropdown-menu>-->
+        <!--          <el-dropdown-item common="b" @click.native="logOut">退出</el-dropdown-item>-->
+        <!--        </el-dropdown-menu>-->
         <el-dropdown-menu>
           <el-dropdown-item>退出</el-dropdown-item>
         </el-dropdown-menu>

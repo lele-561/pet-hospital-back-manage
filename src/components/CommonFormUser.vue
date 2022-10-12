@@ -6,7 +6,8 @@
       <el-switch v-if="item.type === 'switch'" v-model="formData[item.model]"></el-switch>
       <el-date-picker v-if="item.type === 'date'" v-model="formData[item.model]" placeholder="选择日期" type="date"
                       value-format="yyyy-MM-dd"></el-date-picker>
-      <el-select clearable v-if="item.type === 'select'" v-model="formData[item.model]" placeholder="请选择" style="margin-top: 10px">
+      <el-select v-if="item.type === 'select'" v-model="formData[item.model]" clearable placeholder="请选择"
+                 style="margin-top: 10px">
         <el-option v-for="item in item.opts" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>

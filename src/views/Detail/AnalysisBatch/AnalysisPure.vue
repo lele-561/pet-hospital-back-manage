@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="div">
-      <el-select clearable v-model="batchInfo.batchId" placeholder="请选择批次" style="margin-top: 10px">
+      <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
       </el-select>
       <!--      这里的getBatchInfo可改成getGroupList-->
-      <el-button type="primary" style="margin-left: 5px" @click="getBatchInfo">确认</el-button>
+      <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
     <h3>创建分组并生成相应文件</h3>
-    <el-form :inline="true" ref="groupForm" :model="pure_fp" label-width="60px" style="margin-top: 10px">
+    <el-form ref="groupForm" :inline="true" :model="pure_fp" label-width="60px" style="margin-top: 10px">
       <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">
         <el-form-item :label="item.substanceName"
                       :prop="'dynamicItem.'+index+'.substanceX'"
@@ -18,9 +18,9 @@
           <el-input v-model="item.substanceX" placeholder="请输入x"></el-input>
         </el-form-item>
       </div>
-      <el-form-item label="底数" prop="input_logBase"
-                    :rules="{required:true, validator:vali, trigger:'blur'}">
-        <el-input class="input-box" v-model="pure_fp.input_logBase" placeholder="请输入log的底数，默认为10"></el-input>
+      <el-form-item :rules="{required:true, validator:vali, trigger:'blur'}" label="底数"
+                    prop="input_logBase">
+        <el-input v-model="pure_fp.input_logBase" class="input-box" placeholder="请输入log的底数，默认为10"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="generatePureGroup">生成</el-button>
@@ -35,41 +35,41 @@
     <el-descriptions :column="4" border title="">
       <el-descriptions-item>
         <template slot="label">指纹文件fp.csv</template>
-        <el-button type="primary" @click="downloadFp" size="mini" plain>下载文件</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadFp">下载文件</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">训练集train.csv</template>
-        <el-button type="primary" @click="downloadTrain" size="mini" plain>下载文件</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadTrain">下载文件</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">每种物质单位质量颗粒数</template>
-        <el-button type="primary" @click="downloadMassDensity" size="mini" plain>显示内容</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadMassDensity">显示内容</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">配置样品物质数量比</template>
-        <el-button type="primary" @click="downloadConfigSamplesLabel" size="mini" plain>下载文件</el-button>
+        <el-button plain size="mini" type="primary" @click="downloadConfigSamplesLabel">下载文件</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">生成模型</template>
-        <el-button type="primary" @click="generateModel" size="mini" plain>生成</el-button>
+        <el-button plain size="mini" type="primary" @click="generateModel">生成</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
-        <el-select clearable v-model="pure_fp.heatMapType" placeholder="请选择样品类型" size="mini">
+        <el-select v-model="pure_fp.heatMapType" clearable placeholder="请选择样品类型" size="mini">
           <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
         <!--        <div style="display: flex;margin-top: 5px">-->
-        <el-button style="margin-left: 10px" type="primary" size="mini" plain @click="generateHeatMap()">生成热力图
+        <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="generateHeatMap()">生成热力图
         </el-button>
-        <el-button style="margin-left: 5px" type="primary" size="mini" plain @click="downloadHeatMapData('pure')">
+        <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="downloadHeatMapData('pure')">
           下载热力图数据文件
         </el-button>
         <!--        </div>-->
       </el-descriptions-item>
     </el-descriptions>
     <!--绘图区-->
-    <HeatMapPure heat-map-id="heatMapPure" :heat-map-info="heatMapInfo"></HeatMapPure>
+    <HeatMapPure :heat-map-info="heatMapInfo" heat-map-id="heatMapPure"></HeatMapPure>
   </div>
 </template>
 

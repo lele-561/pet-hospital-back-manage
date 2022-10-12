@@ -5,27 +5,27 @@
       <h4 style="margin-left:10px">基本信息</h4>
       <el-row>
         <el-col :span=6>
-          <el-form-item label="批次名" prop="batchName" label-width="100px">
+          <el-form-item label="批次名" label-width="100px" prop="batchName">
             <el-input v-model="batchInfo.batchName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="实验时间" prop="experimentTime" label-width="100px">
+          <el-form-item label="实验时间" label-width="100px" prop="experimentTime">
             <el-date-picker
                 v-model="batchInfo.experimentTime"
-                type="date"
-                placeholder="选择日期">
+                placeholder="选择日期"
+                type="date">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="采样位置" prop="position" label-width="100px">
+          <el-form-item label="采样位置" label-width="100px" prop="position">
             <el-input v-model="batchInfo.position"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="分析类型" prop="analysisType" label-width="100px">
-            <el-select clearable v-model="batchInfo.analysisType" placeholder="请选择分析类型">
+          <el-form-item label="分析类型" label-width="100px" prop="analysisType">
+            <el-select v-model="batchInfo.analysisType" clearable placeholder="请选择分析类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -39,31 +39,31 @@
       <h4 style="margin-left:10px">实验参数</h4>
       <el-row>
         <el-col :span=6>
-          <el-form-item label="数浓度 Cp" prop="Cp" label-width="100px">
+          <el-form-item label="数浓度 Cp" label-width="100px" prop="Cp">
             <el-input v-model="batchInfo.Cp" placeholder="单位：个/L"></el-input>
           </el-form-item>
-          <el-form-item label="流速 V" prop="V" label-width="100px">
+          <el-form-item label="流速 V" label-width="100px" prop="V">
             <el-input v-model="batchInfo.V" placeholder="单位：ml/min"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="测试时间 T" prop="T" label-width="100px">
+          <el-form-item label="测试时间 T" label-width="100px" prop="T">
             <el-input v-model="batchInfo.T" placeholder="单位：s"></el-input>
           </el-form-item>
-          <el-form-item label="进样体积 Vi" prop="Vi" label-width="100px">
+          <el-form-item label="进样体积 Vi" label-width="100px" prop="Vi">
             <el-input v-model="batchInfo.Vi" placeholder="单位：ml"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="定容体积 Vf" prop="Vf" label-width="100px">
+          <el-form-item label="定容体积 Vf" label-width="100px" prop="Vf">
             <el-input v-model="batchInfo.Vf" placeholder="单位：ml"></el-input>
           </el-form-item>
-          <el-form-item label="稀释倍数 Df" prop="Df" label-width="100px">
+          <el-form-item label="稀释倍数 Df" label-width="100px" prop="Df">
             <el-input v-model="batchInfo.Df"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="称样质量 m" prop="m" label-width="100px">
+          <el-form-item label="称样质量 m" label-width="100px" prop="m">
             <el-input v-model="batchInfo.m" placeholder="单位：mg"></el-input>
           </el-form-item>
         </el-col>
@@ -72,17 +72,17 @@
       <el-row>
         <el-col :span=24>
           <div v-for="(item,index) in batchInfo.dynamicItem" :key="index" style="display: flex">
-            <el-form-item label="物质名"
-                          :prop="'dynamicItem.'+index+'.substanceName'"
+            <el-form-item :prop="'dynamicItem.'+index+'.substanceName'"
                           :rules="{ required:true, message:'物质名不能为空',trigger:'blur'}"
+                          label="物质名"
                           label-width="100px">
               <el-input v-model="item.substanceName"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button v-if="index+1===batchInfo.dynamicItem.length" @click="addItem" type="primary" plain
-                         style="margin-left: 5px">增加
+              <el-button v-if="index+1===batchInfo.dynamicItem.length" plain style="margin-left: 5px" type="primary"
+                         @click="addItem">增加
               </el-button>
-              <el-button v-if="index!==0" @click="deleteItem(item,index)" type="danger" plain style="margin-left: 5px">
+              <el-button v-if="index!==0" plain style="margin-left: 5px" type="danger" @click="deleteItem(item,index)">
                 删除
               </el-button>
             </el-form-item>
@@ -92,44 +92,44 @@
       <h4 style="margin-left:10px">上传文件</h4>
       <el-row>
         <el-col :span=12>
-          <el-form-item label="同位素单位强度" prop="file" label-width="150px">
+          <el-form-item label="同位素单位强度" label-width="150px" prop="file">
             <el-upload
-                class="upload-demo"
                 ref="upload1"
-                action=""
+                :auto-upload="false"
+                :before-upload="handleBeforeUpload"
+                :file-list="fileList1"
+                :http-request="httpRequest"
                 :limit="2"
                 :multiple="false"
-                accept="text/csv"
-                :http-request="httpRequest"
-                :before-upload="handleBeforeUpload"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove1"
                 :on-change="handleChange1"
                 :on-exceed="handleExceed1"
-                :file-list="fileList1"
-                :auto-upload="false">
+                :on-preview="handlePreview"
+                :on-remove="handleRemove1"
+                accept="text/csv"
+                action=""
+                class="upload-demo">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <div slot="tip" class="el-upload__tip">只能上传csv文件，mass_factor.csv</div>
             </el-upload>
           </el-form-item>
         </el-col>
         <el-col :span=12>
-          <el-form-item label="配置样品质量配比" prop="file" label-width="150px">
+          <el-form-item label="配置样品质量配比" label-width="150px" prop="file">
             <el-upload
-                class="upload-demo"
                 ref="upload2"
-                action=""
+                :auto-upload="false"
+                :before-upload="handleBeforeUpload"
+                :file-list="fileList2"
+                :http-request="httpRequest"
                 :limit="2"
                 :multiple="false"
-                accept="text/csv"
-                :http-request="httpRequest"
-                :before-upload="handleBeforeUpload"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove2"
                 :on-change="handleChange2"
                 :on-exceed="handleExceed2"
-                :file-list="fileList2"
-                :auto-upload="false">
+                :on-preview="handlePreview"
+                :on-remove="handleRemove2"
+                accept="text/csv"
+                action=""
+                class="upload-demo">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
               <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>
             </el-upload>
