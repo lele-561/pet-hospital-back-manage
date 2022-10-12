@@ -38,7 +38,6 @@ export default {
     },
     deleteItem(item, index) {
       this.sampleInfo.dynamicItem.splice(index, 1)
-      console.log(this.sampleInfo.dynamicItem, "删除")
     },
   }
 }

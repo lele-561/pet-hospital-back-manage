@@ -203,7 +203,6 @@ export default {
     },
     deleteItem(item, index) {
       this.batchInfo.dynamicItem.splice(index, 1)
-      console.log(this.batchInfo.dynamicItem, "删除")
     },
     // 文件上传
     httpRequest(param) { // submitUpload重复调用httpRequest，达到效果
@@ -268,9 +267,10 @@ export default {
           uploadData.append('Vf', this.batchInfo.Vf)
           uploadData.append('Df', this.batchInfo.Df)
           uploadData.append('m', this.batchInfo.m)
-          for (let [a, b] of uploadData.entries()) {
-            console.log(a, b, '--------------');
-          }
+
+          // for (let [a, b] of uploadData.entries()) {
+          //   console.log(a, b, '--------------');
+          // }
 
           postRequestFormData('/batch/postBatchInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {

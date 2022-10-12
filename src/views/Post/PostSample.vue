@@ -107,11 +107,6 @@ export default {
     }
   },
   watch: {
-    'sampleInfo.substanceType':{
-      handler(){
-        console.log("6666点了")
-      }
-    },
     'sampleInfo.sampleType': {
       handler() {
         this.sampleInfo.sampleName = ""
@@ -189,7 +184,6 @@ export default {
     },
     handleRemove(file, fileList) {
       this.fileList = fileList;
-      console.log(this.fileList)
     },
     handlePreview(file) {
     },
@@ -213,9 +207,9 @@ export default {
           uploadData.append('substanceType', this.sampleInfo.substanceType)
           uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
 
-          for (let [a, b] of uploadData.entries()) {
-            console.log(a, b, '--------------');
-          }
+          // for (let [a, b] of uploadData.entries()) {
+          //   console.log(a, b, '--------------');
+          // }
 
           postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
             if (resp.data.code === 0) {
