@@ -20,7 +20,7 @@
       </div>
       <el-form-item label="底数" prop="input_logBase"
                     :rules="{required:true, validator:vali, trigger:'blur'}">
-        <el-input class="input-box" v-model="pure_fp.input_logBase" placeholder="请输入log的底数"></el-input>
+        <el-input class="input-box" v-model="pure_fp.input_logBase" placeholder="请输入log的底数，默认为10"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="generatePureGroup">生成</el-button>
@@ -155,7 +155,7 @@ export default {
         this.pure_fp.dynamicItem = []
         this.pure_fp.groupId = ""
         this.pure_fp.selectRow = ""
-        this.show.groupString=""
+        this.show.groupString = ""
       }
     },
     'pure_fp.selectRow': {
@@ -204,11 +204,18 @@ export default {
       }
       await this.$refs.groupForm.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/analysis/generatePureGroup', {
             batchId: this.batchInfo.batchId,
             substanceList: this.pure_fp.dynamicItem,
             logBase: this.pure_fp.input_logBase
           }).then((resp) => {
+            loading.close();
             if (resp.data.code === 0) {
               this.$confirm(resp.data.message, '提示', {
                 confirmButtonText: '确定',
@@ -232,31 +239,45 @@ export default {
         }
       })
     },
-    // 下载三种物质的fp文件
+    // 下载n种物质的fp文件
     downloadFp() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
       // 每种物质单位质量颗粒数(列表)
       for (let i = 0; i < this.pure_fp.dynamicItem.length; i++) {
+        const loading = this.$loading({
+          lock: true,
+          text: '执行中，请等一会儿~',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         postRequestJSON('/download/fpCSV', {
           groupId: this.pure_fp.groupId,
           substanceType: this.sampleTypeOptions[i].value
         }).then((resp) => {
+          loading.close();
           downloadCSV(resp, this.sampleTypeOptions[i].value + "_fp")
         });
       }
     },
     // 下载每种物质单位质量颗粒数
     downloadMassDensity() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/download/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
+        loading.close();
         this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
           confirmButtonText: '确定',
         });
@@ -264,32 +285,50 @@ export default {
     },
     // 下载纯物质某分组的train.csv
     downloadTrain() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/download/trainCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
+        loading.close();
         downloadCSV(resp, "train")
       });
     },
     // 下载配置样品中物质数量比
     downloadConfigSamplesLabel() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/download/configSamplesLabelCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
+        loading.close();
         downloadCSV(resp, "configuration_samples_label")
       });
     },
     // 生成热力图
     generateHeatMap() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
+        return
+      }
+      if (this.pure_fp.heatMapType === "") {
+        this.$message.error("请选择物质类型")
         return
       }
       this.heatMapInfo = {
@@ -302,32 +341,46 @@ export default {
     },
     // 下载热力图数据文件
     downloadHeatMapData() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
-      if(this.pure_fp.heatMapType===""){
+      if (this.pure_fp.heatMapType === "") {
         this.$message.error("请选择物质类型")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
         substanceType: this.pure_fp.heatMapType,
         logBase: "",
       }).then((resp) => {
+        loading.close();
         downloadCSV(resp, "HeatMap_" + this.heatMapType)
       });
     },
     // 生成模型
     generateModel() {
-      if(this.pure_fp.groupId===""){
+      if (this.pure_fp.groupId === "") {
         this.$message.error("请选择分组")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/analysis/model', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
+        loading.close();
         if (resp.data.code === 0) {
           this.$confirm(resp.data.message, '提示', {
             confirmButtonText: '确定',
@@ -335,7 +388,7 @@ export default {
           }).then(() => {
           })
           this.getPureGroupList();
-          this.show.groupString=""
+          this.show.groupString = ""
           this.$bus.$emit("updateModelList")
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {

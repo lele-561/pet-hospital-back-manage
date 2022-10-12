@@ -22,6 +22,7 @@ export default {
       chemical_element: [],   // 横坐标：元素名称
       unitData: [],           // 单元格数据：元素含量
       raw_data: [],           // 热力图原始数据
+      maxValue: "",            // 最大值
       heatMapFileId: '',
       heatMapDivWidth: '',    // 热力图宽度
       heatMapDivHeight: '',   // 热力图高度
@@ -53,13 +54,21 @@ export default {
       this.raw_data = []
       this.heatMapDivWidth = ''
       this.heatMapDivHeight = ''
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       await postRequestJSON('/chart/getHeatMapInfo', {
         id: data.type === 'pure' ? data.groupId : data.fileId,
         sampleType: data.type,
         substanceType: data.heatMapType,
         logBase: data.logBase
       }).then((resp) => {
+        loading.close();
         this.raw_data = resp.data.result.raw_data;
+        this.maxValue = resp.data.result.maxValue;
         this.heatMapFileId = resp.data.result.fileId;
       });
 
@@ -111,7 +120,7 @@ export default {
         },
         visualMap: {
           min: 0,
-          max: 10,    // 这里要确定范围
+          max: this.maxValue,    // 这里要确定范围
           calculable: true,
           realtime: false,
           inRange: {color: this.heatMapColor}

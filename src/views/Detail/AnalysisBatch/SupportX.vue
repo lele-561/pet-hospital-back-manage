@@ -58,9 +58,10 @@ export default {
           } else {
             callback();
           }
-        } else if (this.supportX.sampleType !== "") {
-          if (value < 0 || value > 1) {
-            callback(new Error('非纯样品请输入范围(0, 1)内数字'))
+        }
+        if (this.supportX.sampleType !== "PureSample") {
+          if (value !== 0.01) {
+            callback(new Error('非纯样品默认为0.01'))
           } else {
             callback();
           }
@@ -226,13 +227,21 @@ export default {
         this.$message.error("请选择信息")
         return
       }
+
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestJSON('/analysis/generateSupportXFile', {
             sampleId: this.supportX.sampleId,
             sampleType: this.supportX.sampleType,
             support: this.supportX.x,
           }).then((resp) => {
+            loading.close();
             if (resp.data.code === 0) {
               // 全局事件总线，更新内容
               this.$confirm(resp.data.message, '提示', {

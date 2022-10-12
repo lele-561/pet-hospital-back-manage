@@ -52,9 +52,16 @@ export default {
   },
   methods: {
     async getBarChartInfo(data) {
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       await postRequestJSON('/chart/getBarChartInfo', {
         groupId: data.groupId,
       }).then((resp) => {
+        loading.close();
         this.barChartData = resp.data.result.raw_data;
       });
     },

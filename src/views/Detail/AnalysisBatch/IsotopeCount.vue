@@ -123,10 +123,17 @@ export default {
         this.$message.error("请选择信息")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/download/isotopeCount', {
         sampleId: this.isotopeCount.sampleId,
         sampleType: this.isotopeCount.sampleType
       }).then((resp) => {
+        loading.close();
         downloadCSV(resp, "number")
         this.$confirm("分析成功", '提示', {
           confirmButtonText: '确定',

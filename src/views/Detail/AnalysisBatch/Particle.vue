@@ -130,10 +130,17 @@ export default {
         this.$message.error("请选择信息")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/analysis/particle', {
         sampleId: this.particle.sampleId,
         sampleType: this.particle.sampleType,
       }).then((resp) => {
+        loading.close();
         if (resp.data.code === 0) {
           this.$confirm(resp.data.message, '提示', {
             confirmButtonText: '确定',

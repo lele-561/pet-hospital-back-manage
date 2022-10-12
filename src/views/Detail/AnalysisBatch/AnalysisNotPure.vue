@@ -22,7 +22,7 @@
     <el-form :inline="true" ref="logBaseForm" :model="notPure_fp" label-width="55px" style="margin-top: 10px"
              :rules="rules">
       <el-form-item label="底数" prop="logBase">
-        <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数"></el-input>
+        <el-input class="input-box" v-model="notPure_fp.logBase" placeholder="请输入log的底数，默认为10"></el-input>
       </el-form-item>
     </el-form>
     <el-descriptions :column="2" border title="">
@@ -49,11 +49,11 @@
                        :value="item.value">
             </el-option>
           </el-select>
+          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>
+            生成并下载溯源结果文件
+          </el-button>
           <el-button type="primary" style="margin-left: 5px" @click="generateBarChart" size="mini" plain>
             生成柱状图
-          </el-button>
-          <el-button type="primary" style="margin-left: 5px" @click="downloadTraceResult" size="mini" plain>
-            下载溯源结果文件
           </el-button>
           <el-button type="primary" style="margin-left: 5px" @click="updateBestModel" size="mini" plain>
             更新其为最优模型
@@ -221,6 +221,12 @@ export default {
         this.$message.error("请选择样品")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       await this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/analysis/generateTestCSV', {
@@ -228,6 +234,7 @@ export default {
             sampleType: this.notPure_fp.sampleType,
             logBase: this.notPure_fp.logBase,
           }).then((resp) => {
+            loading.close();
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
             } else if (resp.data.code === 1) {
@@ -252,6 +259,12 @@ export default {
         this.$message.error("请选择样品")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/download/testCSV', {
@@ -259,6 +272,7 @@ export default {
             sampleType: this.notPure_fp.sampleType,
             logBase: this.notPure_fp.logBase,
           }).then((resp) => {
+            loading.close();
             downloadCSV(resp, "test")
           });
         } else return false;
@@ -279,9 +293,16 @@ export default {
         this.$message.warning("未选择模型，无法更新")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postRequestJSON('/analysis/updateBestModel', {
         groupId: this.notPure_fp.selectModel
       }).then((resp) => {
+        loading.close();
         if (resp.data.code === 0) {
           this.$message.success(resp.data.message)
           this.getModelList()
@@ -315,6 +336,12 @@ export default {
         this.$message.error("请选择样品")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       this.$refs.logBaseForm.validate((valid) => {
         if (valid) {
           postRequestJSON('/download/heatMapDataCSV', {
@@ -323,6 +350,7 @@ export default {
             substanceType: "",
             logBase: this.notPure_fp.logBase
           }).then((resp) => {
+            loading.close();
             downloadCSV(resp, "HeatMap_" + this.heatMapType)
           });
         } else return false;
@@ -356,11 +384,18 @@ export default {
         return
       }
       this.$refs.logBaseForm.validate((valid) => {
+        const loading = this.$loading({
+          lock: true,
+          text: '执行中，请等一会儿~',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         if (valid) {
           postRequestJSON('/download/traceResultCSV', {
             groupId: this.notPure_fp.selectModel,
             batchId: this.batchInfo.batchId,
           }).then((resp) => {
+            loading.close();
             downloadCSV(resp, "trace_result")
           });
         }

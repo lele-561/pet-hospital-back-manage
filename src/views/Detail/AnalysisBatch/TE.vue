@@ -60,8 +60,16 @@ export default {
         this.$message.error("请选择批次")
         return
       }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+
       postRequestJSON('/analysis/TE', {sampleId: this.batchInfo.sampleList.standardSampleList[0].id}).then(
           (resp) => {
+            loading.close();
             if (resp.data.code === 0) {
               this.$confirm(resp.data.message, '提示', {
                 confirmButtonText: '确定',
