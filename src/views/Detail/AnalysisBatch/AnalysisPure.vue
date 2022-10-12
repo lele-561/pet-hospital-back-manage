@@ -306,6 +306,10 @@ export default {
         this.$message.error("请选择分组")
         return
       }
+      if(this.pure_fp.heatMapType===""){
+        this.$message.error("请选择物质类型")
+        return
+      }
       postRequestJSON('/download/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
