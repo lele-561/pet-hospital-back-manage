@@ -292,30 +292,13 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      postRequestJSON('/fileExist/massDensityCSV', {
+      postRequestJSON('/download/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         loading.close();
-        if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
-          postRequestJSON('/download/massDensityCSV', {
-            groupId: this.pure_fp.groupId,
-          }).then((resp) => {
-            this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
-              confirmButtonText: '确定',
-            });
-          });
-        } else if (resp.data.code === 1) {
-          this.$confirm(resp.data.message, '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
-          })
-        } else {
-          this.$confirm(resp.data.message, '提示', {
-            confirmButtonText: '确定',
-            type: 'error'
-          })
-        }
+        this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
+          confirmButtonText: '确定',
+        });
       });
     },
     // 下载纯物质某分组的train.csv
