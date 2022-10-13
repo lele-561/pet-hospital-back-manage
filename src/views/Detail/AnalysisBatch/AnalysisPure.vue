@@ -253,12 +253,30 @@ export default {
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.7)'
         });
-        postRequestJSON('/download/fpCSV', {
+        postRequestJSON('/fileExist/fpCSV', {
           groupId: this.pure_fp.groupId,
           substanceType: this.sampleTypeOptions[i].value
         }).then((resp) => {
           loading.close();
-          downloadCSV(resp, this.sampleTypeOptions[i].value + "_fp")
+          if (resp.data.code === 0) {
+            this.$message.success(resp.data.message)
+            postRequestJSON('/download/fpCSV', {
+              groupId: this.pure_fp.groupId,
+              substanceType: this.sampleTypeOptions[i].value
+            }).then((resp) => {
+              downloadCSV(resp, this.sampleTypeOptions[i].value + "_fp")
+            });
+          } else if (resp.data.code === 1) {
+            this.$confirm(resp.data.message, '提示', {
+              confirmButtonText: '确定',
+              type: 'warning'
+            })
+          } else {
+            this.$confirm(resp.data.message, '提示', {
+              confirmButtonText: '确定',
+              type: 'error'
+            })
+          }
         });
       }
     },
@@ -274,13 +292,30 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      postRequestJSON('/download/massDensityCSV', {
+      postRequestJSON('/fileExist/massDensityCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         loading.close();
-        this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
-          confirmButtonText: '确定',
-        });
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          postRequestJSON('/download/massDensityCSV', {
+            groupId: this.pure_fp.groupId,
+          }).then((resp) => {
+            this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
+              confirmButtonText: '确定',
+            });
+          });
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
     },
     // 下载纯物质某分组的train.csv
@@ -295,11 +330,28 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      postRequestJSON('/download/trainCSV', {
+      postRequestJSON('/fileExist/trainCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         loading.close();
-        downloadCSV(resp, "train")
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          postRequestJSON('/download/trainCSV', {
+            groupId: this.pure_fp.groupId,
+          }).then((resp) => {
+            downloadCSV(resp, "train")
+          });
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
     },
     // 下载配置样品中物质数量比
@@ -314,11 +366,29 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      postRequestJSON('/download/configSamplesLabelCSV', {
+      postRequestJSON('/fileExist/configSamplesLabelCSV', {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         loading.close();
-        downloadCSV(resp, "configuration_samples_label")
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          postRequestJSON('/download/configSamplesLabelCSV', {
+            groupId: this.pure_fp.groupId,
+          }).then((resp) => {
+            loading.close();
+            downloadCSV(resp, "configuration_samples_label")
+          });
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
     },
     // 生成热力图
@@ -355,15 +425,37 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      postRequestJSON('/download/heatMapDataCSV', {
+      postRequestJSON('/fileExist/heatMapDataCSV', {
         id: this.pure_fp.groupId,
         sampleType: "pure",
         substanceType: this.pure_fp.heatMapType,
         logBase: "",
       }).then((resp) => {
         loading.close();
-        downloadCSV(resp, "HeatMap_" + this.heatMapType)
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          postRequestJSON('/download/heatMapDataCSV', {
+            id: this.pure_fp.groupId,
+            sampleType: "pure",
+            substanceType: this.pure_fp.heatMapType,
+            logBase: "",
+          }).then((resp) => {
+            loading.close();
+            downloadCSV(resp, "HeatMap_" + this.heatMapType)
+          });
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
+
     },
     // 生成模型
     generateModel() {

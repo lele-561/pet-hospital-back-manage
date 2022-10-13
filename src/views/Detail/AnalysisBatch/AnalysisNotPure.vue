@@ -269,13 +269,32 @@ export default {
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           });
-          postRequestJSON('/download/testCSV', {
+          postRequestJSON('/fileExist/testCSV', {
             fileId: this.notPure_fp.fileId,
             sampleType: this.notPure_fp.sampleType,
             logBase: this.notPure_fp.logBase,
           }).then((resp) => {
             loading.close();
-            downloadCSV(resp, "test")
+            if (resp.data.code === 0) {
+              this.$message.success(resp.data.message)
+              postRequestJSON('/download/testCSV', {
+                fileId: this.notPure_fp.fileId,
+                sampleType: this.notPure_fp.sampleType,
+                logBase: this.notPure_fp.logBase,
+              }).then((resp) => {
+                downloadCSV(resp, "test")
+              });
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
         } else return false;
       })
@@ -346,15 +365,36 @@ export default {
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           });
-          postRequestJSON('/download/heatMapDataCSV', {
+          postRequestJSON('/fileExist/heatMapDataCSV', {
             id: this.notPure_fp.fileId,
             sampleType: "notPure",
             substanceType: "",
             logBase: this.notPure_fp.logBase
           }).then((resp) => {
             loading.close();
-            downloadCSV(resp, "HeatMap_" + this.heatMapType)
+            if (resp.data.code === 0) {
+              this.$message.success(resp.data.message)
+              postRequestJSON('/download/heatMapDataCSV', {
+                id: this.notPure_fp.fileId,
+                sampleType: "notPure",
+                substanceType: "",
+                logBase: this.notPure_fp.logBase
+              }).then((resp) => {
+                downloadCSV(resp, "HeatMap_" + this.heatMapType)
+              });
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
+
         } else return false;
       })
     },
@@ -393,12 +433,30 @@ export default {
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           });
-          postRequestJSON('/download/traceResultCSV', {
+          postRequestJSON('/fileExist/traceResultCSV', {
             groupId: this.notPure_fp.selectModel,
             batchId: this.batchInfo.batchId,
           }).then((resp) => {
             loading.close();
-            downloadCSV(resp, "trace_result")
+            if (resp.data.code === 0) {
+              this.$message.success(resp.data.message)
+              postRequestJSON('/download/traceResultCSV', {
+                groupId: this.notPure_fp.selectModel,
+                batchId: this.batchInfo.batchId,
+              }).then((resp) => {
+                downloadCSV(resp, "trace_result")
+              });
+            } else if (resp.data.code === 1) {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+              })
+            } else {
+              this.$confirm(resp.data.message, '提示', {
+                confirmButtonText: '确定',
+                type: 'error'
+              })
+            }
           });
         }
       })
