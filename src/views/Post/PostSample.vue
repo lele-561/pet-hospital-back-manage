@@ -211,7 +211,14 @@ export default {
           //   console.log(a, b, '--------------');
           // }
 
+          const loading = this.$loading({
+            lock: true,
+            text: '执行中，请等一会儿~',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           postRequestFormData('/sample/postSampleInfo', uploadData).then((resp) => {
+            loading.close();
             if (resp.data.code === 0) {
               this.$message.success(resp.data.message)
               this.$router.back();
