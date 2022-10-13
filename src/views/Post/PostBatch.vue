@@ -271,7 +271,7 @@ export default {
           // for (let [a, b] of uploadData.entries()) {
           //   console.log(a, b, '--------------');
           // }
-          
+
           const loading = this.$loading({
             lock: true,
             text: '执行中，请等一会儿~',
