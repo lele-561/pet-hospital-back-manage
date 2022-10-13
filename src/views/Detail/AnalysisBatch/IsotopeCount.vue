@@ -142,7 +142,6 @@ export default {
             sampleId: this.isotopeCount.sampleId,
             sampleType: this.isotopeCount.sampleType
           }).then((resp) => {
-            loading.close();
             downloadCSV(resp, "number")
             this.$confirm("分析成功", '提示', {
               confirmButtonText: '确定',
