@@ -56,12 +56,18 @@ export default {
           {prop: "sampleName", label: '样品名'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
+          {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
         config: [
           {prop: "sampleName", label: '样品名'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
+          {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
       }
     }

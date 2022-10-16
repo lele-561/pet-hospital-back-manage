@@ -42,6 +42,8 @@
           <el-form-item label="数浓度 Cp" label-width="100px" prop="Cp">
             <el-input v-model="batchInfo.Cp" placeholder="单位：个/L"></el-input>
           </el-form-item>
+        </el-col>
+        <el-col :span=6>
           <el-form-item label="流速 V" label-width="100px" prop="V">
             <el-input v-model="batchInfo.V" placeholder="单位：ml/min"></el-input>
           </el-form-item>
@@ -50,21 +52,10 @@
           <el-form-item label="测试时间 T" label-width="100px" prop="T">
             <el-input v-model="batchInfo.T" placeholder="单位：s"></el-input>
           </el-form-item>
+        </el-col>
+        <el-col :span=6>
           <el-form-item label="进样体积 Vi" label-width="100px" prop="Vi">
             <el-input v-model="batchInfo.Vi" placeholder="单位：ml"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span=6>
-          <el-form-item label="定容体积 Vf" label-width="100px" prop="Vf">
-            <el-input v-model="batchInfo.Vf" placeholder="单位：ml"></el-input>
-          </el-form-item>
-          <el-form-item label="稀释倍数 Df" label-width="100px" prop="Df">
-            <el-input v-model="batchInfo.Df"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span=6>
-          <el-form-item label="称样质量 m" label-width="100px" prop="m">
-            <el-input v-model="batchInfo.m" placeholder="单位：mg"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -173,7 +164,7 @@ export default {
         experimentTime: "",
         position: "",
         analysisType: "",
-        Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "",
+        Cp: "", V: "", T: "", Vi: "",
         dynamicItem: []
       },
       rules: {
@@ -184,9 +175,6 @@ export default {
         V: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         T: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         Vi: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
-        Vf: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
-        Df: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
-        m: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         analysisType: [{required: true, message: "请选择分析类型", trigger: "blur"}],
       },
       options: [{label: '迭代法', value: 'iteration'},
@@ -264,9 +252,6 @@ export default {
           uploadData.append('V', this.batchInfo.V)
           uploadData.append('T', this.batchInfo.T)
           uploadData.append('Vi', this.batchInfo.Vi)
-          uploadData.append('Vf', this.batchInfo.Vf)
-          uploadData.append('Df', this.batchInfo.Df)
-          uploadData.append('m', this.batchInfo.m)
 
           // for (let [a, b] of uploadData.entries()) {
           //   console.log(a, b, '--------------');
@@ -312,7 +297,7 @@ export default {
         experimentTime: "",
         position: "",
         analysisType: "",
-        Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "",
+        Cp: "", V: "", T: "", Vi: "",
         dynamicItem: [{substanceName: ""}]
       }
     },

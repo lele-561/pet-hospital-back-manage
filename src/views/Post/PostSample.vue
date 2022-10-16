@@ -5,6 +5,9 @@
       <el-form-item label="批次名" prop="batch">
         {{ sampleInfo.batchName }}
       </el-form-item>
+      <el-form-item label="样品名" prop="sampleName">
+        <el-input style="width: 22%" v-model="sampleInfo.sampleName"></el-input>
+      </el-form-item>
       <el-form-item label="样品类型" prop="sampleType">
         <el-select v-model="sampleInfo.sampleType" clearable placeholder="请选择样品类型">
           <el-option
@@ -15,7 +18,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :style="{ display: substanceTypeShow}" label="物质类型" prop="substanceType">
+      <el-form-item :style="{display: substanceTypeShow}" label="物质类型" prop="substanceType">
         <el-select v-model="sampleInfo.substanceType" clearable placeholder="请选择物质类型" @change="resolveBug">
           <el-option
               v-for="item in sampleInfo.substanceList"
@@ -34,9 +37,23 @@
           <el-input v-model="item.substanceMass" placeholder="请输入质量（单位：mg）"></el-input>
         </el-form-item>
       </div>
-      <el-form-item label="样品名" prop="sampleName">
-        <el-input v-model="sampleInfo.sampleName"></el-input>
-      </el-form-item>
+      <el-row>
+        <el-col :span=8>
+          <el-form-item label="定容体积 Vf" label-width="100px" prop="Vf">
+            <el-input style="width: 80%" v-model="sampleInfo.Vf" placeholder="单位：ml"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item label="稀释倍数 Df" label-width="100px" prop="Df">
+            <el-input style="width: 80%" v-model="sampleInfo.Df"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item label="称样质量 m" label-width="100px" prop="m">
+            <el-input style="width: 80%" v-model="sampleInfo.m" placeholder="单位：mg"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="样品文件" prop="file" :style="{display: fileUploadShow}">
         <el-upload
             ref="upload"
@@ -90,7 +107,8 @@ export default {
         sampleType: "",
         substanceType: "",
         dynamicItem: [],
-        substanceList: []
+        substanceList: [],
+        Vf: "", Df: "", m: ""
       },
       fileList: [],
       sampleOptions: [
@@ -103,6 +121,9 @@ export default {
         sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
         sampleType: [{required: true, message: "请选择样品类型", trigger: "blur"}],
         substanceType: [{required: true, message: "请选择物质类型", trigger: "blur"}],
+        Vf: [{required: true, message: "请输入内容", trigger: "blur"}],
+        Df: [{required: true, message: "请输入内容", trigger: "blur"}],
+        m: [{required: true, message: "请输入内容", trigger: "blur"}],
       },
       vali: valiNumDotPass
     }
@@ -210,6 +231,9 @@ export default {
           uploadData.append('sampleType', this.sampleInfo.sampleType)
           uploadData.append('substanceType', this.sampleInfo.substanceType)
           uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
+          uploadData.append('Vf', this.sampleInfo.Vf)
+          uploadData.append('Df', this.sampleInfo.Df)
+          uploadData.append('m', this.sampleInfo.m)
 
           // for (let [a, b] of uploadData.entries()) {
           //   console.log(a, b, '--------------');
@@ -255,7 +279,8 @@ export default {
         sampleType: "",
         substanceType: "",
         dynamicItem: [],
-        substanceList: []
+        substanceList: [],
+        Vf: "", Df: "", m: ""
       }
       this.fileList = []
     },

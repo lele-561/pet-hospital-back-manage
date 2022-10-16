@@ -40,25 +40,9 @@
         {{ batchInfo.parameters.Vi }} ml
       </el-descriptions-item>
       <el-descriptions-item>
-        <template slot="label">定容体积 V<sub>f</sub></template>
-        {{ batchInfo.parameters.Vf }} ml
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">稀释倍数 D<sub>f</sub></template>
-        {{ batchInfo.parameters.Df }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">称样质量 m</template>
-        {{ batchInfo.parameters.m }} mg
-      </el-descriptions-item>
-      <el-descriptions-item>
         <template slot="label">传输效率 TE</template>
         {{ batchInfo.parameters.TE }}
       </el-descriptions-item>
-      <!--      <el-descriptions-item>-->
-      <!--        <template slot="label"><i class="el-icon-paperclip"></i>同位素单位强度文件</template>-->
-      <!--        <el-button type="primary" plain size="mini">下载文件</el-button>-->
-      <!--      </el-descriptions-item>-->
     </el-descriptions>
     <h4>标准样品</h4>
     <common-table :table-data="sampleList.standardSampleList" :table-label="tableLabel.normal"></common-table>
@@ -89,7 +73,7 @@ export default {
         position: "",
         sampleNum: "",
         analysisType: "",
-        parameters: {Cp: "", V: "", T: "", Vi: "", Vf: "", Df: "", m: "", TE: ""},
+        parameters: {Cp: "", V: "", T: "", Vi: "", TE: ""},
         modelList: [],
       },
       // 其他信息
@@ -101,12 +85,18 @@ export default {
           {prop: "sampleName", label: '样品名'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
+          {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
         config: [
           {prop: "sampleName", label: '样品名'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
           {prop: "fileName", label: '样品文件名'},
           {prop: "type", label: '样品类型'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
+          {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
       },
       // 4种样品列表
