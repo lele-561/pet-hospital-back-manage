@@ -137,17 +137,14 @@ export default {
       }).then((resp) => {
         loading.close();
         if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
+          this.$alert(resp.data.result.string, 'number.csv文件内容', {
+            confirmButtonText: '确定',
+          });
           postRequestJSON('/download/isotopeCount', {
             sampleId: this.isotopeCount.sampleId,
             sampleType: this.isotopeCount.sampleType
           }).then((resp) => {
             downloadCSV(resp, "number")
-            this.$confirm("分析成功", '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'success'
-            })
           });
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {
