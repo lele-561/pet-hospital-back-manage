@@ -11,36 +11,36 @@
 </template>
 
 <script>
-import {postRequestJSON} from "../../../utils/api";
+import {downloadCSV, postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "BarChart",
   data() {
     return {
       barChartData: {
-        title: ['测试柱图1', '测试柱图2', '测试柱图3'],//标题列表
-        dimensions: {
-          0: ['sample', 's1/001002003', 's1'],
-          1: ['sample', 's2/001002003', 's2'],
-          2: ['sample', 's3/001002003', 's3'],
-        },
-        source: {
-          0: [
-            {sample: 'meihui', 's1/001002003': 43.3, 's1': 85.8},
-            {sample: 'turang', 's1/001002003': 83.1, 's1': 73.4},
-            {sample: 'weiqi', 's1/001002003': 86.4, 's1': 65.2},
-          ],
-          1: [
-            {sample: 'meihui', 's2/001002003': 43.3, 's2': 85.8},
-            {sample: 'turang', 's2/001002003': 83.1, 's2': 73.4},
-            {sample: 'weiqi', 's2/001002003': 86.4, 's2': 65.2},
-          ],
-          2: [
-            {sample: 'meihui', 's3/001002003': 43.3, 's3': 85.8},
-            {sample: 'turang', 's3/001002003': 83.1, 's3': 73.4},
-            {sample: 'weiqi', 's3/001002003': 86.4, 's3': 65.2},
-          ],
-        }
+        // title: ['测试柱图1', '测试柱图2', '测试柱图3'],//标题列表
+        // dimensions: {
+        //   0: ['sample', 's1/001002003', 's1'],
+        //   1: ['sample', 's2/001002003', 's2'],
+        //   2: ['sample', 's3/001002003', 's3'],
+        // },
+        // source: {
+        //   0: [
+        //     {sample: 'meihui', 's1/001002003': 43.3, 's1': 85.8},
+        //     {sample: 'turang', 's1/001002003': 83.1, 's1': 73.4},
+        //     {sample: 'weiqi', 's1/001002003': 86.4, 's1': 65.2},
+        //   ],
+        //   1: [
+        //     {sample: 'meihui', 's2/001002003': 43.3, 's2': 85.8},
+        //     {sample: 'turang', 's2/001002003': 83.1, 's2': 73.4},
+        //     {sample: 'weiqi', 's2/001002003': 86.4, 's2': 65.2},
+        //   ],
+        //   2: [
+        //     {sample: 'meihui', 's3/001002003': 43.3, 's3': 85.8},
+        //     {sample: 'turang', 's3/001002003': 83.1, 's3': 73.4},
+        //     {sample: 'weiqi', 's3/001002003': 86.4, 's3': 65.2},
+        //   ],
+        // }
       },
     }
   },
@@ -62,7 +62,20 @@ export default {
         groupId: data.groupId,
       }).then((resp) => {
         loading.close();
-        this.barChartData = resp.data.result.raw_data;
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          this.barChartData = resp.data.result.raw_data;
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
     },
     async drawBarChart(data) {

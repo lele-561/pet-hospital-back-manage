@@ -67,9 +67,22 @@ export default {
         logBase: data.logBase
       }).then((resp) => {
         loading.close();
-        this.raw_data = resp.data.result.raw_data;
-        this.maxValue = resp.data.result.maxValue;
-        this.heatMapFileId = resp.data.result.fileId;
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          this.raw_data = resp.data.result.raw_data;
+          this.maxValue = resp.data.result.maxValue;
+          this.heatMapFileId = resp.data.result.fileId;
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          })
+        }
       });
 
       // 横坐标：元素名
