@@ -296,7 +296,7 @@ export default {
         groupId: this.pure_fp.groupId,
       }).then((resp) => {
         loading.close();
-        this.$alert(resp.data.result.string, '每种物质单位质量颗粒数：', {
+        this.$alert(resp.data.result.string, '每种物质单位质量颗粒数', {
           confirmButtonText: '确定',
         });
       });
