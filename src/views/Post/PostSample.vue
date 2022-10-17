@@ -54,7 +54,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="样品文件" prop="file" :style="{display: fileUploadShow}">
+      <el-form-item label="样品文件" prop="file">
         <el-upload
             ref="upload"
             :auto-upload="false"
@@ -99,7 +99,6 @@ export default {
     return {
       configShow: "none",
       substanceTypeShow: "none",
-      fileUploadShow: "none",
       sampleInfo: {
         batchId: "",
         batchName: "",
@@ -136,7 +135,6 @@ export default {
         if (this.sampleInfo.sampleType === "ConfigSample") {
           this.configShow = ""
           this.substanceTypeShow = "none"
-          this.fileUploadShow = "none"
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = [];
           for (let i = 0; i < this.sampleInfo.substanceList.length; i++) {
@@ -148,7 +146,6 @@ export default {
         } else if (this.sampleInfo.sampleType === "PureSample") {
           this.configShow = "none"
           this.substanceTypeShow = ""
-          this.fileUploadShow = ""
           this.sampleInfo.substanceType = ""
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
@@ -158,7 +155,6 @@ export default {
         } else {
           this.configShow = "none"
           this.substanceTypeShow = "none"
-          this.fileUploadShow = ""
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
@@ -216,7 +212,7 @@ export default {
       this.$message.error(`只允许上传1个文件`);
     },
     async submitUpload() {
-      if (this.fileList.length !== 1 && this.sampleInfo.sampleType !== "ConfigSample") {
+      if (this.fileList.length !== 1) {
         this.$message.error("请选择文件！！")
         return
       }

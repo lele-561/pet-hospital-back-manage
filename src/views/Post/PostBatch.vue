@@ -104,28 +104,28 @@
             </el-upload>
           </el-form-item>
         </el-col>
-        <el-col :span=12>
-          <el-form-item label="配置样品质量配比" label-width="150px" prop="file">
-            <el-upload
-                ref="upload2"
-                :auto-upload="false"
-                :before-upload="handleBeforeUpload"
-                :file-list="fileList2"
-                :http-request="httpRequest"
-                :limit="2"
-                :multiple="false"
-                :on-change="handleChange2"
-                :on-exceed="handleExceed2"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove2"
-                accept="text/csv"
-                action=""
-                class="upload-demo">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>
-            </el-upload>
-          </el-form-item>
-        </el-col>
+<!--        <el-col :span=12>-->
+<!--          <el-form-item label="配置样品质量配比" label-width="150px" prop="file">-->
+<!--            <el-upload-->
+<!--                ref="upload2"-->
+<!--                :auto-upload="false"-->
+<!--                :before-upload="handleBeforeUpload"-->
+<!--                :file-list="fileList2"-->
+<!--                :http-request="httpRequest"-->
+<!--                :limit="2"-->
+<!--                :multiple="false"-->
+<!--                :on-change="handleChange2"-->
+<!--                :on-exceed="handleExceed2"-->
+<!--                :on-preview="handlePreview"-->
+<!--                :on-remove="handleRemove2"-->
+<!--                accept="text/csv"-->
+<!--                action=""-->
+<!--                class="upload-demo">-->
+<!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+<!--              <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>-->
+<!--            </el-upload>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
         <el-col :span=24>
           <el-form-item style="margin-left: 30px">
             <el-button type="primary" @click="submitUpload()">{{ '新建' }}</el-button>
@@ -157,7 +157,7 @@ export default {
     };
     return {
       fileList1: [],
-      fileList2: [],
+      // fileList2: [],
       uploadData: "",
       batchInfo: {
         batchName: "",
@@ -198,8 +198,8 @@ export default {
     handleBeforeUpload(file) {
       if (this.fileList1.length !== 1)
         this.$message.error(`只允许上传1个文件`);
-      if (this.fileList2.length !== 1)
-        this.$message.error(`只允许上传1个文件`);
+      // if (this.fileList2.length !== 1)
+      //   this.$message.error(`只允许上传1个文件`);
     },
     handleSuccess(res, file) {
     },
@@ -209,40 +209,44 @@ export default {
       if (this.$refs.upload1.uploadFiles.length > 0)
         this.fileList1 = this.$refs.upload1.uploadFiles
     },
-    handleChange2(file, fileList) {
-      if (this.$refs.upload2.uploadFiles.length > 1)
-        this.$refs.upload2.uploadFiles.shift()
-      if (this.$refs.upload2.uploadFiles.length > 0)
-        this.fileList2 = this.$refs.upload2.uploadFiles
-    },
+    // handleChange2(file, fileList) {
+    //   if (this.$refs.upload2.uploadFiles.length > 1)
+    //     this.$refs.upload2.uploadFiles.shift()
+    //   if (this.$refs.upload2.uploadFiles.length > 0)
+    //     this.fileList2 = this.$refs.upload2.uploadFiles
+    // },
     handleRemove1(file, fileList) {
       this.fileList1 = fileList;
     },
-    handleRemove2(file, fileList) {
-      this.fileList2 = fileList;
-    },
+    // handleRemove2(file, fileList) {
+    //   this.fileList2 = fileList;
+    // },
     handlePreview(file) {
     },
     handleExceed1() {
       this.$message.error('只允许上传1个文件');
     },
-    handleExceed2() {
-      this.$message.error('只允许上传1个文件');
-    },
+    // handleExceed2() {
+    //   this.$message.error('只允许上传1个文件');
+    // },
     async submitUpload() {
-      if (this.fileList1.length !== 1 && this.fileList2.length !== 1) {
+      if (this.fileList1.length !== 1) {
         this.$message.error("请选择文件！！")
         return
       }
+      // if (this.fileList1.length !== 1 && this.fileList2.length !== 1) {
+      //   this.$message.error("请选择文件！！")
+      //   return
+      // }
       await this.$refs.batchForm.validate((valid) => {
         if (valid) {
           let uploadData = new FormData(); // 用FormData存放上传文件
           this.fileList1.forEach(file => {
             uploadData.append('mass_factor', file.raw)
           })
-          this.fileList2.forEach(file => {
-            uploadData.append('configuration_samples_mass', file.raw)
-          })
+          // this.fileList2.forEach(file => {
+          //   uploadData.append('configuration_samples_mass', file.raw)
+          // })
           uploadData.append('batchName', this.batchInfo.batchName)
           uploadData.append('experimentTime', this.batchInfo.experimentTime)
           uploadData.append('position', this.batchInfo.position)
@@ -290,7 +294,7 @@ export default {
     },
     clear() {
       this.fileList1 = []
-      this.fileList2 = []
+      // this.fileList2 = []
       this.uploadData = ""
       this.batchInfo = {
         batchName: "",
