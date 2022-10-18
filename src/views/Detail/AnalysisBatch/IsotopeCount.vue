@@ -75,6 +75,7 @@ export default {
       if (data.function === 'isotopeCount') {
         this.isotopeCount.sampleId = data.sample.id;
         this.isotopeCount.selectRow = data.sample;
+        console.log(this.isotopeCount.selectRow)
       }
     })
   },
@@ -150,7 +151,11 @@ export default {
             sampleId: this.isotopeCount.sampleId,
             sampleType: this.isotopeCount.sampleType
           }).then((resp) => {
-            downloadCSV(resp, "number")
+            downloadCSV(resp,
+                "number-" +
+                this.batchInfo.batchId + "_" +
+                this.isotopeCount.sampleType + "_" +
+                this.isotopeCount.selectRow.sampleName)
           });
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {

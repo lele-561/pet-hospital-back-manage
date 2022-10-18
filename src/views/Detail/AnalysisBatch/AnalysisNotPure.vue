@@ -161,6 +161,7 @@ export default {
       if (data.function === 'notPure') {
         this.notPure_fp.fileId = data.sample.fileId;
         this.notPure_fp.selectRow = data.sample;
+        console.log(this.notPure_fp.selectRow)
       }
     })
   },
@@ -288,7 +289,13 @@ export default {
                 sampleType: this.notPure_fp.sampleType,
                 logBase: this.notPure_fp.logBase,
               }).then((resp) => {
-                downloadCSV(resp, "test")
+                downloadCSV(resp,
+                    "test-" +
+                    this.batchInfo.batchId + "_" +
+                    this.notPure_fp.sampleType + "_" +
+                    this.notPure_fp.selectRow.sampleName + "_" +
+                    this.notPure_fp.selectRow.support +
+                    this.notPure_fp.logBase)
               });
             } else if (resp.data.code === 1) {
               this.$confirm(resp.data.message, '提示', {
@@ -386,7 +393,11 @@ export default {
                 substanceType: "",
                 logBase: this.notPure_fp.logBase
               }).then((resp) => {
-                downloadCSV(resp, "HeatMap_" + this.heatMapType)
+                downloadCSV(resp,
+                    "HeatMapData-" +
+                    this.batchInfo.batchId + "_" +
+                    this.notPure_fp.sampleType + "_" +
+                    this.notPure_fp.logBase)
               });
             } else if (resp.data.code === 1) {
               this.$confirm(resp.data.message, '提示', {
@@ -450,7 +461,10 @@ export default {
                 groupId: this.notPure_fp.selectModel,
                 batchId: this.batchInfo.batchId,
               }).then((resp) => {
-                downloadCSV(resp, "trace_result")
+                downloadCSV(resp,
+                    "trace_result-" +
+                    this.batchInfo.batchId + "_" +
+                    this.notPure_fp.selectModel)
               });
             } else if (resp.data.code === 1) {
               this.$confirm(resp.data.message, '提示', {

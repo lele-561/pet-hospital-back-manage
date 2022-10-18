@@ -140,6 +140,7 @@ export default {
       if (data.function === 'pure') {
         this.pure_fp.groupId = data.sample.id;
         this.pure_fp.selectRow = data.sample;
+        console.log(this.pure_fp.selectRow)
       }
     })
   },
@@ -264,7 +265,12 @@ export default {
               groupId: this.pure_fp.groupId,
               substanceType: this.sampleTypeOptions[i].value
             }).then((resp) => {
-              downloadCSV(resp, this.sampleTypeOptions[i].value + "_fp")
+              downloadCSV(resp,
+                  "fp-" +
+                  this.sampleTypeOptions[i].value + "_" +
+                  this.batchInfo.batchId + "_" +
+                  this.pure_fp.selectRow.substance + "_" +
+                  this.pure_fp.selectRow.logBase)
             });
           } else if (resp.data.code === 1) {
             this.$confirm(resp.data.message, '提示', {
@@ -322,7 +328,11 @@ export default {
           postRequestJSON('/download/trainCSV', {
             groupId: this.pure_fp.groupId,
           }).then((resp) => {
-            downloadCSV(resp, "train")
+            downloadCSV(resp,
+                "train-" +
+                this.batchInfo.batchId + "_" +
+                this.pure_fp.selectRow.substance + "_" +
+                this.pure_fp.selectRow.logBase)
           });
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {
@@ -359,7 +369,11 @@ export default {
             groupId: this.pure_fp.groupId,
           }).then((resp) => {
             loading.close();
-            downloadCSV(resp, "configuration_samples_label")
+            downloadCSV(resp,
+                "configuration_samples_label-" +
+                this.batchInfo.batchId + "_" +
+                this.pure_fp.selectRow.substance + "_" +
+                this.pure_fp.selectRow.logBase)
           });
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {
@@ -424,7 +438,13 @@ export default {
             logBase: "",
           }).then((resp) => {
             loading.close();
-            downloadCSV(resp, "HeatMap_" + this.heatMapType)
+            downloadCSV(resp,
+                "HeatMapData-" +
+                "PureSample_" +
+                this.batchInfo.batchId + "_" +
+                this.pure_fp.heatMapType + "_" +
+                this.pure_fp.selectRow.substance + "_" +
+                this.pure_fp.selectRow.logBase)
           });
         } else if (resp.data.code === 1) {
           this.$confirm(resp.data.message, '提示', {
