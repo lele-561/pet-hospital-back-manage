@@ -21,12 +21,13 @@
                            style="margin-top: 10px"
                            @change="resolveBug"></common-table-single>
       <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
+      <el-button style="margin-top: 15px" type="primary" @click="downloadParticleCSV()">下载particle.csv文件</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import {postRequestJSON} from "../../../utils/api";
+import {downloadCSV, postRequestJSON} from "../../../utils/api";
 import CommonTableSingle from "../../../components/CommonTableSingle";
 
 export default {
@@ -164,6 +165,47 @@ export default {
           this.$confirm(resp.data.message, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
+            type: 'error'
+          })
+        }
+      });
+    },
+    downloadParticleCSV() {
+      if (this.particle.sampleId === "" || this.particle.sampleType === "") {
+        this.$message.error("请选择信息")
+        return
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: '执行中，请等一会儿~',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      postRequestJSON('/fileExist/particleCSV', {
+        sampleId: this.particle.sampleId,
+        sampleType: this.particle.sampleType
+      }).then((resp) => {
+        loading.close();
+        if (resp.data.code === 0) {
+          this.$message.success(resp.data.message)
+          postRequestJSON('/download/particleCSV', {
+            sampleId: this.particle.sampleId,
+            sampleType: this.particle.sampleType
+          }).then((resp) => {
+            downloadCSV(resp,
+                "particle-" +
+                this.batchInfo.batchId + "_" +
+                this.particle.sampleType + "_" +
+                this.particle.selectRow.sampleName)
+          });
+        } else if (resp.data.code === 1) {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
+          })
+        } else {
+          this.$confirm(resp.data.message, '提示', {
+            confirmButtonText: '确定',
             type: 'error'
           })
         }
