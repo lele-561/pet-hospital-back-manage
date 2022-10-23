@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {downloadCSV, postRequestJSON} from "../../../utils/api";
+import {postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "BarChart",
@@ -60,6 +60,8 @@ export default {
       });
       await postRequestJSON('/chart/getBarChartInfo', {
         groupId: data.groupId,
+        modelType: data.modelType,
+        batchId:data.batchId
       }).then((resp) => {
         loading.close();
         if (resp.data.code === 0) {

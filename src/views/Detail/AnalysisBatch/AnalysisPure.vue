@@ -51,7 +51,11 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">生成模型</template>
-        <el-button plain size="mini" type="primary" @click="generateModel">生成</el-button>
+        <el-select v-model="pure_fp.modelType" clearable placeholder="请选择模型类型" size="mini" style="width: 150px">
+          <el-option v-for="item in modelTypeOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="generateModel">生成</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">热力图</template>
@@ -111,6 +115,7 @@ export default {
       },
       heatMapInfo: "",
       pure_fp: {
+        modelType: "",
         dynamicItem: [],
         input_logBase: "",
         groupList: [],
@@ -130,6 +135,11 @@ export default {
         ]
       },
       sampleTypeOptions: [],
+      modelTypeOptions: [
+        {label: "RF", value: "RF"},
+        {label: "XGB", value: "XGB"},
+        {label: "SVM", value: "SVM"},
+        {label: "GaussianNB", value: "GaussianNB"}],
       show: {
         groupString: ""
       }
@@ -140,7 +150,6 @@ export default {
       if (data.function === 'pure') {
         this.pure_fp.groupId = data.sample.id;
         this.pure_fp.selectRow = data.sample;
-        console.log(this.pure_fp.selectRow)
       }
     })
   },
@@ -156,6 +165,7 @@ export default {
         this.pure_fp.dynamicItem = []
         this.pure_fp.groupId = ""
         this.pure_fp.selectRow = ""
+        this.pure_fp.modelType = ""
         this.show.groupString = ""
       }
     },
@@ -466,6 +476,10 @@ export default {
         this.$message.error("请选择分组")
         return
       }
+      if (this.pure_fp.modelType === "") {
+        this.$message.error("请选择模型类型")
+        return
+      }
       const loading = this.$loading({
         lock: true,
         text: '执行中，请等一会儿~',
@@ -474,6 +488,7 @@ export default {
       });
       postRequestJSON('/analysis/model', {
         groupId: this.pure_fp.groupId,
+        modelType: this.pure_fp.modelType
       }).then((resp) => {
         loading.close();
         if (resp.data.code === 0) {

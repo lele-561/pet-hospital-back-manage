@@ -44,11 +44,10 @@
         <template slot="label">溯源样品</template>
         <div>当前全批次最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
         <div style="display: flex; margin-top: 5px">
-          <el-select v-model="notPure_fp.selectModel" clearable placeholder="请选择模型" size="mini">
-            <el-option v-for="item in notPure_fp.modelList" :key="item.value" :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
+          <el-cascader
+              v-model="notPure_fp.selectModel"
+              :options="notPure_fp.modelList"
+              clearable placeholder="请选择模型" size="mini" style="width: 300px"></el-cascader>
           <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="downloadTraceResult">
             生成并下载溯源结果文件
           </el-button>
@@ -121,7 +120,7 @@ export default {
         xSampleLabel: [],
         fileId: "",   // 选中的supportX文件id
         selectRow: "",
-        selectModel: "",
+        selectModel: [],
         modelList: [],
         bestModel: ""
       },
@@ -161,7 +160,6 @@ export default {
       if (data.function === 'notPure') {
         this.notPure_fp.fileId = data.sample.fileId;
         this.notPure_fp.selectRow = data.sample;
-        console.log(this.notPure_fp.selectRow)
       }
     })
   },
@@ -193,6 +191,8 @@ export default {
         this.notPure_fp.sampleType = "";
         this.notPure_fp.fileId = "";
         this.notPure_fp.selectRow = "";
+        this.notPure_fp.modelList = [];
+        this.notPure_fp.selectModel = [];
         if (this.batchInfo.batchId !== "") {
           this.getModelList()
         }
@@ -323,7 +323,7 @@ export default {
     },
     // 更新最优模型
     updateBestModel() {
-      if (this.notPure_fp.selectModel === "") {
+      if (this.notPure_fp.selectModel.length === 0) {
         this.$message.warning("未选择模型，无法更新")
         return
       }
@@ -334,7 +334,8 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       });
       postRequestJSON('/analysis/updateBestModel', {
-        groupId: this.notPure_fp.selectModel
+        groupId: this.notPure_fp.selectModel[0],
+        modelType: this.notPure_fp.selectModel[1]
       }).then((resp) => {
         loading.close();
         if (resp.data.code === 0) {
@@ -411,7 +412,6 @@ export default {
               })
             }
           });
-
         } else return false;
       })
     },
@@ -425,12 +425,40 @@ export default {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return
       }
-      this.$refs.logBaseForm.validate((valid) => {
-        if (valid) {
-          this.tabActiveName = "BarChart"
-          this.$bus.$emit("drawBarChart", {groupId: this.notPure_fp.selectModel, batchId: this.batchInfo.batchId})
-        }
-      })
+      if (this.notPure_fp.selectModel.length === 0) {
+        this.$confirm('将使用全局最优模型进行分析', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.logBaseForm.validate((valid) => {
+            if (valid) {
+              this.tabActiveName = "BarChart"
+              this.$bus.$emit("drawBarChart", {
+                groupId: this.notPure_fp.selectModel[0],
+                modelType: this.notPure_fp.selectModel[1],
+                batchId: this.batchInfo.batchId
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消'
+          });
+        });
+      } else {
+        this.$refs.logBaseForm.validate((valid) => {
+          if (valid) {
+            this.tabActiveName = "BarChart"
+            this.$bus.$emit("drawBarChart", {
+              groupId: this.notPure_fp.selectModel[0],
+              modelType: this.notPure_fp.selectModel[1],
+              batchId: this.batchInfo.batchId
+            })
+          }
+        })
+      }
     },
     // 下载溯源文件
     downloadTraceResult() {
@@ -442,44 +470,102 @@ export default {
         this.$message.warning("最优模型为空，请选择一个模型并更新其为最优模型")
         return
       }
-      this.$refs.logBaseForm.validate((valid) => {
-        if (valid) {
-          const loading = this.$loading({
-            lock: true,
-            text: '执行中，请等一会儿~',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-          });
-          postRequestJSON('/fileExist/traceResultCSV', {
-            groupId: this.notPure_fp.selectModel,
-            batchId: this.batchInfo.batchId,
-          }).then((resp) => {
-            loading.close();
-            if (resp.data.code === 0) {
-              this.$message.success(resp.data.message)
-              postRequestJSON('/download/traceResultCSV', {
-                groupId: this.notPure_fp.selectModel,
+      if (this.notPure_fp.selectModel.length === 0) {
+        this.$confirm('将使用全局最优模型进行分析', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs.logBaseForm.validate((valid) => {
+            if (valid) {
+              const loading = this.$loading({
+                lock: true,
+                text: '执行中，请等一会儿~',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+              });
+              postRequestJSON('/fileExist/traceResultCSV', {
+                groupId: this.notPure_fp.selectModel[0],
+                modelType: this.notPure_fp.selectModel[1],
                 batchId: this.batchInfo.batchId,
               }).then((resp) => {
-                downloadCSV(resp,
-                    "trace_result-" +
-                    this.batchInfo.batchId + "_" +
-                    this.notPure_fp.selectModel)
+                loading.close();
+                if (resp.data.code === 0) {
+                  this.$message.success(resp.data.message)
+                  postRequestJSON('/download/traceResultCSV', {
+                    groupId: this.notPure_fp.selectModel[0],
+                    modelType: this.notPure_fp.selectModel[1],
+                    batchId: this.batchInfo.batchId,
+                  }).then((resp) => {
+                    downloadCSV(resp,
+                        "trace_result-" +
+                        this.batchInfo.batchId + "_" +
+                        this.notPure_fp.selectModel[0] + "_" +
+                        this.notPure_fp.selectModel[1])
+                  });
+                } else if (resp.data.code === 1) {
+                  this.$confirm(resp.data.message, '提示', {
+                    confirmButtonText: '确定',
+                    type: 'warning'
+                  })
+                } else {
+                  this.$confirm(resp.data.message, '提示', {
+                    confirmButtonText: '确定',
+                    type: 'error'
+                  })
+                }
               });
-            } else if (resp.data.code === 1) {
-              this.$confirm(resp.data.message, '提示', {
-                confirmButtonText: '确定',
-                type: 'warning'
-              })
-            } else {
-              this.$confirm(resp.data.message, '提示', {
-                confirmButtonText: '确定',
-                type: 'error'
-              })
             }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消'
           });
-        }
-      })
+        });
+      } else {
+        this.$refs.logBaseForm.validate((valid) => {
+          if (valid) {
+            const loading = this.$loading({
+              lock: true,
+              text: '执行中，请等一会儿~',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            });
+            postRequestJSON('/fileExist/traceResultCSV', {
+              groupId: this.notPure_fp.selectModel[0],
+              modelType: this.notPure_fp.selectModel[1],
+              batchId: this.batchInfo.batchId,
+            }).then((resp) => {
+              loading.close();
+              if (resp.data.code === 0) {
+                this.$message.success(resp.data.message)
+                postRequestJSON('/download/traceResultCSV', {
+                  groupId: this.notPure_fp.selectModel[0],
+                  modelType: this.notPure_fp.selectModel[1],
+                  batchId: this.batchInfo.batchId,
+                }).then((resp) => {
+                  downloadCSV(resp,
+                      "trace_result-" +
+                      this.batchInfo.batchId + "_" +
+                      this.notPure_fp.selectModel[0] + "_" +
+                      this.notPure_fp.selectModel[1])
+                });
+              } else if (resp.data.code === 1) {
+                this.$confirm(resp.data.message, '提示', {
+                  confirmButtonText: '确定',
+                  type: 'warning'
+                })
+              } else {
+                this.$confirm(resp.data.message, '提示', {
+                  confirmButtonText: '确定',
+                  type: 'error'
+                })
+              }
+            });
+          }
+        })
+      }
     },
   }
 }

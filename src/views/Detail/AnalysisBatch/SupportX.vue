@@ -46,7 +46,6 @@ export default {
   data() {
     //包含小数的数字
     let valiNumDotPass = (rule, value, callback) => {
-      console.log("这是value" + value)
       let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
       if (value === '') {
         callback(new Error('请输入内容'));
@@ -60,7 +59,6 @@ export default {
             callback();
           }
         } else if (this.supportX.sampleType !== "") {
-          console.log("这里是外面" + value)
           if (value < 0.01 || value > 0.01) {     // 关于为啥不能直接判断!===，我也不知道，哈哈
             callback(new Error('非纯样品默认为0.01'))
           } else {

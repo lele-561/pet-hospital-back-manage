@@ -75,7 +75,6 @@ export default {
       if (data.function === 'isotopeCount') {
         this.isotopeCount.sampleId = data.sample.id;
         this.isotopeCount.selectRow = data.sample;
-        console.log(this.isotopeCount.selectRow)
       }
     })
   },
