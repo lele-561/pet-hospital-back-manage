@@ -42,7 +42,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">溯源样品</template>
-        <div>当前全批次最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
+        <div>当前批次最优模型为{{ notPure_fp.bestModel.label }}，默认选择最优模型分析</div>
         <div style="display: flex; margin-top: 5px">
           <el-cascader
               v-model="notPure_fp.selectModel"
@@ -193,6 +193,7 @@ export default {
         this.notPure_fp.selectRow = "";
         this.notPure_fp.modelList = [];
         this.notPure_fp.selectModel = [];
+        this.notPure_fp.bestModel = "";
         if (this.batchInfo.batchId !== "") {
           this.getModelList()
         }

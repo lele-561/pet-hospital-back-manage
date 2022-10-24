@@ -136,10 +136,10 @@ export default {
       },
       sampleTypeOptions: [],
       modelTypeOptions: [
-        {label: "RF", value: "RF"},
-        {label: "XGB", value: "XGB"},
-        {label: "SVM", value: "SVM"},
-        {label: "GaussianNB", value: "GaussianNB"}],
+        {label: "RF", value: "RFModel"},
+        {label: "XGB", value: "XGBoostModel"},
+        {label: "SVM", value: "SVMModel"},
+        {label: "GaussianNB", value: "GaussianNBModel"}],
       show: {
         groupString: ""
       }
