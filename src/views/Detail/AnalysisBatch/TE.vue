@@ -60,7 +60,10 @@ export default {
         this.$message.error("请选择批次")
         return
       }
-
+      if (this.batchInfo.sampleList === [] || this.batchInfo.sampleList === "") {
+        this.$message.error("当前批次未上传标准样品，请上传")
+        return
+      }
       const loading = this.$loading({
         lock: true,
         text: '执行中，请等一会儿~',
