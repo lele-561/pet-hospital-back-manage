@@ -5,9 +5,6 @@
       <el-form-item label="批次名" prop="batch">
         {{ sampleInfo.batchName }}
       </el-form-item>
-      <el-form-item label="样品名" prop="sampleName">
-        <el-input style="width: 22%" v-model="sampleInfo.sampleName"></el-input>
-      </el-form-item>
       <el-form-item label="样品类型" prop="sampleType">
         <el-select v-model="sampleInfo.sampleType" clearable placeholder="请选择样品类型">
           <el-option
@@ -17,6 +14,9 @@
               :value="item.value">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="样品名" prop="sampleName">
+        <el-input style="width: 22%" v-model="sampleInfo.sampleName"></el-input>
       </el-form-item>
       <el-form-item :style="{display: substanceTypeShow}" label="物质类型" prop="substanceType">
         <el-select v-model="sampleInfo.substanceType" clearable placeholder="请选择物质类型" @change="resolveBug">
