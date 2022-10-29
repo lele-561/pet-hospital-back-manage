@@ -149,6 +149,9 @@ export default {
               substanceMass: "",
             })
           }
+          this.sampleInfo.Vf = ""
+          this.sampleInfo.Df = ""
+          this.sampleInfo.m = ""
         } else if (this.sampleInfo.sampleType === "PureSample") {
           this.configShow = "none"
           this.substanceTypeShow = ""
@@ -161,6 +164,9 @@ export default {
             substanceName: "temp",
             substanceMass: 123
           })
+          this.sampleInfo.Vf = ""
+          this.sampleInfo.Df = ""
+          this.sampleInfo.m = ""
         } else if (this.sampleInfo.sampleType === "StandardSample") {
           this.configShow = "none"
           this.substanceTypeShow = ""
@@ -173,9 +179,9 @@ export default {
             substanceName: "temp",
             substanceMass: 123
           })
-          this.sampleInfo.Vf="temp"
-          this.sampleInfo.Df="temp"
-          this.sampleInfo.m="temp"
+          this.sampleInfo.Vf = "temp"
+          this.sampleInfo.Df = "temp"
+          this.sampleInfo.m = "temp"
         } else {
           this.configShow = "none"
           this.substanceTypeShow = "none"
@@ -188,6 +194,9 @@ export default {
             substanceName: "temp",
             substanceMass: 123
           })
+          this.sampleInfo.Vf = ""
+          this.sampleInfo.Df = ""
+          this.sampleInfo.m = ""
         }
       }
     },
