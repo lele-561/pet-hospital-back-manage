@@ -39,17 +39,17 @@
       </div>
       <el-row>
         <el-col :span=8>
-          <el-form-item label="定容体积 Vf" label-width="100px" prop="Vf">
+          <el-form-item label="定容体积 Vf" label-width="100px" prop="Vf" :style="{display: VfShow}">
             <el-input style="width: 80%" v-model="sampleInfo.Vf" placeholder="单位：ml"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item label="稀释倍数 Df" label-width="100px" prop="Df">
+          <el-form-item label="稀释倍数 Df" label-width="100px" prop="Df" :style="{display: DfShow}">
             <el-input style="width: 80%" v-model="sampleInfo.Df"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item label="称样质量 m" label-width="100px" prop="m">
+          <el-form-item label="称样质量 m" label-width="100px" prop="m" :style="{display: mShow}">
             <el-input style="width: 80%" v-model="sampleInfo.m" placeholder="单位：mg"></el-input>
           </el-form-item>
         </el-col>
@@ -99,6 +99,9 @@ export default {
     return {
       configShow: "none",
       substanceTypeShow: "none",
+      VfShow: "none",
+      DfShow: "none",
+      mShow: "none",
       sampleInfo: {
         batchId: "",
         batchName: "",
@@ -135,6 +138,9 @@ export default {
         if (this.sampleInfo.sampleType === "ConfigSample") {
           this.configShow = ""
           this.substanceTypeShow = "none"
+          this.VfShow = ""
+          this.DfShow = ""
+          this.mShow = ""
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = [];
           for (let i = 0; i < this.sampleInfo.substanceList.length; i++) {
@@ -146,15 +152,36 @@ export default {
         } else if (this.sampleInfo.sampleType === "PureSample") {
           this.configShow = "none"
           this.substanceTypeShow = ""
+          this.VfShow = ""
+          this.DfShow = ""
+          this.mShow = ""
           this.sampleInfo.substanceType = ""
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
             substanceMass: 123
           })
+        } else if (this.sampleInfo.sampleType === "StandardSample") {
+          this.configShow = "none"
+          this.substanceTypeShow = ""
+          this.VfShow = "none"
+          this.DfShow = "none"
+          this.mShow = "none"
+          this.sampleInfo.substanceType = ""
+          this.sampleInfo.dynamicItem = []
+          this.sampleInfo.dynamicItem.push({
+            substanceName: "temp",
+            substanceMass: 123
+          })
+          this.sampleInfo.Vf="temp"
+          this.sampleInfo.Df="temp"
+          this.sampleInfo.m="temp"
         } else {
           this.configShow = "none"
           this.substanceTypeShow = "none"
+          this.VfShow = ""
+          this.DfShow = ""
+          this.mShow = ""
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({

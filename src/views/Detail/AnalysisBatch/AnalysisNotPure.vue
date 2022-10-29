@@ -47,7 +47,7 @@
           <el-cascader
               v-model="notPure_fp.selectModel"
               :options="notPure_fp.modelList"
-              clearable placeholder="请选择模型" size="mini" style="width: 300px"></el-cascader>
+              clearable placeholder="请选择模型" size="mini" style="width: 350px"></el-cascader>
           <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="downloadTraceResult">
             生成并下载溯源结果文件
           </el-button>
