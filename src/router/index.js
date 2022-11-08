@@ -8,7 +8,6 @@ import Register from '@/views/Register'
 import BatchList from '@/views/ShowList/BatchList'
 
 import DetailBatch from '@/views/Detail/DetailBatch'
-import DetailSample from '@/views/Detail/DetailSample'
 
 import PostBatch from '@/views/Post/PostBatch'
 import PostSample from '@/views/Post/PostSample'
@@ -20,7 +19,6 @@ import SupportX from "../views/Detail/AnalysisBatch/SupportX";
 import IsotopeCount from "../views/Detail/AnalysisBatch/IsotopeCount";
 import AnalysisPure from "../views/Detail/AnalysisBatch/AnalysisPure";
 import AnalysisNotPure from "../views/Detail/AnalysisBatch/AnalysisNotPure";
-import BestModel from "../views/Detail/AnalysisBatch/BestModel";
 import SupportXFile from "../views/Detail/FileManage/SupportXFile";
 
 Vue.use(VueRouter)
@@ -53,11 +51,6 @@ const routes = [{
             path: 'detailBatch',
             name: 'detailBatch',
             component: DetailBatch
-        },
-        {
-            path: 'DetailSample',
-            name: 'DetailSample',
-            component: DetailSample
         },
         {
             path: 'postBatch',
@@ -99,11 +92,6 @@ const routes = [{
             path: 'function/analysisNotPure',
             name: 'function_analysisNotPure',
             component: AnalysisNotPure
-        },
-        {
-            path: 'function/bestModel',
-            name: 'function_bestModel',
-            component: BestModel
         },
         // 数据管理
         {
