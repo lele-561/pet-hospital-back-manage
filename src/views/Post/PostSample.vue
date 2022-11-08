@@ -169,11 +169,11 @@ export default {
           this.sampleInfo.m = ""
         } else if (this.sampleInfo.sampleType === "StandardSample") {
           this.configShow = "none"
-          this.substanceTypeShow = ""
+          this.substanceTypeShow = "none"
           this.VfShow = "none"
           this.DfShow = "none"
           this.mShow = "none"
-          this.sampleInfo.substanceType = ""
+          this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
