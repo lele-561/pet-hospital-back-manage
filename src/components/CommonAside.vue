@@ -5,7 +5,8 @@
       alive-text-color="#C5A553"
       class="el-menu-vertical-demo"
       text-color="#fff">
-    <h3>颗粒物分析系统</h3>
+    <h3>单颗粒金属全元素</h3>
+    <h3>分析云</h3>
     <!-- :index跳转路由使用 -->
     <el-menu-item v-for="item in noChildren" :key="item.path" :index="item.path" @click="clickMenu(item)">
       <i :class="'el-icon-' + item.icon"></i>
