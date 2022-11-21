@@ -48,8 +48,8 @@ export default {
         selectRow: ""
       },
       options: [
-        {value: 'PureSample', label: '纯样品'},
-        {value: 'TrueSample', label: '真实样品'},
+        {value: 'PureSample', label: '源样品'},
+        {value: 'TrueSample', label: '样品'},
         {value: 'ConfigSample', label: '配置样品'},
       ],
       tableLabel: {

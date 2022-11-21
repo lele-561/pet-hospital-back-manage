@@ -46,9 +46,9 @@
     </el-descriptions>
     <h4>标准样品</h4>
     <common-table :table-data="sampleList.standardSampleList" :table-label="tableLabel.normal"></common-table>
-    <h4>纯样品</h4>
+    <h4>源样品</h4>
     <common-table :table-data="sampleList.pureSampleList" :table-label="tableLabel.normal"></common-table>
-    <h4>真实样品</h4>
+    <h4>样品</h4>
     <common-table :table-data="sampleList.trueSampleList" :table-label="tableLabel.normal"></common-table>
     <h4>配置样品</h4>
     <common-table :table-data="sampleList.configSampleList" :table-label="tableLabel.config"></common-table>

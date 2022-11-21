@@ -125,7 +125,7 @@ export default {
         bestModel: ""
       },
       sampleTypeOptions: [
-        {value: 'TrueSample', label: '真实样品'},
+        {value: 'TrueSample', label: '样品'},
         {value: 'ConfigSample', label: '配置样品'},
       ],
       rules: {

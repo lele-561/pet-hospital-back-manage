@@ -54,13 +54,13 @@ export default {
       } else {
         if (this.supportX.sampleType === "PureSample") {
           if (value < 0.001 || value > 0.009) {
-            callback(new Error('纯样品请输入范围[0.001, 0.009]内数字'))
+            callback(new Error('源样品请输入范围[0.001, 0.009]内数字'))
           } else {
             callback();
           }
         } else if (this.supportX.sampleType !== "") {
           if (value < 0.01 || value > 0.01) {     // 关于为啥不能直接判断!===，我也不知道，哈哈
-            callback(new Error('非纯样品默认为0.01'))
+            callback(new Error('非源样品默认为0.01'))
           } else {
             callback();
           }
@@ -90,8 +90,8 @@ export default {
       },
       placeHolder: "",
       options: [
-        {value: 'PureSample', label: '纯样品'},
-        {value: 'TrueSample', label: '真实样品'},
+        {value: 'PureSample', label: '源样品'},
+        {value: 'TrueSample', label: '样品'},
         {value: 'ConfigSample', label: '配置样品'},
       ],
       tableLabel: {
