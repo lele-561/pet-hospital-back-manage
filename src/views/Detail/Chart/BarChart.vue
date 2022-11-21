@@ -93,7 +93,7 @@ export default {
             top: '5%',
             textAlign: 'center'
           },
-          grid: {top: "35%", left: "15%", right: "10%", bottom: "15%"},
+          grid: {top: "40%", left: "15%", right: "10%", bottom: "15%"},
           legend: {top: '20%', right: 'center'},
           tooltip: {},
           dataset: {
@@ -101,7 +101,16 @@ export default {
             source: this.barChartData.source[i]
           },
           xAxis: {type: 'category'},
-          yAxis: {},
+          yAxis: {
+            min: 0,
+            max: 100,
+            type: 'value',
+            axisLabel: {
+              show: true,
+              interval: 0, // 使x轴文字显示全
+              formatter: '{value}%'
+            }
+          },
           series: [{
             type: 'bar',
             label: {normal: {show: true, position: 'top'}}
@@ -137,7 +146,7 @@ export default {
 .main {
   width: 300px;
   margin-top: 20px;
-  height: 200px;
+  height: 300px;
   margin-left: 20px;
   background-color: #FFFFFF;
 
