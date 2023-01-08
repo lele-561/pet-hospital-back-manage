@@ -62,7 +62,7 @@ const routes = [{
             name: 'postSample',
             component: PostSample
         },
-        // 功能管理
+        // 分析功能管理
         {
             path: 'function/particle',
             name: 'function_particle',
@@ -92,6 +92,12 @@ const routes = [{
             path: 'function/analysisNotPure',
             name: 'function_analysisNotPure',
             component: AnalysisNotPure
+        },
+        // 预测功能管理
+        {   // 样例
+            path: 'prediction/x1',
+            name: 'prediction_x1',
+            component: TE
         },
         // 数据管理
         {
