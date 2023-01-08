@@ -53,19 +53,20 @@ export default {
       } else if (!reg.test(value)) {
         callback(new Error('请输入数字'));
       } else {
-        if (this.supportX.sampleType === "PureSample") {
-          if (value < 0.001 || value > 0.009) {
-            callback(new Error('源样品请输入范围[0.001, 0.009]内数字'))
-          } else {
-            callback();
-          }
-        } else if (this.supportX.sampleType !== "") {
-          if (value < 0.01 || value > 0.01) {     // 关于为啥不能直接判断!===，我也不知道，哈哈
-            callback(new Error('非源样品默认为0.01'))
-          } else {
-            callback();
-          }
-        }
+        callback();
+        // if (this.supportX.sampleType === "PureSample") {
+        //   if (value < 0.001 || value > 0.009) {
+        //     callback(new Error('源样品请输入范围[0.001, 0.009]内数字'))
+        //   } else {
+        //     callback();
+        //   }
+        // } else if (this.supportX.sampleType !== "") {
+        //   if (value < 0.01 || value > 0.01) {     // 关于为啥不能直接判断!===，我也不知道，哈哈
+        //     callback(new Error('非源样品默认为0.01'))
+        //   } else {
+        //     callback();
+        //   }
+        // }
       }
     };
     return {
@@ -130,14 +131,14 @@ export default {
           {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
         supportX_liquid_normal: [
           {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
-          {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
-          {prop: "m", label: '称样质量m(mg)'},
         ],
         supportX_liquid_config: [
           {prop: "sampleName", label: '样品名称'},
@@ -164,6 +165,7 @@ export default {
   watch: {
     'supportX.sampleType': {
       handler() {
+        console.log(this.batchInfo.sampleState,"state现在是")
         this.supportX.sampleId = ""
         this.supportX.selectRow = ""
         if (this.supportX.sampleType === "PureSample") {
@@ -186,6 +188,7 @@ export default {
     },
     "batchInfo.xSampleList": {
       handler() {
+        console.log(this.batchInfo.sampleState,"state现在是")
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
@@ -232,7 +235,7 @@ export default {
         this.$message.error("请选择批次")
         return
       }
-      await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.batchInfo.sampleState = resp.data.result.batchInfo.sampleState
           this.batchInfo.sampleList = resp.data.result.sampleList;
@@ -241,7 +244,7 @@ export default {
           this.$message.warning(resp.data.message)
         }
       });
-      this.getSupportXList()
+      await this.getSupportXList()
     },
     // 获取该批次下已经使用x生成的频繁项文件
     getSupportXList() {

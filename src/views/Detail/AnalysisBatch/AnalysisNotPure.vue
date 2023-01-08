@@ -145,14 +145,14 @@ export default {
           {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
+          {prop: "m", label: '称样质量m(mg)'},
         ],
         supportX_liquid_normal: [
           {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
-          {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
-          {prop: "m", label: '称样质量m(mg)'},
         ],
         supportX_liquid_config: [
           {prop: "sampleName", label: '样品名称'},
