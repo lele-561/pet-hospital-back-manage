@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>非纯物质分析</h3>
     <div class="div">
       <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
@@ -16,9 +17,9 @@
     <common-table-single :table-data="notPure_fp.xSampleList"
                          :table-label="notPure_fp.xSampleLabel"
                          function="notPure"></common-table-single>
-    <h3>您当前选择的样品类型是：
+    <h4>您当前选择的样品类型是：
       {{ notPure_fp.selectRow.type + "，x为" + notPure_fp.selectRow.support }}
-    </h3>
+    </h4>
     <el-form ref="logBaseForm" :inline="true" :model="notPure_fp" :rules="rules" label-width="55px"
              style="margin-top: 10px">
       <el-form-item label="底数" prop="logBase">

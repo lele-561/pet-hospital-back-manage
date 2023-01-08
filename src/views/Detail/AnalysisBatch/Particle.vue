@@ -1,6 +1,7 @@
 <template>
   <!--颗粒态分析-->
   <div>
+    <h3>颗粒态分析</h3>
     <div class="div">
       <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>指纹提取</h3>
     <div class="div">
       <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
@@ -8,7 +9,7 @@
       </el-select>
       <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
-    <h3>已经产生的指纹文件</h3>
+    <h4>已经产生的指纹文件</h4>
     <el-select v-model="supportX.sampleType" clearable placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">
@@ -16,7 +17,7 @@
     </el-select>
     <common-table v-if="isReloadData" :table-data="supportX.xSampleList"
                   :table-label="supportX.xSampleLabel"></common-table>
-    <h3>生成指纹文件</h3>
+    <h4>生成指纹文件</h4>
     <el-select v-model="supportX.sampleType" clearable placeholder="请选择样品类型">
       <el-option v-for="item in options" :key="item.value" :label="item.label"
                  :value="item.value">

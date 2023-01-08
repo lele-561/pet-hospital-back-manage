@@ -45,11 +45,7 @@ export default {
       options: [
         {
           value: 'batch',
-          label: '按采样批次'
-        },
-        {
-          value: 'position',
-          label: '按采样位置'
+          label: '按批次名'
         },
         {
           value: 'time',

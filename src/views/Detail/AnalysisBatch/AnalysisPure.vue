@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>纯物质分析</h3>
     <div class="div">
       <el-select v-model="batchInfo.batchId" clearable placeholder="请选择批次" style="margin-top: 10px">
         <el-option v-for="item in batchListStandard" :key="item.value" :label="item.label"
@@ -9,7 +10,7 @@
       <!--      这里的getBatchInfo可改成getGroupList-->
       <el-button style="margin-left: 5px" type="primary" @click="getBatchInfo">确认</el-button>
     </div>
-    <h3>创建分组并生成相应文件</h3>
+    <h4>创建分组并生成相应文件</h4>
     <el-form ref="groupForm" :inline="true" :model="pure_fp" label-width="60px" style="margin-top: 10px">
       <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">
         <el-form-item :label="item.substanceName"
@@ -27,11 +28,11 @@
       </el-form-item>
     </el-form>
     <!--            分组列表展示-->
-    <h3>选择分组</h3>
+    <h4>选择分组</h4>
     <common-table-single :table-data="pure_fp.groupList"
                          :table-label="tableLabel.group"
                          function="pure"></common-table-single>
-    <h4>您当前选择的分组是：{{ show.groupString }}</h4>
+    <h5>您当前选择的分组是：{{ show.groupString }}</h5>
     <el-descriptions :column="4" border title="">
       <el-descriptions-item>
         <template slot="label">指纹文件fp.csv</template>
