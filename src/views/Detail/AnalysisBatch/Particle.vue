@@ -22,7 +22,7 @@
                            style="margin-top: 10px"
                            @change="resolveBug"></common-table-single>
       <el-button style="margin-top: 15px" type="primary" @click="runParticle()">确认执行分析</el-button>
-      <el-button style="margin-top: 15px" type="primary" @click="downloadParticleCSV()">下载particle.csv文件</el-button>
+      <el-button style="margin-top: 15px" type="primary" @click="downloadParticleCSV()">下载单颗粒全元素质量占比文件</el-button>
     </div>
   </div>
 </template>

@@ -75,7 +75,7 @@ export default {
           (resp) => {
             loading.close();
             if (resp.data.code === 0) {
-              this.$confirm(resp.data.message, '提示', {
+              this.$confirm(resp.data.result.TE, 'TE计算结果为', {
                 confirmButtonText: '确定',
                 type: 'success'
               })
