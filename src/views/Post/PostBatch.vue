@@ -10,7 +10,7 @@
           </el-form-item>
         </el-col>
         <el-col :span=6>
-          <el-form-item label="实验时间" label-width="100px" prop="experimentTime">
+          <el-form-item label="采样时间" label-width="100px" prop="experimentTime">
             <el-date-picker
                 v-model="batchInfo.experimentTime"
                 placeholder="选择日期"
@@ -27,7 +27,7 @@
           <el-form-item label="分析类型" label-width="100px" prop="analysisType">
             <el-select v-model="batchInfo.analysisType" clearable placeholder="请选择分析类型">
               <el-option
-                  v-for="item in options"
+                  v-for="item in analysisTypeOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -38,29 +38,53 @@
       </el-row>
       <h4 style="margin-left:10px">实验参数</h4>
       <el-row>
-        <el-col :span=6>
+        <el-col :span=8>
           <el-form-item label="数浓度 Cp" label-width="100px" prop="Cp">
-            <el-input v-model="batchInfo.Cp" placeholder="单位：个/L"></el-input>
+            <el-input v-model="Cp" placeholder="单位：个/L"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span=6>
+        <el-col :span=8>
+          <el-form-item label="底数" label-width="100px" prop="CpBase">
+            <el-input v-model="batchInfo.CpBase" placeholder="单位：个/L"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item label="指数" label-width="100px" prop="CpExponent">
+            <el-input v-model="batchInfo.CpExponent" placeholder="单位：个/L"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span=8>
           <el-form-item label="流速 V" label-width="100px" prop="V">
             <el-input v-model="batchInfo.V" placeholder="单位：ml/min"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span=6>
+        <el-col :span=8>
           <el-form-item label="测试时间 T" label-width="100px" prop="T">
             <el-input v-model="batchInfo.T" placeholder="单位：s"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span=6>
+        <el-col :span=8>
           <el-form-item label="进样体积 Vi" label-width="100px" prop="Vi">
-            <el-input v-model="batchInfo.Vi" placeholder="单位：ml"></el-input>
+            <el-input v-model="Vi" placeholder="单位：ml"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <h4 style="margin-left:10px">物质类型</h4>
       <el-row>
+        <el-col :span=24>
+          <el-form-item label="样品状态" label-width="100px" prop="analysisType">
+            <el-select v-model="batchInfo.sampleState" clearable placeholder="请选择样品状态">
+              <el-option
+                  v-for="item in sampleStateOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col :span=24>
           <div v-for="(item,index) in batchInfo.dynamicItem" :key="index" style="display: flex">
             <el-form-item :prop="'dynamicItem.'+index+'.substanceName'"
@@ -83,7 +107,7 @@
       <h4 style="margin-left:10px">上传文件</h4>
       <el-row>
         <el-col :span=12>
-          <el-form-item label="同位素单位强度" label-width="150px" prop="file">
+          <el-form-item label="类金属同位素的标准曲线" label-width="100px" prop="file">
             <el-upload
                 ref="upload1"
                 :auto-upload="false"
@@ -104,28 +128,28 @@
             </el-upload>
           </el-form-item>
         </el-col>
-<!--        <el-col :span=12>-->
-<!--          <el-form-item label="配置样品质量配比" label-width="150px" prop="file">-->
-<!--            <el-upload-->
-<!--                ref="upload2"-->
-<!--                :auto-upload="false"-->
-<!--                :before-upload="handleBeforeUpload"-->
-<!--                :file-list="fileList2"-->
-<!--                :http-request="httpRequest"-->
-<!--                :limit="2"-->
-<!--                :multiple="false"-->
-<!--                :on-change="handleChange2"-->
-<!--                :on-exceed="handleExceed2"-->
-<!--                :on-preview="handlePreview"-->
-<!--                :on-remove="handleRemove2"-->
-<!--                accept="text/csv"-->
-<!--                action=""-->
-<!--                class="upload-demo">-->
-<!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
-<!--              <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>-->
-<!--            </el-upload>-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
+        <!--        <el-col :span=12>-->
+        <!--          <el-form-item label="配置样品质量配比" label-width="150px" prop="file">-->
+        <!--            <el-upload-->
+        <!--                ref="upload2"-->
+        <!--                :auto-upload="false"-->
+        <!--                :before-upload="handleBeforeUpload"-->
+        <!--                :file-list="fileList2"-->
+        <!--                :http-request="httpRequest"-->
+        <!--                :limit="2"-->
+        <!--                :multiple="false"-->
+        <!--                :on-change="handleChange2"-->
+        <!--                :on-exceed="handleExceed2"-->
+        <!--                :on-preview="handlePreview"-->
+        <!--                :on-remove="handleRemove2"-->
+        <!--                accept="text/csv"-->
+        <!--                action=""-->
+        <!--                class="upload-demo">-->
+        <!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+        <!--              <div slot="tip" class="el-upload__tip">只能上传csv文件，configuration_samples_mass.csv</div>-->
+        <!--            </el-upload>-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
         <el-col :span=24>
           <el-form-item style="margin-left: 30px">
             <el-button type="primary" @click="submitUpload()">{{ '新建' }}</el-button>
@@ -164,22 +188,36 @@ export default {
         experimentTime: "",
         position: "",
         analysisType: "",
-        Cp: "", V: "", T: "", Vi: "",
+        sampleState: "",
+        CpBase: "",CpExponent:"", V: "", T: "",
         dynamicItem: []
       },
       rules: {
         batchName: [{required: true, message: "请输入批次", trigger: "blur"}],
         experimentTime: [{required: true, message: "请输入实验时间", trigger: "blur"}],
         position: [{required: true, message: "请输入采样位置", trigger: "blur"}],
-        Cp: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        CpBase: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
+        CpExponent: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         V: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         T: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
-        Vi: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
         analysisType: [{required: true, message: "请选择分析类型", trigger: "blur"}],
+        sampleState: [{required: true, message: "请选择样品状态", trigger: "blur"}],
       },
-      options: [{label: '迭代法', value: 'iteration'},
+      analysisTypeOptions: [
+        {label: '迭代法', value: 'iteration'},
         {label: '泊松法', value: 'poisson'}],
+      sampleStateOptions: [
+        {label: '固态', value: 'solid'},
+        {label: '液态', value: 'liquid'}],
     };
+  },
+  computed: {
+    Vi: function () {
+      return this.batchInfo.V * (this.batchInfo.T / 60)
+    },
+    Cp: function () {
+      return Math.pow(this.batchInfo.CpBase,this.batchInfo.CpExponent)
+    }
   },
   activated() {
     this.clear();
@@ -251,15 +289,16 @@ export default {
           uploadData.append('experimentTime', this.batchInfo.experimentTime)
           uploadData.append('position', this.batchInfo.position)
           uploadData.append('analysisType', this.batchInfo.analysisType)
+          uploadData.append('sampleState', this.batchInfo.sampleState)
           uploadData.append('substanceList', JSON.stringify(this.batchInfo.dynamicItem))
-          uploadData.append('Cp', this.batchInfo.Cp)
+          uploadData.append('Cp', this.Cp)
           uploadData.append('V', this.batchInfo.V)
           uploadData.append('T', this.batchInfo.T)
-          uploadData.append('Vi', this.batchInfo.Vi)
+          uploadData.append('Vi', this.Vi)
 
-          // for (let [a, b] of uploadData.entries()) {
-          //   console.log(a, b, '--------------');
-          // }
+          for (let [a, b] of uploadData.entries()) {
+            console.log(a, b, '--------------');
+          }
 
           const loading = this.$loading({
             lock: true,
@@ -301,7 +340,8 @@ export default {
         experimentTime: "",
         position: "",
         analysisType: "",
-        Cp: "", V: "", T: "", Vi: "",
+        sampleState: "",
+        Cp: "", V: "", T: "", Vi: this.Vi,
         dynamicItem: [{substanceName: ""}]
       }
     },
