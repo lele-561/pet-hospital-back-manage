@@ -109,6 +109,7 @@ export default {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
+        sampleState:"",
         sampleList: {},
         xSampleList: {}
       },
@@ -133,24 +134,31 @@ export default {
         logBase: [{required: true, validator: valiNumDotPass, trigger: "blur"}],
       },
       tableLabel: {
-        supportX_normal: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "type", label: '样品类型'},
+        supportX_solid_normal: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
-          {prop: "fileName", label: '样品文件名'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        supportX_config: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "type", label: '样品类型'},
+        supportX_solid_config: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
-          {prop: "fileName", label: '样品文件名'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        supportX_liquid_normal: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "support", label: '支持度 x'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
+        ],
+        supportX_liquid_config: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "support", label: '支持度 x'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Df", label: '稀释倍数Df'},
         ],
       }
     }
@@ -176,10 +184,10 @@ export default {
         this.notPure_fp.selectRow = "";
         if (this.notPure_fp.sampleType === "TrueSample") {
           this.notPure_fp.xSampleList = this.batchInfo.xSampleList.trueSampleList;
-          this.notPure_fp.xSampleLabel = this.tableLabel.supportX_normal;
+          this.notPure_fp.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_normal : this.tableLabel.supportX_liquid_normal
         } else if (this.notPure_fp.sampleType === "ConfigSample") {
           this.notPure_fp.xSampleList = this.batchInfo.xSampleList.configSampleList;
-          this.notPure_fp.xSampleLabel = this.tableLabel.supportX_config;
+          this.notPure_fp.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_config : this.tableLabel.supportX_liquid_config
         }
       }
     },
@@ -198,6 +206,7 @@ export default {
         if (this.batchInfo.batchId !== "") {
           this.getModelList()
         }
+        this.batchInfo.sampleState=""
       }
     }
   },
@@ -210,6 +219,7 @@ export default {
       }
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
+          this.batchInfo.sampleState = resp.data.result.batchInfo.sampleState
           this.batchInfo.sampleList = resp.data.result.sampleList;
           this.$message.success(resp.data.message)
         } else {

@@ -73,6 +73,7 @@ export default {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
+        sampleState: "",
         sampleList: {},
         xSampleList: {}
       },
@@ -96,41 +97,53 @@ export default {
         {value: 'ConfigSample', label: '配置样品'},
       ],
       tableLabel: {
-        normal: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
+        solid_normal: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        config: [
-          {prop: "sampleName", label: '样品名'},
+        solid_config: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        supportX_normal: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "type", label: '样品类型'},
+        liquid_normal: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        liquid_config: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        supportX_solid_normal: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
-          {prop: "fileName", label: '支持度文件名'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        supportX_config: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "type", label: '样品类型'},
+        supportX_solid_config: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "support", label: '支持度 x'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
-          {prop: "fileName", label: '支持度文件名'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        supportX_liquid_normal: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "support", label: '支持度 x'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
+        ],
+        supportX_liquid_config: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "support", label: '支持度 x'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Df", label: '稀释倍数Df'},
         ],
       }
     }
@@ -156,18 +169,18 @@ export default {
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
-          this.supportX.sampleLabel = this.tableLabel.normal;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_normal : this.tableLabel.supportX_liquid_normal
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.supportX.sampleType === "TrueSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.trueSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
-          this.supportX.sampleLabel = this.tableLabel.normal;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_normal : this.tableLabel.supportX_liquid_normal
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.supportX.sampleType === "ConfigSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.configSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.configSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_config;
-          this.supportX.sampleLabel = this.tableLabel.config;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_config : this.tableLabel.supportX_liquid_config
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_config : this.tableLabel.liquid_config
         }
       }
     },
@@ -176,18 +189,18 @@ export default {
         if (this.supportX.sampleType === "PureSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.pureSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.pureSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
-          this.supportX.sampleLabel = this.tableLabel.normal;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_normal : this.tableLabel.supportX_liquid_normal
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.supportX.sampleType === "TrueSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.trueSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.trueSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_normal;
-          this.supportX.sampleLabel = this.tableLabel.normal;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_normal : this.tableLabel.supportX_liquid_normal
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.supportX.sampleType === "ConfigSample") {
           this.supportX.xSampleList = this.batchInfo.xSampleList.configSampleList;
           this.supportX.sampleList = this.batchInfo.sampleList.configSampleList;
-          this.supportX.xSampleLabel = this.tableLabel.supportX_config;
-          this.supportX.sampleLabel = this.tableLabel.config;
+          this.supportX.xSampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.supportX_solid_config : this.tableLabel.supportX_liquid_config
+          this.supportX.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_config : this.tableLabel.liquid_config
         }
       }
     },
@@ -195,11 +208,13 @@ export default {
       handler() {
         this.supportX.sampleId = ""
         this.supportX.selectRow = ""
-        this.supportX.sampleList = [];
+        this.supportX.sampleList = []
         this.supportX.sampleLabel = []
-        this.supportX.xSampleList = [];
-        this.supportX.xSampleLabel = [];
+        this.supportX.xSampleList = []
+        this.supportX.xSampleLabel = []
         this.supportX.sampleType = ""
+        this.batchInfo.sampleList = []
+        this.batchInfo.sampleState = ""
       }
     }
   },
@@ -219,6 +234,7 @@ export default {
       }
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
+          this.batchInfo.sampleState = resp.data.result.batchInfo.sampleState
           this.batchInfo.sampleList = resp.data.result.sampleList;
           this.$message.success(resp.data.message)
         } else {

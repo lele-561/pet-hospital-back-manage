@@ -36,7 +36,8 @@ export default {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
-        sampleList: {}
+        sampleList: {},
+        sampleState:"",
       },
       isotopeCount: {
         sampleType: "",
@@ -51,22 +52,27 @@ export default {
         {value: 'ConfigSample', label: '配置样品'},
       ],
       tableLabel: {
-        normal: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
+        solid_normal: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        config: [
-          {prop: "sampleName", label: '样品名'},
+        solid_config: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
+        ],
+        liquid_normal: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        liquid_config: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Df", label: '稀释倍数Df'},
         ],
       }
     }
@@ -91,13 +97,13 @@ export default {
         this.isotopeCount.selectRow = ""
         if (this.isotopeCount.sampleType === "PureSample") {
           this.isotopeCount.sampleList = this.batchInfo.sampleList.pureSampleList;
-          this.isotopeCount.sampleLabel = this.tableLabel.normal;
+          this.isotopeCount.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.isotopeCount.sampleType === "TrueSample") {
           this.isotopeCount.sampleList = this.batchInfo.sampleList.trueSampleList;
-          this.isotopeCount.sampleLabel = this.tableLabel.normal;
+          this.isotopeCount.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.isotopeCount.sampleType === "ConfigSample") {
           this.isotopeCount.sampleList = this.batchInfo.sampleList.configSampleList;
-          this.isotopeCount.sampleLabel = this.tableLabel.config;
+          this.isotopeCount.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_config : this.tableLabel.liquid_config
         }
       }
     },
@@ -108,6 +114,8 @@ export default {
         this.isotopeCount.sampleType = ""
         this.isotopeCount.sampleId = ""
         this.isotopeCount.selectRow = ""
+        this.batchInfo.sampleList = []
+        this.batchInfo.sampleState = ""
       }
     }
   },
@@ -120,6 +128,7 @@ export default {
       }
       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
+          this.batchInfo.sampleState = resp.data.result.batchInfo.sampleState
           this.batchInfo.sampleList = resp.data.result.sampleList;
           this.$message.success(resp.data.message)
         } else {

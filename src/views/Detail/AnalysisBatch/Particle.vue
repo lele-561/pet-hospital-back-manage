@@ -39,6 +39,7 @@ export default {
       batchListStandard: [],
       batchInfo: {
         batchId: "",
+        sampleState: "",
         sampleList: {},
       },
       particle: {
@@ -54,22 +55,27 @@ export default {
         {value: 'ConfigSample', label: '配置样品'},
       ],
       tableLabel: {
-        normal: [
-          {prop: "sampleName", label: '样品名'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
+        solid_normal: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
         ],
-        config: [
-          {prop: "sampleName", label: '样品名'},
+        solid_config: [
+          {prop: "sampleName", label: '样品名称'},
           {prop: "substanceMass", label: '配置样品物质及质量'},
-          {prop: "fileName", label: '样品文件名'},
-          {prop: "type", label: '样品类型'},
           {prop: "Vf", label: '定容体积Vf(ml)'},
           {prop: "Df", label: '稀释倍数Df'},
           {prop: "m", label: '称样质量m(mg)'},
+        ],
+        liquid_normal: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "Df", label: '稀释倍数Df'},
+        ],
+        liquid_config: [
+          {prop: "sampleName", label: '样品名称'},
+          {prop: "substanceMass", label: '配置样品物质及质量'},
+          {prop: "Df", label: '稀释倍数Df'},
         ],
       }
     }
@@ -94,16 +100,16 @@ export default {
         this.particle.selectRow = ""
         if (this.particle.sampleType === "PureSample") {
           this.particle.sampleList = this.batchInfo.sampleList.pureSampleList;
-          this.particle.sampleLabel = this.tableLabel.normal;
+          this.particle.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.particle.sampleType === "StandardSample") {
           this.particle.sampleList = this.batchInfo.sampleList.standardSampleList;
-          this.particle.sampleLabel = this.tableLabel.normal;
+          this.particle.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.particle.sampleType === "TrueSample") {
           this.particle.sampleList = this.batchInfo.sampleList.trueSampleList;
-          this.particle.sampleLabel = this.tableLabel.normal;
+          this.particle.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_normal : this.tableLabel.liquid_normal
         } else if (this.particle.sampleType === "ConfigSample") {
           this.particle.sampleList = this.batchInfo.sampleList.configSampleList;
-          this.particle.sampleLabel = this.tableLabel.config;
+          this.particle.sampleLabel = this.batchInfo.sampleState === "solid" ? this.tableLabel.solid_config : this.tableLabel.liquid_config
         }
       }
     },
@@ -111,10 +117,11 @@ export default {
       handler() {
         this.particle.sampleId = ""
         this.particle.selectRow = ""
-        this.particle.sampleList = [];
-        this.particle.sampleLabel = [];
-        this.particle.sampleType = "";
+        this.particle.sampleList = []
+        this.particle.sampleLabel = []
+        this.particle.sampleType = ""
         this.batchInfo.sampleList = []
+        this.batchInfo.sampleState = ""
       }
     }
   },
@@ -127,7 +134,8 @@ export default {
       }
       postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
-          this.batchInfo.sampleList = resp.data.result.sampleList;
+          this.batchInfo.sampleState = resp.data.result.batchInfo.sampleState
+          this.batchInfo.sampleList = resp.data.result.sampleList
           this.$message.success(resp.data.message)
         } else {
           this.$message.warning(resp.data.message)

@@ -42,16 +42,16 @@
     </el-descriptions>
     <h4>标准样品</h4>
     <common-table :table-data="sampleList.standardSampleList"
-                  :table-label="batchInfo.sampleState==='固态'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
+                  :table-label="batchInfo.sampleState==='solid'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
     <h4>源样品</h4>
     <common-table :table-data="sampleList.pureSampleList"
-                  :table-label="batchInfo.sampleState==='固态'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
+                  :table-label="batchInfo.sampleState==='solid'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
     <h4>样品</h4>
     <common-table :table-data="sampleList.trueSampleList"
-                  :table-label="batchInfo.sampleState==='固态'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
+                  :table-label="batchInfo.sampleState==='solid'?tableLabel.solid_normal:tableLabel.liquid_normal"></common-table>
     <h4>配置样品</h4>
     <common-table :table-data="sampleList.configSampleList"
-                  :table-label="batchInfo.sampleState==='固态'?tableLabel.solid_config:tableLabel.liquid_config"></common-table>
+                  :table-label="batchInfo.sampleState==='solid'?tableLabel.solid_config:tableLabel.liquid_config"></common-table>
   </div>
 </template>
 
