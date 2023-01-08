@@ -2,6 +2,8 @@
   <!-- 左侧菜单 -->
   <el-menu
       :collapse="isCollapse"
+      @open="handleOpen"
+      @close="handleClose"
       alive-text-color="#C5A553"
       class="el-menu-vertical-demo"
       text-color="#fff">
@@ -18,7 +20,7 @@
         <span slot="title">{{ item.label }}</span>
       </template>
       <!-- 二级菜单 -->
-      <el-menu-item-group v-for="subItem in item.children" :key="subItem.path" :index="subItem.path"
+      <el-menu-item-group v-for="subItem in item.children" :key="subItem.path"
                           class="el-menu-vertical-demo">
         <el-menu-item :index="subItem.path" @click="clickMenu(subItem)">{{ subItem.label }}</el-menu-item>
       </el-menu-item-group>
@@ -93,14 +95,20 @@ export default {
               icon: 'collection-tag',
               url: 'analysisNotPure/analysisNotPure'
             },
-            // {
-            //   path: 'function/bestModel',
-            //   name: 'function_bestModel',
-            //   label: '最优模型',
-            //   icon: 'collection-tag',
-            //   url: 'bestModel/bestModel'
-            // },
           ]
+        },
+        {
+          path: '/prediction',
+          label: '预测功能',
+          icon: 'data-board',
+          children: [
+            {
+              path: 'prediction/x1',
+              name: 'prediction_x1',
+              label: '示例1',
+              icon: 'collection-tag',
+              url: 'x1/x1'
+            }]
         },
         {
           path: '/fileManage',
@@ -121,7 +129,13 @@ export default {
   methods: {
     clickMenu(item) {
       this.$router.push({name: item.name});
-    }
+    },
+    handleOpen(key,keyPath){
+      console.log(key,keyPath)
+    },
+    handleClose(key,keyPath){
+      console.log(key,keyPath)
+    },
   },
   computed: {
     noChildren() {
