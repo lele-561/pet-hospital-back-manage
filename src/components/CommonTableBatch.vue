@@ -7,23 +7,13 @@
         max-height="100%"
         style="width: 100%; overflow-x: hidden; overflow-y: hidden"
         tooltip-effect="dark">
-      <el-table-column align="left" label="批次" min-width="15%" prop="batch" sortable>
+      <el-table-column align="left" label="批次名" min-width="15%" prop="batch" sortable>
         <template slot-scope="scope"><span style="color: #409eff; cursor: pointer" @click="itemClick(scope.row)">{{
             scope.row.batchName
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" label="采样位置" min-width="25%" prop="position">
-        <template slot-scope="scope">
-          {{ scope.row.position }}
-        </template>
-      </el-table-column>
-      <el-table-column align="left" label="样品总数" min-width="10%" prop="sampleNum">
-        <template slot-scope="scope">
-          {{ scope.row.sampleNum }}
-        </template>
-      </el-table-column>
-      <el-table-column align="left" label="实验时间" min-width="25%" prop="experimentTime" sortable>
+      <el-table-column align="left" label="创建时间" min-width="25%" prop="experimentTime" sortable>
         <template slot-scope="scope">
           {{ scope.row.experimentTime }}
         </template>
