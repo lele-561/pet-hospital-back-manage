@@ -312,6 +312,7 @@ export default {
             uploadData.append('sampleFile', file.raw)
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
+          uploadData.append('sampleState', this.sampleInfo.sampleState)
           uploadData.append('sampleType', this.sampleInfo.sampleType)
           uploadData.append('substanceType', this.sampleInfo.substanceType)
           uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
