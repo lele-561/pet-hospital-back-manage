@@ -16,7 +16,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label"><i class="el-icon-reading"></i>样品状态</template>
-        {{ batchInfo.sampleState }}
+        {{ batchInfo.sampleState === "solid" ? "固态" : "液态" }}
       </el-descriptions-item>
       <!--      实验参数-->
       <el-descriptions-item>
@@ -148,7 +148,8 @@ export default {
         name: "postSample",
         query: {
           batchId: this.batchInfo.id,
-          batchName: this.batchInfo.batchName
+          batchName: this.batchInfo.batchName,
+          sampleState: this.batchInfo.sampleState
         }
       });
     },

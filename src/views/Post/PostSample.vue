@@ -2,9 +2,24 @@
   <div>
     <h3>上传样品文件</h3>
     <el-form ref="sampleForm" :model="sampleInfo" :rules="rules" label-width="100px">
-      <el-form-item label="批次名" prop="batch">
+      <el-form-item label="批次名称" prop="batch">
         {{ sampleInfo.batchName }}
       </el-form-item>
+      <el-form-item label="样品状态" prop="batch">
+        {{ sampleInfo.sampleState === "solid" ? "固态" : "液态" }}
+      </el-form-item>
+      <el-row>
+        <el-col :span=6>
+          <el-form-item label="采样时间" label-width="100px" prop="experimentTime">
+            <el-input v-model="sampleInfo.experimentTime"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=6>
+          <el-form-item label="采样位置" label-width="100px" prop="position">
+            <el-input v-model="sampleInfo.position"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="样品类型" prop="sampleType">
         <el-select v-model="sampleInfo.sampleType" clearable placeholder="请选择样品类型">
           <el-option
@@ -14,9 +29,6 @@
               :value="item.value">
           </el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="样品名" prop="sampleName">
-        <el-input style="width: 22%" v-model="sampleInfo.sampleName"></el-input>
       </el-form-item>
       <el-form-item :style="{display: substanceTypeShow}" label="物质类型" prop="substanceType">
         <el-select v-model="sampleInfo.substanceType" clearable placeholder="请选择物质类型" @change="resolveBug">
@@ -34,7 +46,7 @@
                       :prop="'dynamicItem.'+index+'.substanceMass'"
                       :rules="{required:true, validator:vali, trigger:'blur'}"
                       :style="{ display: configShow}">
-          <el-input v-model="item.substanceMass" placeholder="请输入质量（单位：mg）"></el-input>
+          <el-input v-model="item.substanceMass" :placeholder="placeHolder"></el-input>
         </el-form-item>
       </div>
       <el-row>
@@ -97,6 +109,7 @@ export default {
       }
     };
     return {
+      placeHolder: "",
       configShow: "none",
       substanceTypeShow: "none",
       VfShow: "none",
@@ -105,7 +118,9 @@ export default {
       sampleInfo: {
         batchId: "",
         batchName: "",
-        sampleName: "",
+        sampleState: "",
+        experimentTime: "",
+        position: "",
         sampleType: "",
         substanceType: "",
         dynamicItem: [],
@@ -120,7 +135,8 @@ export default {
         {value: 'TrueSample', label: '样品'},
       ],
       rules: {
-        sampleName: [{required: true, message: "请输入样品名", trigger: "blur"}],
+        experimentTime: [{required: true, message: "请输入采样时间", trigger: "blur"}],
+        position: [{required: true, message: "请输入采样位置", trigger: "blur"}],
         sampleType: [{required: true, message: "请选择样品类型", trigger: "blur"}],
         substanceType: [{required: true, message: "请选择物质类型", trigger: "blur"}],
         Vf: [{required: true, message: "请输入内容", trigger: "blur"}],
@@ -131,16 +147,35 @@ export default {
     }
   },
   watch: {
+    'sampleInfo.sampleState': {
+      handler() {
+        if (this.sampleInfo.sampleState === 'solid')
+          this.placeHolder = '请输入质量（单位：mg）'
+        else if (this.sampleInfo.sampleState === 'liquid')
+          this.placeHolder = '请输入体积（单位：ml）'
+      }
+    },
     'sampleInfo.sampleType': {
       handler() {
-        this.sampleInfo.sampleName = ""
         this.fileList = []
         if (this.sampleInfo.sampleType === "ConfigSample") {
           this.configShow = ""
           this.substanceTypeShow = "none"
-          this.VfShow = ""
-          this.DfShow = ""
-          this.mShow = ""
+          if (this.sampleInfo.sampleState === 'solid') {
+            this.VfShow = ""
+            this.DfShow = ""
+            this.mShow = ""
+            this.sampleInfo.Vf = ""
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = ""
+          } else {
+            this.VfShow = "none"
+            this.DfShow = ""
+            this.mShow = "none"
+            this.sampleInfo.Vf = "temp"
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = "temp"
+          }
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = [];
           for (let i = 0; i < this.sampleInfo.substanceList.length; i++) {
@@ -149,24 +184,30 @@ export default {
               substanceMass: "",
             })
           }
-          this.sampleInfo.Vf = ""
-          this.sampleInfo.Df = ""
-          this.sampleInfo.m = ""
         } else if (this.sampleInfo.sampleType === "PureSample") {
           this.configShow = "none"
           this.substanceTypeShow = ""
-          this.VfShow = ""
-          this.DfShow = ""
-          this.mShow = ""
+          if (this.sampleInfo.sampleState === 'solid') {
+            this.VfShow = ""
+            this.DfShow = ""
+            this.mShow = ""
+            this.sampleInfo.Vf = ""
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = ""
+          } else {
+            this.VfShow = "none"
+            this.DfShow = ""
+            this.mShow = "none"
+            this.sampleInfo.Vf = "temp"
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = "temp"
+          }
           this.sampleInfo.substanceType = ""
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
             substanceMass: 123
           })
-          this.sampleInfo.Vf = ""
-          this.sampleInfo.Df = ""
-          this.sampleInfo.m = ""
         } else if (this.sampleInfo.sampleType === "StandardSample") {
           this.configShow = "none"
           this.substanceTypeShow = "none"
@@ -185,18 +226,27 @@ export default {
         } else {
           this.configShow = "none"
           this.substanceTypeShow = "none"
-          this.VfShow = ""
-          this.DfShow = ""
-          this.mShow = ""
+          if (this.sampleInfo.sampleState === 'solid') {
+            this.VfShow = ""
+            this.DfShow = ""
+            this.mShow = ""
+            this.sampleInfo.Vf = ""
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = ""
+          } else {
+            this.VfShow = "none"
+            this.DfShow = ""
+            this.mShow = "none"
+            this.sampleInfo.Vf = "temp"
+            this.sampleInfo.Df = ""
+            this.sampleInfo.m = "temp"
+          }
           this.sampleInfo.substanceType = "temp"
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.dynamicItem.push({
             substanceName: "temp",
             substanceMass: 123
           })
-          this.sampleInfo.Vf = ""
-          this.sampleInfo.Df = ""
-          this.sampleInfo.m = ""
         }
       }
     },
@@ -205,12 +255,15 @@ export default {
     this.clear()
     this.sampleInfo.batchId = this.$route.query.batchId;
     this.sampleInfo.batchName = this.$route.query.batchName;
+    this.sampleInfo.sampleState = this.$route.query.sampleState;
     await this.getBatchInfo();
   },
   methods: {
     async getBatchInfo() {
       await postRequestJSON('/batch/getBatchInfo', {batchId: this.$route.query.batchId}).then((resp) => {
         if (resp.data.code === 0) {
+          this.sampleInfo.experimentTime = resp.data.result.batchInfo.experimentTime
+          this.sampleInfo.position = resp.data.result.batchInfo.position
           this.sampleInfo.dynamicItem = []
           this.sampleInfo.substanceList = resp.data.result.batchInfo.substanceList
           for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
@@ -259,7 +312,6 @@ export default {
             uploadData.append('sampleFile', file.raw)
           })
           uploadData.append('batchId', this.sampleInfo.batchId)
-          uploadData.append('sampleName', this.sampleInfo.sampleName)
           uploadData.append('sampleType', this.sampleInfo.sampleType)
           uploadData.append('substanceType', this.sampleInfo.substanceType)
           uploadData.append('substanceList', JSON.stringify(this.sampleInfo.dynamicItem))
@@ -307,7 +359,7 @@ export default {
       this.sampleInfo = {
         batchId: "",
         batchName: "",
-        sampleName: "",
+        sampleState: "",
         sampleType: "",
         substanceType: "",
         dynamicItem: [],
