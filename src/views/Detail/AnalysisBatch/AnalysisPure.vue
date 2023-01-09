@@ -12,11 +12,21 @@
     </div>
     <h4>创建分组并生成相应文件</h4>
     <el-form ref="groupForm" :inline="true" :model="pure_fp" label-width="60px" style="margin-top: 10px">
+      <!--      <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">-->
+      <!--        <el-form-item :label="item.substanceName"-->
+      <!--                      :prop="'dynamicItem.'+index+'.substanceX'"-->
+      <!--                      :rules="{required:true, validator:vali, trigger:'blur'}">-->
+      <!--          <el-input v-model="item.substanceX" placeholder="请输入x"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--      </div>-->
       <div v-for="(item,index) in pure_fp.dynamicItem" :key="index" style="display: flex">
         <el-form-item :label="item.substanceName"
                       :prop="'dynamicItem.'+index+'.substanceX'"
                       :rules="{required:true, validator:vali, trigger:'blur'}">
-          <el-input v-model="item.substanceX" placeholder="请输入x"></el-input>
+          <el-select v-model="item.substanceX" clearable placeholder="请选择支持度x">
+            <el-option v-for="item in item.options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </div>
       <el-form-item :rules="{required:true, validator:vali, trigger:'blur'}" label="底数"
@@ -183,16 +193,21 @@ export default {
         this.$message.error("请选择批次")
         return
       }
-      await postRequestJSON('/batch/getBatchInfo', {batchId: this.batchInfo.batchId}).then((resp) => {
+      await postRequestJSON('/batch/getAllPureSampleX', {batchId: this.batchInfo.batchId}).then((resp) => {
         if (resp.data.code === 0) {
           this.pure_fp.dynamicItem = []
-          for (let i = 0; i < resp.data.result.batchInfo.substanceList.length; i++) {
+          this.sampleTypeOptions=[]
+          for (let i = 0; i < resp.data.result.substanceList.length; i++) {
             this.pure_fp.dynamicItem.push({
-              substanceName: resp.data.result.batchInfo.substanceList[i].label,
+              substanceName: resp.data.result.substanceList[i].substanceName,
               substanceX: "",
+              options:resp.data.result.substanceList[i].supportXValues,
+            })
+            this.sampleTypeOptions.push({
+              value:resp.data.result.substanceList[i].substanceName,
+              label:resp.data.result.substanceList[i].substanceName,
             })
           }
-          this.sampleTypeOptions = resp.data.result.batchInfo.substanceList;
           this.getPureGroupList();
           this.$message.success(resp.data.message)
         } else {
