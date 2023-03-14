@@ -1,7 +1,7 @@
 import axios from "axios";
 // let base = 'http://localhost:8090';   // 跨域1
 let base = 'http://localhost:8090/api';   // 跨域1
-// let base = 'http://59.78.194.93:8092/api';  // 跨域2
+// let base = 'http://59.78.194.93:8091/api';  // 跨域2
 
 export const postRequestJSON = (url, data, params) => {
     return axios({

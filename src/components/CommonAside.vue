@@ -7,8 +7,7 @@
       alive-text-color="#C5A553"
       class="el-menu-vertical-demo"
       text-color="#fff">
-    <h3>单颗粒金属全元素</h3>
-    <h3>分析云</h3>
+    <h3>虚拟宠物医院后台管理</h3>
     <!-- :index跳转路由使用 -->
     <el-menu-item v-for="item in noChildren" :key="item.path" :index="item.path" @click="clickMenu(item)">
       <i :class="'el-icon-' + item.icon"></i>
@@ -41,87 +40,95 @@ export default {
         url: 'Home/Home'
       },
         {
+          path: '/basicInfo',
+          name: 'basicInfo',
+          label: '基本管理',
+          icon: 's-grid',
+          children: [
+            {
+              path: 'basicManage/office',
+              name: 'diseaseManage_exampleCase',
+              label: '科室管理',
+              icon: 'collection-tag',
+              url: 'exampleCase/exampleCase'
+            },
+            {
+              path: 'basicManage/office',
+              name: 'diseaseManage_exampleCase',
+              label: '人员管理',
+              icon: 'collection-tag',
+              url: 'exampleCase/exampleCase'
+            },
+            {
+              path: 'basicManage/office',
+              name: 'diseaseManage_exampleCase',
+              label: '药品管理',
+              icon: 'collection-tag',
+              url: 'exampleCase/exampleCase'
+            },
+            {
+              path: 'basicManage/office',
+              name: 'diseaseManage_exampleCase',
+              label: '检查项目管理',
+              icon: 'collection-tag',
+              url: 'exampleCase/exampleCase'
+            }
+          ]
+        },
+        {
           path: '/batchList',
           name: 'batchList',
-          label: '批次列表',
+          label: '用户管理',
           icon: 's-grid',
           url: 'batchList/batchList'
         },
         {
-          path: '/function',
-          label: '分析功能',
+          path: '/diseaseManage',
+          label: '疾病管理',
           icon: 'data-board',
           children: [
             {
-              path: 'function/TE',
-              name: 'function_TE',
-              label: '计算TE',
+              path: 'diseaseManage/exampleCase',
+              name: 'diseaseManage_exampleCase',
+              label: '病例信息',
               icon: 'collection-tag',
-              url: 'TE/TE'
+              url: 'exampleCase/exampleCase'
             },
             {
-              path: 'function/particle',
-              name: 'function_particle',
-              label: '颗粒态分析',
+              path: 'diseaseManage/realCase',
+              name: 'diseaseManage_realCase',
+              label: '真实案例',
               icon: 'collection-tag',
-              url: 'particle/particle'
-            },
-
-            {
-              path: 'function/isotopeCount',
-              name: 'function_isotopeCount',
-              label: '纳米颗粒计数',
-              icon: 'collection-tag',
-              url: 'isotopeCount/isotopeCount'
-            },
-            {
-              path: 'function/supportX',
-              name: 'function_supportX',
-              label: '指纹提取',
-              icon: 'collection-tag',
-              url: 'supportX/supportX'
-            },
-            {
-              path: 'function/analysisPure',
-              name: 'function_analysisPure',
-              label: '纯物质分析',
-              icon: 'collection-tag',
-              url: 'analysisPure/analysisPure'
-            },
-            {
-              path: 'function/analysisNotPure',
-              name: 'function_analysisNotPure',
-              label: '非纯物质分析',
-              icon: 'collection-tag',
-              url: 'analysisNotPure/analysisNotPure'
-            },
+              url: 'realCase/realCase'
+            }
           ]
         },
         {
-          path: '/prediction',
-          label: '预测功能',
+          path: '/testManage',
+          label: '测试管理',
           icon: 'data-board',
           children: [
             {
-              path: 'prediction/x1',
-              name: 'prediction_x1',
-              label: '示例1',
+              path: 'testManage/exam',
+              name: 'testManage_exam',
+              label: '考试管理',
               icon: 'collection-tag',
-              url: 'x1/x1'
-            }]
-        },
-        {
-          path: '/fileManage',
-          label: '生成信息管理',
-          icon: 'files',
-          children: [
+              url: 'exam/exam'
+            },
             {
-              path: 'fileManage/supportXFile',
-              name: 'fileManage_supportXFile',
-              label: '指纹管理',
+              path: 'testManage/paper',
+              name: 'testManage_paper',
+              label: '试卷管理',
               icon: 'collection-tag',
-              url: 'supportXFile/supportXFile'
-            }
+              url: 'paper/paper'
+            },
+            {
+              path: 'function/question',
+              name: 'testManage_question',
+              label: '试题管理',
+              icon: 'collection-tag',
+              url: 'question/question'
+            },
           ]
         }],
     };
@@ -130,11 +137,11 @@ export default {
     clickMenu(item) {
       this.$router.push({name: item.name});
     },
-    handleOpen(key,keyPath){
-      console.log(key,keyPath)
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath)
     },
-    handleClose(key,keyPath){
-      console.log(key,keyPath)
+    handleClose(key, keyPath) {
+      console.log(key, keyPath)
     },
   },
   computed: {

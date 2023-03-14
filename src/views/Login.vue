@@ -1,7 +1,7 @@
 <template>
   <div class="login-background">
     <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
-      <h3 class="login-title">单颗粒金属全元素分析云 登录</h3>
+      <h3 class="login-title">虚拟宠物医院后台管理系统 登录</h3>
       <el-form-item class="username" label="id" label-width="80px" prop="id">
         <el-input v-model="form.id" auto-complete="off" placeholder="请输入账号" type="input"></el-input>
       </el-form-item>

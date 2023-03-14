@@ -8,8 +8,8 @@ module.exports = {
         // 跨域2
         proxy: {
             '/api': {
-                target: 'http://localhost:8080/',            // 后端url
-                // target: 'http://127.0.0.1:4523/mock/1428114',   // mock用
+                // target: 'http://localhost:8080/',            // 后端url
+                target: 'http://127.0.0.1:4523/mock/1428114',   // mock用
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

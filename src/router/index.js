@@ -27,7 +27,7 @@ const routes = [{
     path: '/',
     name: 'Main',
     component: Main,
-    redirect: '/batchList',     // 后面改成增加注册，要改成/login
+    redirect: '/login',     // 后面改成增加注册，要改成/login
     meta: {
         login: true
     },
