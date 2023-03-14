@@ -1,7 +1,7 @@
-# pm-analysis: front-end
+# pet-hospital-back-manage: front-end
 
 ## Introduction
-A thesis managing project, based on gauss database. The front end is developed using _vue 2.0_.
+The front end is developed using _vue 2.0_.
 
 ## Config
 ### cross-domain
