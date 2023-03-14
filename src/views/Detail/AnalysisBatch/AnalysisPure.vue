@@ -68,34 +68,17 @@
         </el-select>
         <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="generateModel">生成</el-button>
       </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">热力图</template>
-        <el-select v-model="pure_fp.heatMapType" clearable placeholder="请选择样品类型" size="mini">
-          <el-option v-for="item in sampleTypeOptions" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-        <!--        <div style="display: flex;margin-top: 5px">-->
-        <el-button plain size="mini" style="margin-left: 10px" type="primary" @click="generateHeatMap()">生成热力图
-        </el-button>
-        <el-button plain size="mini" style="margin-left: 5px" type="primary" @click="downloadHeatMapData('pure')">
-          下载热力图数据文件
-        </el-button>
-        <!--        </div>-->
-      </el-descriptions-item>
     </el-descriptions>
-    <!--绘图区-->
-    <HeatMapPure :heat-map-info="heatMapInfo" heat-map-id="heatMapPure"></HeatMapPure>
   </div>
 </template>
 
 <script>
 import CommonTableSingle from "../../../components/CommonTableSingle";
-import HeatMapPure from "../Chart/HeatMap";
 import {downloadCSV, postRequestJSON} from "../../../utils/api";
 
 export default {
   name: "AnalysisPure",
-  components: {CommonTableSingle, HeatMapPure},
+  components: {CommonTableSingle},
   data() {
     //包含小数的数字
     let valiNumDotPass = (rule, value, callback) => {
@@ -124,14 +107,12 @@ export default {
       batchInfo: {
         batchId: "",
       },
-      heatMapInfo: "",
       pure_fp: {
         modelType: "",
         dynamicItem: [],
         input_logBase: "",
         groupList: [],
         groupId: "",    // 选中的组id
-        heatMapType: "",
         selectRow: ""
       },
       rules: {
@@ -414,76 +395,6 @@ export default {
         }
       });
     },
-    // 生成热力图
-    generateHeatMap() {
-      if (this.pure_fp.groupId === "") {
-        this.$message.error("请选择分组")
-        return
-      }
-      if (this.pure_fp.heatMapType === "") {
-        this.$message.error("请选择物质类型")
-        return
-      }
-      this.heatMapInfo = {
-        type: 'pure',
-        groupId: this.pure_fp.groupId,
-        fileId: "",
-        heatMapType: this.pure_fp.heatMapType,
-        logBase: "",
-      }
-    },
-    // 下载热力图数据文件
-    downloadHeatMapData() {
-      if (this.pure_fp.groupId === "") {
-        this.$message.error("请选择分组")
-        return
-      }
-      if (this.pure_fp.heatMapType === "") {
-        this.$message.error("请选择物质类型")
-        return
-      }
-      const loading = this.$loading({
-        lock: true,
-        text: '执行中，请等一会儿~',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-      postRequestJSON('/fileExist/heatMapDataCSV', {
-        id: this.pure_fp.groupId,
-        sampleType: "pure",
-        substanceType: this.pure_fp.heatMapType,
-        logBase: "",
-      }).then((resp) => {
-        loading.close();
-        if (resp.data.code === 0) {
-          this.$message.success(resp.data.message)
-          postRequestJSON('/download/heatMapDataCSV', {
-            id: this.pure_fp.groupId,
-            sampleType: "pure",
-            substanceType: this.pure_fp.heatMapType,
-            logBase: "",
-          }).then((resp) => {
-            loading.close();
-            downloadCSV(resp,
-                "HeatMapData-" +
-                "PureSample_" +
-                this.batchInfo.batchId + "_" +
-                this.pure_fp.heatMapType + "_" +
-                this.pure_fp.selectRow.substance + "_" +
-                this.pure_fp.selectRow.logBase)
-          });
-        } else if (resp.data.code === 1) {
-          this.$confirm(resp.data.message, '提示', {
-            confirmButtonText: '确定',
-            type: 'warning'
-          })
-        } else {
-          this.$confirm(resp.data.message, '提示', {
-            confirmButtonText: '确定',
-            type: 'error'
-          })
-        }
-      });
 
     },
     // 生成模型
