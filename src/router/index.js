@@ -5,21 +5,16 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 
-import BatchList from '@/views/ShowList/BatchList'
-
-import DetailBatch from '@/views/Detail/DetailBatch'
-
-import PostBatch from '@/views/Post/PostBatch'
-import PostSample from '@/views/Post/PostSample'
-
-import UserManage from '@/views/SystemSetting/UserManage'
-import Particle from "../views/Detail/AnalysisBatch/Particle";
-import TE from "../views/Detail/AnalysisBatch/TE";
-import SupportX from "../views/Detail/AnalysisBatch/SupportX";
-import IsotopeCount from "../views/Detail/AnalysisBatch/IsotopeCount";
-import AnalysisPure from "../views/Detail/AnalysisBatch/AnalysisPure";
-import AnalysisNotPure from "../views/Detail/AnalysisBatch/AnalysisNotPure";
-import SupportXFile from "../views/Detail/FileManage/SupportXFile";
+import DepartmentManage from "../views/Detail/BasicManage/DepartmentManage";
+import DrugManage from "../views/Detail/BasicManage/DrugManage";
+import InspectionManage from "../views/Detail/BasicManage/InspectionManage";
+import PeronnelManage from "../views/Detail/BasicManage/PeronnelManage";
+import DiseaseExample from "../views/Detail/DiseaseManage/DiseaseExample";
+import DiseaseReal from "../views/Detail/DiseaseManage/DiseaseReal";
+import ExamManage from "../views/Detail/TestManage/ExamManage";
+import PaperManage from "../views/Detail/TestManage/PaperManage";
+import QuestionManage from "../views/Detail/TestManage/QuestionManage";
+import UserManage from "../views/Detail/UserManage";
 
 Vue.use(VueRouter)
 
@@ -39,76 +34,61 @@ const routes = [{
             login: true
         }
     },
+        // 基本管理
         {
-            path: 'batchList',
-            name: 'batchList',
-            component: BatchList,
+            path: 'basicManage/department',
+            name: 'basicManage_department',
+            component: DepartmentManage,
             meta: {
                 login: true
             }
         },
         {
-            path: 'detailBatch',
-            name: 'detailBatch',
-            component: DetailBatch
+            path: 'basicManage/drug',
+            name: 'basicManage_drug',
+            component: DrugManage
         },
         {
-            path: 'postBatch',
-            name: 'postBatch',
-            component: PostBatch
+            path: 'basicManage/inspection',
+            name: 'basicManage_inspection',
+            component: InspectionManage
         },
         {
-            path: 'postSample',
-            name: 'postSample',
-            component: PostSample
+            path: 'basicManage/peronnel',
+            name: 'basicManage_peronnel',
+            component: PeronnelManage
         },
-        // 分析功能管理
+        // 疾病管理
         {
-            path: 'function/particle',
-            name: 'function_particle',
-            component: Particle
-        },
-        {
-            path: 'function/TE',
-            name: 'function_TE',
-            component: TE
+            path: 'diseaseManage/diseaseReal',
+            name: 'diseaseManage_diseaseReal',
+            component: DiseaseReal
         },
         {
-            path: 'function/isotopeCount',
-            name: 'function_isotopeCount',
-            component: IsotopeCount
+            path: 'diseaseManage/diseaseExample',
+            name: 'diseaseManage_diseaseExample',
+            component: DiseaseExample
+        },
+        // 测试管理
+        {
+            path: 'testManage/exam',
+            name: 'testManage_exam',
+            component: ExamManage
         },
         {
-            path: 'function/supportX',
-            name: 'function_supportX',
-            component: SupportX
+            path: 'testManage/paper',
+            name: 'testManage_paper',
+            component: PaperManage
         },
         {
-            path: 'function/analysisPure',
-            name: 'function_analysisPure',
-            component: AnalysisPure
-        },
-        {
-            path: 'function/analysisNotPure',
-            name: 'function_analysisNotPure',
-            component: AnalysisNotPure
-        },
-        // 预测功能管理
-        {   // 样例
-            path: 'prediction/x1',
-            name: 'prediction_x1',
-            component: TE
-        },
-        // 数据管理
-        {
-            path: 'fileManage/supportXFile',
-            name: 'fileManage_supportXFile',
-            component: SupportXFile
+            path: 'testManage/question',
+            name: 'testManage_question',
+            component: QuestionManage
         },
         // 用户管理
         {
-            path: 'systemSetting/userManage',
-            name: 'systemSetting_userManage',
+            path: 'userManage',
+            name: 'userManage',
             component: UserManage,
             meta: {
                 login: true

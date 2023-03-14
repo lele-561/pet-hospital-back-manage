@@ -40,47 +40,47 @@ export default {
         url: 'Home/Home'
       },
         {
+          path: '/userManage',
+          name: 'userManage',
+          label: '用户管理',
+          icon: 's-grid',
+          url: 'userManage/userManage'
+        },
+        {
           path: '/basicInfo',
           name: 'basicInfo',
           label: '基本管理',
           icon: 's-grid',
           children: [
             {
-              path: 'basicManage/office',
-              name: 'diseaseManage_exampleCase',
+              path: 'basicManage/department',
+              name: 'basicManage_department',
               label: '科室管理',
               icon: 'collection-tag',
-              url: 'exampleCase/exampleCase'
+              url: 'department/department'
             },
             {
-              path: 'basicManage/office',
-              name: 'diseaseManage_exampleCase',
+              path: 'basicManage/peronnel',
+              name: 'basicManage_peronnel',
               label: '人员管理',
               icon: 'collection-tag',
-              url: 'exampleCase/exampleCase'
+              url: 'peronnel/peronnel'
             },
             {
-              path: 'basicManage/office',
-              name: 'diseaseManage_exampleCase',
+              path: 'basicManage/drug',
+              name: 'basicManage_drug',
               label: '药品管理',
               icon: 'collection-tag',
-              url: 'exampleCase/exampleCase'
+              url: 'drug/drug'
             },
             {
-              path: 'basicManage/office',
-              name: 'diseaseManage_exampleCase',
+              path: 'basicManage/inspection',
+              name: 'basicManage_inspection',
               label: '检查项目管理',
               icon: 'collection-tag',
-              url: 'exampleCase/exampleCase'
+              url: 'inspection/inspection'
             }
           ]
-        },
-        {
-          path: '/batchList',
-          name: 'batchList',
-          label: '用户管理',
-          icon: 's-grid',
-          url: 'batchList/batchList'
         },
         {
           path: '/diseaseManage',
@@ -88,18 +88,18 @@ export default {
           icon: 'data-board',
           children: [
             {
-              path: 'diseaseManage/exampleCase',
-              name: 'diseaseManage_exampleCase',
+              path: 'diseaseManage/diseaseExample',
+              name: 'diseaseManage_diseaseExample',
               label: '病例信息',
               icon: 'collection-tag',
-              url: 'exampleCase/exampleCase'
+              url: 'diseaseExample/diseaseExample'
             },
             {
-              path: 'diseaseManage/realCase',
-              name: 'diseaseManage_realCase',
+              path: 'diseaseManage/diseaseReal',
+              name: 'diseaseManage_diseaseReal',
               label: '真实案例',
               icon: 'collection-tag',
-              url: 'realCase/realCase'
+              url: 'diseaseReal/diseaseReal'
             }
           ]
         },
