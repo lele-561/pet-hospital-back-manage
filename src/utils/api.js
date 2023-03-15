@@ -1,7 +1,5 @@
 import axios from "axios";
-// let base = 'http://localhost:8090';   // 跨域1
-// let base = 'http://localhost:8090/api';   // 跨域1
-let base = 'https://black-sea-0a013c010.2.azurestaticapps.net/api';  // 跨域2
+let base = '/api';  // 开发跨域
 
 
 export const getFormData = (url, params) => {
@@ -42,11 +40,7 @@ export const postFormData = (url, data, params) => {
         data: data,
         params: params,
         headers: {
-            'Content-type': 'multipart/form-data'
+            'Content-type': 'multipart/form-data',
         },
-        transformRequest: [function (data) {
-            data = JSON.stringify(data);
-            return data
-        }],
     });
 }

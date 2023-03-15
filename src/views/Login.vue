@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {postRequestJSON} from "../utils/api";
+import {postFormData} from "../utils/api";
 
 export default {
   name: 'Login',
@@ -37,7 +37,7 @@ export default {
             trigger: "blur"
           },
           {
-            max: 10,
+            max: 100,
             message: "id长度不能大于10位",
             trigger: "blur"
           }
@@ -56,22 +56,26 @@ export default {
     login: function () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          postRequestJSON("/user/login", {
-            id: this.form.id,
-            password: this.$md5(this.form.password)
+          //            password: this.$md5(this.form.password)
+
+          postFormData("/user/login", {
+            phoneNumber: this.form.id,
+            password:this.form.password
           }).then((resp) => {
-            if (resp.data.userId != null) {
-              this.$store.commit('setToken', resp.data.userId)
-              this.$store.commit('setRoleName', resp.data.roleName)
-              this.$store.commit('setUserName', resp.data.userName)
-              this.$message({
-                message: resp.data.message,
-                type: 'success'
-              })
-              this.$router.push({name: 'home'})
-            } else {
-              this.$message.error(resp.data.message);
-            }
+            console.log(resp.data)
+
+            // if (resp.data.userId != null) {
+            //   this.$store.commit('setToken', resp.data.userId)
+            //   this.$store.commit('setRoleName', resp.data.roleName)
+            //   this.$store.commit('setUserName', resp.data.userName)
+            //   this.$message({
+            //     message: resp.data.message,
+            //     type: 'success'
+            //   })
+            //   this.$router.push({name: 'home'})
+            // } else {
+            //   this.$message.error(resp.data.message);
+            // }
           })
         } else {
           return false;

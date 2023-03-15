@@ -5,11 +5,14 @@ module.exports = {
         // 跨域1
         // proxy: "http://localhost:8080"
         // proxy: "http://127.0.0.1:4523/mock/1428114"
+        // proxy: 'http://pet-hospital.azurewebsites.net'
         // 跨域2
         proxy: {
             '/api': {
                 // target: 'http://localhost:8080/',            // 后端url
-                target: 'https://black-sea-0a013c010.2.azurestaticapps.net/',   // B组mock用
+                target: 'http://pet-hospital.azurewebsites.net',   // 后端url
+                // target: 'http://pet-hospital.azurewebsites.net',   // B组mock用
+                secure:true,
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
