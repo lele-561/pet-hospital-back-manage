@@ -15,7 +15,7 @@
         <el-input v-model="input" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="search(input)">搜索</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格部分 -->
@@ -23,18 +23,11 @@
       <common-table-user :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
                          @edit="editUser"></common-table-user>
     </div>
-    <!-- 底部跳转 -->
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count="7" background
-                     layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
-      </el-pagination>
-    </div>
-
   </div>
 </template>
 
 <script>
-import {postRequestJSON} from "@/utils/api";
+import {getFormData, postFormData} from "@/utils/api";
 import CommonFormUser from "@/components/CommonFormUser.vue";
 import CommonTableUser from "@/components/CommonTableUser.vue"
 
@@ -53,61 +46,40 @@ export default {
       input: "",
       // 表单配置
       operateFormLabel: [
+        {model: "name", label: "用户名", type: "input"},
         {
-          model: "userName", // 数据名
-          label: "用户名",
-          type: "input",
-        },
-        {
-          model: "roleName",
+          model: "role",
           label: "权限",
           type: "select",
-          opts: [{
-            label: '系统管理员',
-            value: 'admin'
-          },
-            {
-              label: '普通用户',
-              value: 'user'
-            },
+          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},
           ]
         },
       ],
       operateFormData: {
-        userName: "",
-        roleName: "",
+        id: "",
+        name: "",
+        role: "",
       },
       // 表格配置
       tableData: [],
-      tableLabel: [{
-        prop: "userName",
-        label: '用户名'
-      },
-        {
-          prop: "userId",
-          label: 'ID'
-        }, {
-          prop: "roleName",
-          label: '权限'
-        }
+      tableLabel: [
+        {prop: "id", label: 'ID'},
+        {prop: "name", label: '用户名'},
+        {prop: "role", label: '权限'},
+        {prop: 'gender',label:'性别'}
       ]
     };
   },
   methods: {
-    handleCurrentChange: function (currentPage) {
-      this.currentPage = currentPage
-      this.search()
-    },
-    search: function () {
-      postRequestJSON('/user/getUserList', {input: this.input, currentPage: this.currentPage}).then((resp) => {
-        // paper改变
-        this.tableData = resp.data.content;
-        this.totalPages = resp.data.totalPages;
-        this.currentPage = resp.data.currentPage;
+    search: function (content) {
+      console.log(content)
+      getFormData('/userManage/getAllUsers', {content: content}).then((resp) => {
+        console.log(resp.data)
+        this.tableData = resp.data.result.users
       })
     },
     confirm() {
-      postRequestJSON('/user/updateUser', this.operateFormData).then((resp) => {
+      postFormData('/userManage/updateOneUser', this.operateFormData).then((resp) => {
         this.isShow = false;
       })
     },
@@ -122,12 +94,21 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        postRequestJSON('/user/deleteUser', {id: row.userId}).then((resp) => {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          });
-          this.search()
+        console.log(row.id)
+        postFormData('/userManage/deleteOneUser', {id: row.id}).then((resp) => {
+          if (resp.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: resp.data.msg
+            });
+            this.search("")
+          }
+          else {
+            this.$message({
+              type: 'warning',
+              message: resp.data.msg
+            });
+          }
         })
       }).catch(() => {
         this.$message({
@@ -138,7 +119,7 @@ export default {
     }
   },
   mounted() {
-    this.search();
+    this.search('');
   }
 };
 </script>

@@ -9,7 +9,7 @@ module.exports = {
         proxy: {
             '/api': {
                 // target: 'http://localhost:8080/',            // 后端url
-                target: 'http://127.0.0.1:4523/mock/1428114',   // mock用
+                target: 'https://black-sea-0a013c010.2.azurestaticapps.net/',   // B组mock用
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

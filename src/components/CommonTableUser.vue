@@ -1,11 +1,17 @@
 <template>
-  <div class="common-table" height="100%" stripe>
+  <div class="common-table">
     <el-table :data="tableData">
-      <el-table-column v-for="item in tableLabel" :key="item.prop" :label="item.label" min-width="25%"
-                       show-overflow-tooltip>
-        <template slot-scope="scope"><span style="margin-left:10px">{{
-            item.prop === "roleName" ? scope.row[item.prop] === "admin" ? "超级管理员" : "普通用户" : scope.row[item.prop]
-          }}</span></template>
+      <el-table-column
+          v-for="item in tableLabel"
+          :key="item.prop"
+          :label="item.label"
+          min-width="25%"
+          show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{
+              item.prop === "role" ? scope.row[item.prop] === "true" ? "管理员" : "普通用户" : scope.row[item.prop]
+            }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="操作" min-width="25%">
         <template slot-scope="scope">
@@ -42,16 +48,6 @@ export default {
 
 <style lang="less" scoped>
 .common-table {
-  height: calc(100% - 62px);
-  background-color: #fff;
-  position: relative;
-
-  .pager {
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-  }
-
-;
+  margin-top: 10px;
 }
 </style>
