@@ -2,11 +2,17 @@
   <div class="login-background">
     <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
       <h3 class="login-title">虚拟宠物医院后台管理系统 注册</h3>
-      <el-form-item class="username" label="用户名" label-width="80px" prop="username">
-        <el-input v-model="form.username" auto-complete="off" placeholder="请输入用户名" type="input"></el-input>
+      <el-form-item class="name" label="手机号码" label-width="80px" prop="phoneNumber">
+        <el-input v-model="form.phoneNumber" auto-complete="off" placeholder="请输入手机号码" type="input"></el-input>
+      </el-form-item>
+      <el-form-item class="name" label="用户名" label-width="80px" prop="name">
+        <el-input v-model="form.name" auto-complete="off" placeholder="请输入用户名" type="input"></el-input>
       </el-form-item>
       <el-form-item label="密码" label-width="80px" prop="password">
         <el-input v-model="form.password" auto-complete="off" placeholder="请输入密码" type="password"></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" label-width="80px" prop="passwordConfirm">
+        <el-input v-model="form.passwordConfirm" auto-complete="off" placeholder="请确认密码" type="password"></el-input>
       </el-form-item>
       <div style="text-align: center;margin-bottom: 20px">
         <el-button class="login-submit" type="primary" @click="register">注册</el-button>
@@ -22,37 +28,33 @@ import {postRequestJSON} from "../utils/api";
 export default {
   name: 'Register',
   data() {
+    let valiPhoneNumberPass = (rule, value, callback) => {
+      let reg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+      if (value === '') callback(new Error('请输入电话号码'));
+      else if (!reg.test(value)) callback(new Error('请输入正确的电话号码'));
+      else callback();
+    };
+    let valiPasswordConfirm = (rule, value, callback) => {
+      if (value === undefined || value === '') callback(new Error('密码不能为空'));
+      else if (value !== this.form.password) callback(new Error('密码不符'));
+      else callback();
+    };
     return {
       form: {},
       rules: {
-        username: [
-          {
-            required: true,
-            message: "请输入用户名",
-            trigger: "blur"
-          },
-          {
-            min: 3,
-            message: "用户名长度不能小于3位",
-            trigger: "blur"
-          },
-          {
-            max: 100,
-            message: "用户名长度不能大于10位",
-            trigger: "blur"
-          }
+        phoneNumber: [{required: true, validator: valiPhoneNumberPass, trigger: "blur"},],
+        name: [
+          {required: true, message: "请输入用户名", trigger: "blur"},
+          {min: 3, message: "用户名长度不能小于3位", trigger: "blur"},
+          {max: 20, message: "用户名长度不能大于20位", trigger: "blur"}
         ],
         password: [
-          {
-            required: true,
-            message: "请输入密码",
-            trigger: "blur"
-          },
-          {
-            min: 3,
-            message: "密码长度不能小于3位",
-            trigger: "blur"
-          }
+          {required: true, message: "请输入密码", trigger: "blur"},
+          {min: 3, message: "密码长度不能小于3位", trigger: "blur"},
+          {max: 20, message: "密码长度不能大于20位", trigger: "blur"}
+        ],
+        passwordConfirm: [
+          {required: true, validator: valiPasswordConfirm, trigger: "blur"},
         ]
       }
     }
@@ -62,27 +64,24 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           postRequestJSON('/user/register', {
-            username: this.form.username,
+            phoneNumber: this.form.phoneNumber,
+            name: this.form.name,
             password: this.$md5(this.form.password)
           }).then((resp) => {
-            // 传到后端，如果ok则继续回到登陆页面登陆
-            if (resp.data.success) {
-              this.$confirm(resp.data.message, "提示", {
+            if (resp.data.code === 0) {
+              this.$confirm('注册成功，是否返回登录？', "提示", {
                 confirmButtonText: "返回",
                 type: "success",
-              })
-                  .then(() => {
-                    this.$router.push("/login")
-                  })
-                  .catch(() => {
-                  });
-            } else {
-              this.$message.error(resp.data.message)
+              }).then(() => {
+                this.$router.push("/login")
+              }).catch(() => {
+              });
+            } else if (resp.data.code === 1) {
+              this.$message.error('电话号码已存在')
+              this.form = {}
             }
           })
-        } else {
-          return false;
-        }
+        } else return false
       });
     },
     back() {
