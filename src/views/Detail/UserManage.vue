@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog :title="operateType === 'add' ? '新增用户' : '更新用户'" :visible.sync="isShow">
+    <el-dialog title="用户信息" :visible.sync="isShow">
       <common-form-user ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
       </common-form-user>
       <div slot="footer" class="dialog-footer">
@@ -22,14 +22,19 @@
     <div>
       <common-table-user :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
                          @edit="editUser"></common-table-user>
+      <div style="text-align: center; margin-top: 10px">
+        <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
+                       layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import {getFormData, postFormData} from "@/utils/api";
-import CommonFormUser from "@/components/CommonFormUser.vue";
-import CommonTableUser from "@/components/CommonTableUser.vue"
+import CommonFormUser from "@/components/CommonForm.vue";
+import CommonTableUser from "@/components/CommonTableOperator.vue"
 
 export default {
   name: "UserManage",
@@ -38,7 +43,6 @@ export default {
   },
   data() {
     return {
-      operateType: "add",
       isShow: false,
       pageSize: 10,
       totalPages: 1,
@@ -54,37 +58,44 @@ export default {
           opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},
           ]
         },
+        {model: "level", label: "学习等级", type: "input"},
+        {model: "phoneNumber", label: "电话号码", type: "input"},
       ],
       operateFormData: {
         id: "",
         name: "",
+        phoneNumber: "",
         role: "",
       },
       // 表格配置
       tableData: [],
       tableLabel: [
-        {prop: "id", label: 'ID'},
         {prop: "name", label: '用户名'},
+        {prop: "phoneNumber", label: '电话号码'},
         {prop: "role", label: '权限'},
-        {prop: 'gender',label:'性别'}
+        {prop: "level", label: '学习等级'},
       ]
     };
   },
   methods: {
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage
+      this.search(this.content)
+    },
     search: function (content) {
-      console.log(content)
-      getFormData('/userManage/getAllUsers', {content: content}).then((resp) => {
+      console.log(this.currentPage)
+      getFormData('/user/getAllUsers', {content: content}).then((resp) => {
         console.log(resp.data)
         this.tableData = resp.data.result.users
+        this.totalPages = resp.data.result.totalPages
       })
     },
     confirm() {
-      postFormData('/userManage/updateOneUser', this.operateFormData).then((resp) => {
+      postFormData('/user/updateOneUser', this.operateFormData).then((resp) => {
         this.isShow = false;
       })
     },
     editUser(row) {
-      this.operateType = 'edit';
       this.isShow = true;
       this.operateFormData = row
     },
@@ -95,15 +106,14 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log(row.id)
-        postFormData('/userManage/deleteOneUser', {id: row.id}).then((resp) => {
+        postFormData('/user/deleteOneUser', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({
               type: 'success',
               message: resp.data.msg
             });
             this.search("")
-          }
-          else {
+          } else {
             this.$message({
               type: 'warning',
               message: resp.data.msg
@@ -119,6 +129,7 @@ export default {
     }
   },
   mounted() {
+    this.currentPage=1
     this.search('');
   }
 };
