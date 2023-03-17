@@ -6,9 +6,9 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 
 import DepartmentManage from "../views/Detail/BasicManage/DepartmentManage";
-import DrugManage from "../views/Detail/BasicManage/DrugManage";
-import InspectionManage from "../views/Detail/BasicManage/InspectionManage";
-import PeronnelManage from "../views/Detail/BasicManage/PeronnelManage";
+import MedicineManage from "../views/Detail/BasicManage/MedicineManage";
+import CheckupManage from "../views/Detail/BasicManage/CheckupManage";
+import PersonnelManage from "../views/Detail/BasicManage/PersonnelManage";
 import DiseaseExample from "../views/Detail/DiseaseManage/DiseaseExample";
 import DiseaseReal from "../views/Detail/DiseaseManage/DiseaseReal";
 import ExamManage from "../views/Detail/TestManage/ExamManage";
@@ -44,19 +44,19 @@ const routes = [{
             }
         },
         {
-            path: 'basicManage/drug',
-            name: 'basicManage_drug',
-            component: DrugManage
+            path: 'basicManage/medicine',
+            name: 'basicManage_medicine',
+            component: MedicineManage
         },
         {
-            path: 'basicManage/inspection',
-            name: 'basicManage_inspection',
-            component: InspectionManage
+            path: 'basicManage/checkup',
+            name: 'basicManage_checkup',
+            component: CheckupManage
         },
         {
-            path: 'basicManage/peronnel',
-            name: 'basicManage_peronnel',
-            component: PeronnelManage
+            path: 'basicManage/personnel',
+            name: 'basicManage_personnel',
+            component: PersonnelManage
         },
         // 疾病管理
         {

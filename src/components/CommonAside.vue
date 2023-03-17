@@ -60,25 +60,25 @@ export default {
               url: 'department/department'
             },
             {
-              path: 'basicManage/peronnel',
-              name: 'basicManage_peronnel',
+              path: 'basicManage/personnel',
+              name: 'basicManage_personnel',
               label: '人员管理',
               icon: 'collection-tag',
-              url: 'peronnel/peronnel'
+              url: 'personnel/personnel'
             },
             {
-              path: 'basicManage/drug',
-              name: 'basicManage_drug',
+              path: 'basicManage/medicine',
+              name: 'basicManage_medicine',
               label: '药品管理',
               icon: 'collection-tag',
-              url: 'drug/drug'
+              url: 'medicine/medicine'
             },
             {
-              path: 'basicManage/inspection',
-              name: 'basicManage_inspection',
+              path: 'basicManage/checkup',
+              name: 'basicManage_checkup',
               label: '检查项目管理',
               icon: 'collection-tag',
-              url: 'inspection/inspection'
+              url: 'checkup/checkup'
             }
           ]
         },
