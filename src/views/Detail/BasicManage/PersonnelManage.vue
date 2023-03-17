@@ -88,7 +88,6 @@ export default {
       this.search(this.content)
     },
     search: function (content) {
-      console.log(content)
       getFormData('/personnel/getAllPersonnels', {content: content, currentPage: this.currentPage}).then((resp) => {
         this.tableData = resp.data.result.personnels
         this.totalPages = resp.data.result.totalPages
@@ -97,7 +96,6 @@ export default {
     },
     confirm() {
       if (this.operateType === 'add') {
-        console.log(this.operateFormData)
         postFormData('/personnel/addOnePersonnel', this.operateFormData).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
