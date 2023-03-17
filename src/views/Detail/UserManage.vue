@@ -15,7 +15,7 @@
         <el-input v-model="input" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" @click="search(input)">搜索</el-button>
+        <el-button type="success" icon="el-icon-search" @click="search(input)">搜索</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格部分 -->
