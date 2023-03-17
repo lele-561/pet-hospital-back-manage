@@ -44,7 +44,7 @@ export default {
           name: 'userManage',
           label: '用户管理',
           icon: 's-grid',
-          url: 'userManage/userManage'
+          url: 'user/userManage'
         },
         {
           path: '/basicInfo',
