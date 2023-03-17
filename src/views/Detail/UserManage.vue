@@ -2,8 +2,8 @@
   <div>
     <!-- 收集表单 -->
     <el-dialog title="用户信息" :visible.sync="isShow">
-      <common-form-user ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
-      </common-form-user>
+      <common-form ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
+      </common-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="" @click="isShow = false">取消</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
@@ -20,8 +20,8 @@
     </el-form>
     <!-- 表格部分 -->
     <div>
-      <common-table-user :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
-                         @edit="editUser"></common-table-user>
+      <common-table-operator :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
+                             @edit="editUser"></common-table-operator>
       <div style="text-align: center; margin-top: 10px">
         <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
                        layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
@@ -33,13 +33,13 @@
 
 <script>
 import {getFormData, postFormData} from "@/utils/api";
-import CommonFormUser from "@/components/CommonForm.vue";
-import CommonTableUser from "@/components/CommonTableOperator.vue"
+import CommonForm from "@/components/CommonForm.vue";
+import CommonTableOperator from "@/components/CommonTableOperator.vue"
 
 export default {
   name: "UserManage",
   components: {
-    CommonFormUser, CommonTableUser
+    CommonForm, CommonTableOperator
   },
   data() {
     return {
@@ -55,8 +55,7 @@ export default {
           model: "role",
           label: "权限",
           type: "select",
-          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},
-          ]
+          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},]
         },
         {model: "level", label: "学习等级", type: "input"},
         {model: "phoneNumber", label: "电话号码", type: "input"},
@@ -83,16 +82,19 @@ export default {
       this.search(this.content)
     },
     search: function (content) {
-      console.log(this.currentPage)
-      getFormData('/user/getAllUsers', {content: content}).then((resp) => {
-        console.log(resp.data)
+      getFormData('/user/getAllUsers', {content: content, currentPage: this.currentPage}).then((resp) => {
         this.tableData = resp.data.result.users
         this.totalPages = resp.data.result.totalPages
+        this.currentPage = resp.data.result.currentPage
       })
     },
     confirm() {
       postFormData('/user/updateOneUser', this.operateFormData).then((resp) => {
-        this.isShow = false;
+        if (resp.data.code === 0) {
+          this.$message({type: 'success', message: resp.data.message});
+          this.isShow = false;
+          this.search('')
+        } else this.$message({type: 'warning', message: resp.data.message});
       })
     },
     editUser(row) {
@@ -105,31 +107,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(row.id)
         postFormData('/user/deleteOneUser', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: resp.data.msg
-            });
+            this.$message({type: 'success', message: resp.data.message});
             this.search("")
-          } else {
-            this.$message({
-              type: 'warning',
-              message: resp.data.msg
-            });
-          }
+          } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
+        this.$message({type: 'info', message: '已取消删除'});
       });
     }
   },
   mounted() {
-    this.currentPage=1
+    this.currentPage = 1
     this.search('');
   }
 };
