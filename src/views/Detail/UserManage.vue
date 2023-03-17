@@ -55,8 +55,7 @@ export default {
           model: "role",
           label: "权限",
           type: "select",
-          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},
-          ]
+          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},]
         },
         {model: "level", label: "学习等级", type: "input"},
         {model: "phoneNumber", label: "电话号码", type: "input"},
@@ -83,29 +82,19 @@ export default {
       this.search(this.content)
     },
     search: function (content) {
-      console.log(this.currentPage)
       getFormData('/user/getAllUsers', {content: content, currentPage: this.currentPage}).then((resp) => {
-        console.log(resp.data)
-        if (resp.data.result.users.length === 0)
-          this.currentPage = 1
         this.tableData = resp.data.result.users
         this.totalPages = resp.data.result.totalPages
+        this.currentPage = resp.data.result.currentPage
       })
     },
     confirm() {
       postFormData('/user/updateOneUser', this.operateFormData).then((resp) => {
         if (resp.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: resp.data.message
-          });
+          this.$message({type: 'success', message: resp.data.message});
           this.isShow = false;
-        } else {
-          this.$message({
-            type: 'warning',
-            message: resp.data.message
-          });
-        }
+          this.search('')
+        } else this.$message({type: 'warning', message: resp.data.message});
       })
     },
     editUser(row) {
@@ -118,26 +107,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(row.id)
         postFormData('/user/deleteOneUser', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: resp.data.message
-            });
+            this.$message({type: 'success', message: resp.data.message});
             this.search("")
-          } else {
-            this.$message({
-              type: 'warning',
-              message: resp.data.message
-            });
-          }
+          } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
+        this.$message({type: 'info', message: '已取消删除'});
       });
     }
   },
