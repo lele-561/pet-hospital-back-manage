@@ -2,8 +2,8 @@
   <div>
     <!-- 收集表单 -->
     <el-dialog title="用户信息" :visible.sync="isShow">
-      <common-form-user ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
-      </common-form-user>
+      <common-form ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
+      </common-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="" @click="isShow = false">取消</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
@@ -20,8 +20,8 @@
     </el-form>
     <!-- 表格部分 -->
     <div>
-      <common-table-user :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
-                         @edit="editUser"></common-table-user>
+      <common-table-operator :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
+                             @edit="editUser"></common-table-operator>
       <div style="text-align: center; margin-top: 10px">
         <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
                        layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
@@ -33,13 +33,13 @@
 
 <script>
 import {getFormData, postFormData} from "@/utils/api";
-import CommonFormUser from "@/components/CommonForm.vue";
-import CommonTableUser from "@/components/CommonTableOperator.vue"
+import CommonForm from "@/components/CommonForm.vue";
+import CommonTableOperator from "@/components/CommonTableOperator.vue"
 
 export default {
   name: "UserManage",
   components: {
-    CommonFormUser, CommonTableUser
+    CommonForm, CommonTableOperator
   },
   data() {
     return {
@@ -84,15 +84,28 @@ export default {
     },
     search: function (content) {
       console.log(this.currentPage)
-      getFormData('/user/getAllUsers', {content: content}).then((resp) => {
+      getFormData('/user/getAllUsers', {content: content, currentPage: this.currentPage}).then((resp) => {
         console.log(resp.data)
+        if (resp.data.result.users.length === 0)
+          this.currentPage = 1
         this.tableData = resp.data.result.users
         this.totalPages = resp.data.result.totalPages
       })
     },
     confirm() {
       postFormData('/user/updateOneUser', this.operateFormData).then((resp) => {
-        this.isShow = false;
+        if (resp.data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: resp.data.message
+          });
+          this.isShow = false;
+        } else {
+          this.$message({
+            type: 'warning',
+            message: resp.data.message
+          });
+        }
       })
     },
     editUser(row) {
@@ -110,13 +123,13 @@ export default {
           if (resp.data.code === 0) {
             this.$message({
               type: 'success',
-              message: resp.data.msg
+              message: resp.data.message
             });
             this.search("")
           } else {
             this.$message({
               type: 'warning',
-              message: resp.data.msg
+              message: resp.data.message
             });
           }
         })
@@ -129,7 +142,7 @@ export default {
     }
   },
   mounted() {
-    this.currentPage=1
+    this.currentPage = 1
     this.search('');
   }
 };
