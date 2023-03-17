@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "DrugManage"
+  name: "MedicineManage"
 }
 </script>
 

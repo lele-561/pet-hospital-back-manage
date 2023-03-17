@@ -88,6 +88,7 @@ export default {
       this.search(this.content)
     },
     search: function (content) {
+      console.log(content)
       getFormData('/personnel/getAllPersonnels', {content: content, currentPage: this.currentPage}).then((resp) => {
         this.tableData = resp.data.result.personnels
         this.totalPages = resp.data.result.totalPages

@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "InspectionManage"
+  name: "CheckupManage"
 }
 </script>
 
