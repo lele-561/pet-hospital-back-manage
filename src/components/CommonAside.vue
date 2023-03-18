@@ -43,7 +43,7 @@ export default {
           path: '/userManage',
           name: 'userManage',
           label: '用户管理',
-          icon: 's-grid',
+          icon: 'user-solid',
           url: 'user/userManage'
         },
         {
@@ -85,7 +85,7 @@ export default {
         {
           path: '/diseaseManage',
           label: '疾病管理',
-          icon: 'data-board',
+          icon: 's-platform',
           children: [
             {
               path: 'diseaseManage/diseaseExample',
@@ -106,7 +106,7 @@ export default {
         {
           path: '/testManage',
           label: '测试管理',
-          icon: 'data-board',
+          icon: 's-claim',
           children: [
             {
               path: 'testManage/exam',
