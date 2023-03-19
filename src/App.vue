@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <router-view :key="$route.query"></router-view>
-<!--    <router-view :key="$route.path"></router-view>-->
+  <div id='app'>
+    <router-view :key='$route.query'></router-view>
+<!--    <router-view :key='$route.path'></router-view>-->
   </div>
 </template>
 
