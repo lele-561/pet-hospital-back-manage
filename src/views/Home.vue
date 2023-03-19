@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span=24>
-        <el-card class="card">
+        <el-card class='card'>
           <h2>虚拟宠物医院后台管理系统 v1.0</h2>
         </el-card>
       </el-col>
@@ -25,7 +25,7 @@ export default {
 
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .card {
   margin-top: 10px;
   height: 500px;
