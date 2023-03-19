@@ -132,6 +132,7 @@ export default {
       await this.$bus.$emit('toFormValid', 'Medicine')
       if (this.formValid) {
         if (this.operateType === 'add') {
+          delete this.formData.id
           postFormData('/medicine/addOneMedicine', this.formData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message({type: 'success', message: resp.data.message});
