@@ -1,23 +1,23 @@
 <template>
-  <div class="login-background">
-    <el-form ref="form" :model="form" :rules="rules" class="login-container" label-width="100px" status-icon>
-      <h3 class="login-title">虚拟宠物医院后台管理系统 登录</h3>
-      <el-form-item class="username" label="电话号码" label-width="80px" prop="phoneNumber">
-        <el-input v-model="form.phoneNumber" auto-complete="off" placeholder="请输入电话号码" type="input"></el-input>
+  <div class='login-background'>
+    <el-form ref='form' :model='form' :rules='rules' class='login-container' label-width='100px' status-icon>
+      <h3 class='login-title'>虚拟宠物医院后台管理系统 登录</h3>
+      <el-form-item class='username' label='电话号码' label-width='80px' prop='phoneNumber'>
+        <el-input v-model='form.phoneNumber' auto-complete='off' placeholder='请输入电话号码' type='input'></el-input>
       </el-form-item>
-      <el-form-item label="密码" label-width="80px" prop="password">
-        <el-input v-model="form.password" auto-complete="off" placeholder="请输入密码" type="password"></el-input>
+      <el-form-item label='密码' label-width='80px' prop='password'>
+        <el-input v-model='form.password' auto-complete='off' placeholder='请输入密码' type='password'></el-input>
       </el-form-item>
-      <div style="text-align: center;margin-bottom: 20px">
-        <el-button class="login-submit" type="primary" @click="login">登录</el-button>
-        <el-button class="login-submit" style="margin-left: 30px" type="primary" @click="register">注册</el-button>
+      <div style='text-align: center;margin-bottom: 20px'>
+        <el-button class='login-submit' type='primary' @click='login'>登录</el-button>
+        <el-button class='login-submit' style='margin-left: 30px' type='primary' @click='register'>注册</el-button>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import {postFormData} from "../utils/api";
+import {postFormData} from '../utils/api';
 
 export default {
   name: 'Login',
@@ -31,11 +31,11 @@ export default {
     return {
       form: {},
       rules: {
-        phoneNumber: [{required: true, validator: valiPhoneNumberPass, trigger: "blur"},],
+        phoneNumber: [{required: true, validator: valiPhoneNumberPass, trigger: 'blur'},],
         password: [
-          {required: true, message: "请输入密码", trigger: "blur"},
-          {min: 3, message: "密码长度不能小于3位", trigger: "blur"},
-          {max: 20, message: "密码长度不能大于20位", trigger: "blur"}
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 3, message: '密码长度不得少于3位', trigger: 'blur'},
+          {max: 20, message: '密码长度不得多于20位', trigger: 'blur'}
         ],
       }
     }
@@ -44,7 +44,7 @@ export default {
     login: function () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          postFormData("/user/login", {
+          postFormData('/user/login', {
             phoneNumber: this.form.phoneNumber,
             password: this.$md5(this.form.password)
           }).then((resp) => {
@@ -58,24 +58,24 @@ export default {
               //   this.$store.commit('setRoleName', resp.data.roleName)
               //   this.$store.commit('setUserName', resp.data.userName)
             } else if (resp.data.code === 1) {
-              this.$confirm('该用户不存在，是否前往注册？', "提示", {
-                confirmButtonText: "确定",
-                type: "error",
+              this.$confirm('该用户不存在，是否前往注册？', '提示', {
+                confirmButtonText: '确定',
+                type: 'error',
               }).then(() => {
-                this.$router.push("/register")
+                this.$router.push('/register')
               }).catch(() => {
               });
             } else if (resp.data.code === 2) {
-              this.$confirm('密码错误', "提示", {
-                confirmButtonText: "返回",
-                type: "error",
+              this.$confirm('密码错误', '提示', {
+                confirmButtonText: '返回',
+                type: 'error',
               }).then(() => {
               }).catch(() => {
               });
             } else {
-              this.$confirm('该用户无权限', "提示", {
-                confirmButtonText: "返回",
-                type: "warning",
+              this.$confirm('该用户无权限', '提示', {
+                confirmButtonText: '返回',
+                type: 'warning',
               }).then(() => {
               }).catch(() => {
               });
@@ -91,7 +91,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .login-container {
   border-radius: 15px;
   background-clip: padding-box;

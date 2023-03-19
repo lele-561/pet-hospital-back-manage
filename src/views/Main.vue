@@ -1,9 +1,9 @@
 <template>
-  <el-container style="background-color:#eef2f5;height:100%">
-    <el-aside width="auto">
+  <el-container style='background-color:#eef2f5;height:100%'>
+    <el-aside width='auto'>
       <common-aside></common-aside>
     </el-aside>
-    <el-container style="height:100%">
+    <el-container style='height:100%'>
       <el-header>
         <common-header></common-header>
       </el-header>
@@ -33,7 +33,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .el-header {
   background-image: linear-gradient(to left, #3ab5b0 0%, #3d99be 31%, #56317a 100%);
 }
