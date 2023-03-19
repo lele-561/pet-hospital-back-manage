@@ -130,7 +130,6 @@ export default {
     },
     editUser(row) {
       this.isShow = true;
-      console.log(row)
       this.formData = JSON.parse(JSON.stringify(row))  // 新对象，防止修改原值
     },
     delUser(row) {

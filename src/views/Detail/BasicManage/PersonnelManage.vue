@@ -125,7 +125,6 @@ export default {
           })
         }
       })
-      console.log(this.departmentOptions)
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
@@ -142,7 +141,6 @@ export default {
       this.formValid = false
       await this.$bus.$emit('toFormValid', 'Personnel')
       if (this.formValid) {
-        console.log(this.formData)
         if (this.operateType === 'add') {
           delete this.formData.id
           postFormData('/personnel/addOnePersonnel', this.formData).then((resp) => {
