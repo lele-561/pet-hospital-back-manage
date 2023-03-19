@@ -44,23 +44,15 @@ export default {
   data() {
     let valiNumPositivePass = (rule, value, callback) => {
       let reg = /^[+]{0,1}(\d+)$/g;
-      if (value === '') {
-        callback(new Error('请输入内容'));
-      } else if (!reg.test(value)) {
-        callback(new Error('请输入0及0以上的整数'));
-      } else {
-        callback();
-      }
+      if (value === '') callback(new Error('请输入内容'));
+      else if (!reg.test(value)) callback(new Error('请输入0及0以上的整数'));
+      else callback();
     };
     let valiNumMoneyPass = (rule, value, callback) => {
       let reg = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
-      if (value === '') {
-        callback(new Error('请输入内容'));
-      } else if (!reg.test(value)) {
-        callback(new Error('请输入正确金额'));
-      } else {
-        callback();
-      }
+      if (value === '') callback(new Error('请输入内容'));
+      else if (!reg.test(value)) callback(new Error('请输入正确金额'));
+      else callback();
     };
     return {
       operateType: 'add',

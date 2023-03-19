@@ -44,13 +44,9 @@ export default {
   data() {
     let valiNumMoneyPass = (rule, value, callback) => {
       let reg = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
-      if (value === '') {
-        callback(new Error('请输入内容'));
-      } else if (!reg.test(value)) {
-        callback(new Error('请输入正确金额'));
-      } else {
-        callback();
-      }
+      if (value === '') callback(new Error('请输入内容'));
+      else if (!reg.test(value)) callback(new Error('请输入正确金额'));
+      else callback();
     };
     return {
       operateType: 'add',
