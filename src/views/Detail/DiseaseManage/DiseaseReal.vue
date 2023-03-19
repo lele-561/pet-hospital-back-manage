@@ -1,24 +1,24 @@
 <template>
   <div>
-    <el-form :inline="true" style="margin-top:12px">
-      <el-form-item label="">
-        <el-input v-model="input" placeholder="请输入"></el-input>
+    <el-form :inline='true' style='margin-top:12px'>
+      <el-form-item label=''>
+        <el-input v-model='input' placeholder='请输入'></el-input>
       </el-form-item>
-      <el-form-item label="">
-        <el-button type="success" icon="el-icon-search" @click="search(input)">搜索</el-button>
-        <el-button type="primary" icon="el-icon-edit" @click="addPetProfile">新增</el-button>
+      <el-form-item label=''>
+        <el-button type='success' icon='el-icon-search' @click='search(input)'>搜索</el-button>
+        <el-button type='primary' icon='el-icon-edit' @click='addPetProfile'>新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格部分 -->
     <div>
       <common-table-pet-profile
-          :tableData="tableData"
-          :tableLabel="tableLabel"
-          @changePage="search"
-          @del="delPetProfile"></common-table-pet-profile>
-      <div style="text-align: center; margin-top: 10px">
-        <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
-                       layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
+          :tableData='tableData'
+          :tableLabel='tableLabel'
+          @changePage='search'
+          @del='delPetProfile'></common-table-pet-profile>
+      <div style='text-align: center; margin-top: 10px'>
+        <el-pagination :page-count='totalPages' :page-size='pageSize' :pager-count='7' background
+                       layout='prev, pager, next, jumper' @current-change='handleCurrentChange'>
         </el-pagination>
       </div>
     </div>
@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import {getFormData, postFormData} from "@/utils/api";
-import CommonTablePetProfile from "@/components/CommonTablePetProfile.vue"
+import {getFormData, postFormData} from '@/utils/api';
+import CommonTablePetProfile from '@/components/CommonTablePetProfile.vue'
 
 export default {
-  name: "DiseaseReal",
+  name: 'DiseaseReal',
   components: {
     CommonTablePetProfile
   },
@@ -40,16 +40,16 @@ export default {
       pageSize: 10,
       totalPages: 1,
       currentPage: 1,
-      input: "",
+      input: '',
       // 表格配置
       petProfiles: '',
       tableData: [],
       tableLabel: [
-        {prop: "name", label: '宠物名'},
-        {prop: "type", label: '种类'},
-        {prop: "gender", label: '性别'},
-        {prop: "age", label: '年龄'},
-        {prop: "diseases", label: '疾病'},
+        {prop: 'name', label: '宠物名'},
+        {prop: 'type', label: '种类'},
+        {prop: 'gender', label: '性别'},
+        {prop: 'age', label: '年龄'},
+        {prop: 'diseases', label: '疾病'},
       ]
     };
   },
@@ -66,7 +66,7 @@ export default {
       })
     },
     addPetProfile() {
-      this.$router.push({name: "diseaseManage_petProfile", query: {id: ''}});
+      this.$router.push({name: 'diseaseManage_petProfile', query: {id: ''}});
     },
     delPetProfile(row) {
       this.$confirm('确认删除吗？', '提示', {
@@ -77,7 +77,7 @@ export default {
         postFormData('/petProfile/deleteOnePetProfile', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
-            this.search("")
+            this.search('')
           } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
@@ -92,7 +92,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .header-button {
   display: inline;
   float: right;

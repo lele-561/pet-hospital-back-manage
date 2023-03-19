@@ -1,30 +1,29 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog title="用户信息" :visible.sync="isShow">
-      <common-form ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="true">
+    <el-dialog title='用户信息' :visible.sync='isShow'>
+      <common-form ref='form' :formData='formData' :formLabel='formLabel' :inline='true'>
       </common-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="" @click="isShow = false">取消</el-button>
-        <el-button type="primary" @click="confirm">确定</el-button>
+      <div slot='footer' class='dialog-footer'>
+        <el-button type='' @click='isShow = false'>取消</el-button>
+        <el-button type='primary' @click='confirm'>确定</el-button>
       </div>
     </el-dialog>
-
-    <el-form :inline="true" style="margin-top:12px">
-      <el-form-item label="">
-        <el-input v-model="input" placeholder="请输入"></el-input>
+    <el-form :inline='true' style='margin-top:12px'>
+      <el-form-item label=''>
+        <el-input v-model='input' placeholder='请输入'></el-input>
       </el-form-item>
-      <el-form-item label="">
-        <el-button type="success" icon="el-icon-search" @click="search(input)">搜索</el-button>
+      <el-form-item label=''>
+        <el-button type='success' icon='el-icon-search' @click='search(input)'>搜索</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格部分 -->
     <div>
-      <common-table-operator :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delUser"
-                             @edit="editUser"></common-table-operator>
-      <div style="text-align: center; margin-top: 10px">
-        <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
-                       layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
+      <common-table-operator :tableData='tableData' :tableLabel='tableLabel' @changePage='search' @del='delUser'
+                             @edit='editUser'></common-table-operator>
+      <div style='text-align: center; margin-top: 10px'>
+        <el-pagination :page-count='totalPages' :page-size='pageSize' :pager-count='7' background
+                       layout='prev, pager, next, jumper' @current-change='handleCurrentChange'>
         </el-pagination>
       </div>
     </div>
@@ -32,47 +31,75 @@
 </template>
 
 <script>
-import {getFormData, postFormData} from "@/utils/api";
-import CommonForm from "@/components/CommonForm.vue";
-import CommonTableOperator from "@/components/CommonTableOperator.vue"
+import {getFormData, postFormData} from '@/utils/api';
+import CommonForm from '@/components/CommonForm.vue';
+import CommonTableOperator from '@/components/CommonTableOperator.vue'
 
 export default {
-  name: "UserManage",
+  name: 'UserManage',
   components: {
     CommonForm, CommonTableOperator
   },
   data() {
+    let valiPhoneNumberPass = (rule, value, callback) => {
+      let reg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+      if (value === '') callback(new Error('请输入电话号码'));
+      else if (!reg.test(value)) callback(new Error('请输入正确的电话号码'));
+      else callback();
+    };
+    let valiLevelPass = (rule, value, callback) => {
+      let reg = /^[+]{0,1}(\d+)$/g;
+      if (value === '') callback(new Error('请输入内容'));
+      else if (!reg.test(value)) callback(new Error('请输入整数'));
+      else if (value < 1 || value > 5) callback(new Error('请输入1~5之间的数字'));
+      else callback();
+    };
     return {
       isShow: false,
       pageSize: 10,
       totalPages: 1,
       currentPage: 1,
-      input: "",
+      input: '',
+      formValid: '',
       // 表单配置
-      operateFormLabel: [
-        {model: "name", label: "用户名", type: "input"},
+      formLabel: [
         {
-          model: "role",
-          label: "权限",
-          type: "select",
-          opts: [{label: '系统管理员', value: 'true'}, {label: '普通用户', value: 'false'},]
+          model: 'name', label: '用户名', type: 'input', prop: 'name',
+          rules: [
+            {required: true, message: '请填写用户名', trigger: 'blur'},
+            {min: 2, message: '用户名不得少于2个字', trigger: 'blur'},
+            {max: 20, message: '用户名不得多于20个字', trigger: 'blur'}
+          ],
         },
-        {model: "level", label: "学习等级", type: "input"},
-        {model: "phoneNumber", label: "电话号码", type: "input"},
+        {
+          model: 'role',
+          label: '权限',
+          type: 'selectStatic',
+          opts: [{label: '管理员', value: 'true'}, {label: '普通用户', value: 'false'},],
+          rules: [{required: true, message: '请选择权限', trigger: 'blur'}]
+        },
+        {
+          model: 'level', label: '学习等级', type: 'input', prop: 'level',
+          rules: [{required: true, validator: valiLevelPass, trigger: 'blur'},]
+        },
+        {
+          model: 'phoneNumber', label: '电话号码', type: 'input', prop: 'phoneNumber',
+          rules: [{required: true, validator: valiPhoneNumberPass, trigger: 'blur'},]
+        },
       ],
-      operateFormData: {
-        id: "",
-        name: "",
-        phoneNumber: "",
-        role: "",
+      formData: {
+        id: '',
+        name: '',
+        phoneNumber: '',
+        role: '',
       },
       // 表格配置
       tableData: [],
       tableLabel: [
-        {prop: "name", label: '用户名'},
-        {prop: "phoneNumber", label: '电话号码'},
-        {prop: "role", label: '权限'},
-        {prop: "level", label: '学习等级'},
+        {prop: 'name', label: '用户名'},
+        {prop: 'phoneNumber', label: '电话号码'},
+        {prop: 'role', label: '权限'},
+        {prop: 'level', label: '学习等级'},
       ]
     };
   },
@@ -88,18 +115,22 @@ export default {
         this.currentPage = resp.data.result.currentPage
       })
     },
-    confirm() {
-      postFormData('/user/updateOneUser', this.operateFormData).then((resp) => {
-        if (resp.data.code === 0) {
-          this.$message({type: 'success', message: resp.data.message});
-          this.isShow = false;
-          this.search('')
-        } else this.$message({type: 'warning', message: resp.data.message});
-      })
+    async confirm() {
+      this.formValid = false
+      await this.$bus.$emit('toFormValid', 'User')
+      if (this.formValid) {
+        postFormData('/user/updateOneUser', this.formData).then((resp) => {
+          if (resp.data.code === 0) {
+            this.$message({type: 'success', message: resp.data.message});
+            this.isShow = false;
+            this.search('')
+          } else this.$message({type: 'warning', message: resp.data.message});
+        })
+      }
     },
     editUser(row) {
       this.isShow = true;
-      this.operateFormData = row
+      this.formData = JSON.parse(JSON.stringify(row))  // 新对象，防止修改原值
     },
     delUser(row) {
       this.$confirm('确认删除吗？', '提示', {
@@ -110,7 +141,7 @@ export default {
         postFormData('/user/deleteOneUser', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
-            this.search("")
+            this.search('')
           } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
@@ -118,14 +149,20 @@ export default {
       });
     }
   },
-  mounted() {
+  async mounted() {
     this.currentPage = 1
-    this.search('');
+    this.search('')
+    this.$bus.$on('returnFormValidUser', (data) => {
+      this.formValid = data
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off('returnFormValidUser')
   }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .header-button {
   display: inline;
   float: left;
