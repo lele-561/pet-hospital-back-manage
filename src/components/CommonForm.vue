@@ -7,6 +7,9 @@
       <el-date-picker v-if="item.type === 'date'" v-model="formData[item.model]" placeholder="选择日期" type="date"
                       value-format="yyyy-MM-dd"></el-date-picker>
       <el-select v-if="item.type === 'select'" v-model="formData[item.model]" clearable placeholder="请选择">
+        <el-option v-for="item in item.opts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+      <el-select v-if="item.type === 'selectRemote'" v-model="formData[item.model]" clearable placeholder="请选择">
         <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
       <el-input v-if="item.type === 'textarea'" type="textarea" autosize v-model="formData[item.model]"
