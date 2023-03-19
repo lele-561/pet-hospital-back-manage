@@ -1,95 +1,117 @@
 <template>
-  <div style="margin-top: 20px">
+  <div style='margin-top: 20px'>
     <h3>宠物真实病例</h3>
-    <el-descriptions :column="3" border>
-      <el-descriptions-item>
-        <template slot="label">宠物名</template>
-        <el-input v-model="petProfile.name" placeholder="请输入宠物名"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">种类</template>
-        <el-input v-model="petProfile.type" placeholder="请输入种类"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">性别</template>
-        <el-input v-model="petProfile.gender" placeholder="请输入性别"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">生日</template>
-        <el-input v-model="petProfile.birthday" placeholder="请输入生日"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">年龄</template>
-        <el-input v-model="petProfile.age" placeholder="请输入年龄"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">重量</template>
-        <el-input v-model="petProfile.weight" placeholder="请输入"></el-input>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">疾病</template>
-        <el-tag v-for="tag in petProfile.diseases" :key="tag[id]" :disable-transitions="false" closable type="warning"
-                @close="handleClose(tag, 'disease')">{{ tag['name'] }}
+    <el-form ref='form' :model='petProfile' :rules='rules' label-width='80px'>
+      <el-row>
+        <el-col :span=8>
+          <el-form-item prop='name' label='宠物名'>
+            <el-input v-model='petProfile.name' placeholder='请输入宠物名'>{{ petProfile.name }}</el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item prop='type' label='种类'>
+            <el-input v-model='petProfile.type' placeholder='请输入种类'>{{ petProfile.type }}</el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item prop='gender' label='性别'>
+            <el-select v-model='petProfile.gender' clearable placeholder='请选择性别'>
+              <el-option v-for='item in genderOptions'
+                         :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span=8>
+          <el-form-item prop='weight' label='重量'>
+            <el-input v-model='petProfile.weight' placeholder='请输入重量（单位：kg）'>{{ petProfile.weight }}</el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item prop='birthday' label='生日'>
+            <el-date-picker v-model="petProfile.birthday" type="date" placeholder="请选择生日"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span=8>
+          <el-form-item prop='age' label='年龄'>{{ petProfile.age }} 岁</el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item label='所患疾病'>
+        <el-tag v-for='tag in petProfile.diseases' :key='tag[id]'
+                :disable-transitions='false' closable type='warning'
+                @close='handleClose(tag, "disease")'>{{ tag['name'] }}
         </el-tag>
-        <el-autocomplete v-if="inputDiseaseVisible" ref="saveDiseaseTagInput" v-model="inputDiseaseValue"
-                         class="input-new-tag" size="small"
-                         :fetch-suggestions="querySearchAsyncDisease"
-                         placeholder="请输入内容"
-                         @select="handleSelectDisease"
+        <el-autocomplete v-if='inputDiseaseVisible' ref='saveDiseaseTagInput' v-model='inputDiseaseValue'
+                         class='input-new-tag' size='small'
+                         :fetch-suggestions='querySearchAsyncDisease'
+                         placeholder='请输入内容'
+                         @select='handleSelectDisease'
         ></el-autocomplete>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput('disease')">+ 新疾病</el-button>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">用药记录</template>
-        <el-tag v-for="tag in petProfile.medicines" :key="tag[id]" :disable-transitions="false" closable type="success"
-                @close="handleClose(tag, 'medicine')">{{ tag['name'] }}
+        <el-button v-else class='button-new-tag' type='warning' plain size='small'
+                   @click='showInput("disease")'>+ 新疾病
+        </el-button>
+      </el-form-item>
+      <el-form-item label='用药记录'>
+        <el-tag v-for='tag in petProfile.medicines' :key='tag[id]'
+                :disable-transitions='false' closable type='success'
+                @close='handleClose(tag, "medicine")'>{{ tag['name'] }}
         </el-tag>
-        <el-autocomplete v-if="inputMedicineVisible" ref="saveMedicineTagInput" v-model="inputMedicineValue"
-                         class="input-new-tag" size="small"
-                         :fetch-suggestions="querySearchAsyncMedicine"
-                         placeholder="请输入内容"
-                         @select="handleSelectMedicine"
+        <el-autocomplete v-if='inputMedicineVisible' ref='saveMedicineTagInput' v-model='inputMedicineValue'
+                         class='input-new-tag' size='small'
+                         :fetch-suggestions='querySearchAsyncMedicine'
+                         placeholder='请输入内容'
+                         @select='handleSelectMedicine'
         ></el-autocomplete>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput('medicine')">+ 新药品</el-button>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">检查项目</template>
-        <el-tag v-for="tag in petProfile.checkups" :key="tag[id]" :disable-transitions="false" closable type="primary"
-                @close="handleClose(tag, 'checkup')">{{ tag['name'] }}
+        <el-button v-else class='button-new-tag' type='success' plain size='small'
+                   @click='showInput("medicine")'>+ 新药品
+        </el-button>
+      </el-form-item>
+      <el-form-item label='检查项目'>
+        <el-tag v-for='tag in petProfile.checkups' :key='tag[id]'
+                :disable-transitions='false' closable type='primary'
+                @close='handleClose(tag, "checkup")'>{{ tag['name'] }}
         </el-tag>
-        <el-autocomplete v-if="inputCheckupVisible" ref="saveCheckupTagInput" v-model="inputCheckupValue"
-                         class="input-new-tag" size="small"
-                         :fetch-suggestions="querySearchAsyncCheckup"
-                         placeholder="请输入内容"
-                         @select="handleSelectCheckup"
-        ></el-autocomplete>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput('checkup')">+ 新检查</el-button>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">病情表述</template>
-        <el-input type="textarea" v-model="petProfile.description" placeholder="请输入病情表述"></el-input>
-      </el-descriptions-item>
-    </el-descriptions>
-    <el-button style="margin-top: 20px;margin-left:10px;float: right" type="success" icon="el-icon-check" @click="save">
-      保存
+        <el-autocomplete v-if='inputCheckupVisible' ref='saveCheckupTagInput' v-model='inputCheckupValue'
+                         class='input-new-tag' size='small'
+                         :fetch-suggestions='querySearchAsyncCheckup'
+                         placeholder='请输入内容'
+                         @select='handleSelectCheckup'></el-autocomplete>
+        <el-button v-else class='button-new-tag' type='primary' plain size='small'
+                   @click='showInput("checkup")'>+ 新检查
+        </el-button>
+      </el-form-item>
+      <el-form-item prop='description' label='病情表述'>
+        <el-input type='textarea' v-model='petProfile.description' autosize placeholder='请输入病情表述'></el-input>
+      </el-form-item>
+    </el-form>
+    <el-button style='margin-left:10px; float: right'
+               type='success' icon='el-icon-check' @click='confirm'>保存
     </el-button>
-    <el-button style="margin-top: 20px;float: right" type="info" icon="el-icon-back" @click="back">返回</el-button>
+    <el-button style='float: right' type='info' icon='el-icon-back' @click='back'>返回</el-button>
   </div>
-
 </template>
 
 <script>
-import {getFormData, postFormData} from "@/utils/api";
+import {getFormData, postFormData} from '@/utils/api';
 
 export default {
-  name: "PetProfile",
+  name: 'PetProfile',
   components: {},
   data() {
+    let valiBirthdayPass = (rule, value, callback) => {
+      this.petProfile.age < 0 ? callback(new Error('生日选择错误')) : callback()
+    };
+    let valiWeightPass = (rule, value, callback) => {
+      let reg = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
+      if (value === '') callback(new Error('请输入内容'));
+      else if (!reg.test(value)) callback(new Error('请输入正确数值，限小数点后2位'));
+      else callback();
+    };
     return {
       timeout: null,
       petProfile: {
         id: this.$route.query.id,
-        diseases: [],
         name: '',
         type: '',
         gender: '',
@@ -97,6 +119,7 @@ export default {
         age: '',
         weight: '',
         description: '',
+        diseases: [],
         medicines: [],
         checkups: []
       },
@@ -111,7 +134,39 @@ export default {
       diseaseOptions: [],
       medicineOptions: [],
       checkupOptions: [],
+      genderOptions: [{value: '母', label: '母'}, {value: '公', label: '公'},],
+      rules: {
+        name: [{required: true, message: '请填写宠物名', trigger: 'blur'},
+          {min: 2, message: '宠物名不得少于2个字', trigger: 'blur'},
+          {max: 20, message: '宠物名不得多于20个字', trigger: 'blur'}],
+        type: [{required: true, message: '请填写宠物种类', trigger: 'blur'},
+          {min: 2, message: '种类不得少于2个字', trigger: 'blur'},
+          {max: 10, message: '种类不得多于10个字', trigger: 'blur'}],
+        gender: [{
+          required: true, message: '请选择性别', trigger: 'blur'
+        }],
+        birthday: [{
+          required: true, validator: valiBirthdayPass, trigger: 'blur'
+        }],
+        age: [{
+          required: true, message: '请计算年龄', trigger: 'blur'
+        }],
+        weight: [{required: true, validator: valiWeightPass, trigger: 'blur'},],
+        description: [{required: true, message: '请填写病情描述', trigger: 'blur'},
+          {min: 10, message: '病情描述不得少于10个字', trigger: 'blur'},
+          {max: 200, message: '病情描述不得多于200个字', trigger: 'blur'}],
+      }
     }
+  },
+  watch: {
+    'petProfile.birthday': {
+      deep: true,
+      handler() {
+        // 动态修改宠物年龄
+        var date = new Date();
+        this.petProfile.age = date.getFullYear() - this.petProfile.birthday.getFullYear()
+      }
+    },
   },
   methods: {
     getPetProfile() {
@@ -151,25 +206,25 @@ export default {
       })
     },
     handleClose(type, typeName) {
-      if (typeName === "disease")
+      if (typeName === 'disease')
         this.petProfile.diseases.splice(this.petProfile.diseases.indexOf(type), 1)
-      else if (typeName === "medicine")
+      else if (typeName === 'medicine')
         this.petProfile.medicines.splice(this.petProfile.medicines.indexOf(type), 1)
-      else if (typeName === "checkup")
+      else if (typeName === 'checkup')
         this.petProfile.checkups.splice(this.petProfile.checkups.indexOf(type), 1)
     },
     showInput(typeName) {
-      if (typeName === "disease") {
+      if (typeName === 'disease') {
         this.inputDiseaseVisible = true
         this.$nextTick(() => {
           this.$refs.saveDiseaseTagInput.$refs.input.focus()
         })
-      } else if (typeName === "medicine") {
+      } else if (typeName === 'medicine') {
         this.inputMedicineVisible = true
         this.$nextTick(() => {
           this.$refs.saveMedicineTagInput.$refs.input.focus()
         })
-      } else if (typeName === "checkup") {
+      } else if (typeName === 'checkup') {
         this.inputCheckupVisible = true
         this.$nextTick(() => {
           this.$refs.saveCheckupTagInput.$refs.input.focus()
@@ -187,7 +242,7 @@ export default {
     handleSelectDisease(item) {
       this.petProfile.diseases.push({id: item.id, name: item.value})
       this.inputDiseaseVisible = false
-      this.inputDiseaseValue = ""
+      this.inputDiseaseValue = ''
     },
     querySearchAsyncMedicine(queryString, cb) {
       var options = this.medicineOptions
@@ -200,7 +255,7 @@ export default {
     handleSelectMedicine(item) {
       this.petProfile.medicine.push({id: item.id, name: item.value})
       this.inputMedicineVisible = false
-      this.inputMedicineValue = ""
+      this.inputMedicineValue = ''
     },
     querySearchAsyncCheckup(queryString, cb) {
       var options = this.checkupOptions
@@ -213,37 +268,47 @@ export default {
     handleSelectCheckup(item) {
       this.petProfile.checkups.push({id: item.id, name: item.value})
       this.inputCheckupVisible = false
-      this.inputCheckupValue = ""
+      this.inputCheckupValue = ''
     },
     createStateFilter(queryString) {
       return (state) => {
         return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
-    save() {
-      // 更新档案
-      if (this.$route.query.id !== '') {
-        postFormData('/petProfile/updateOnePetProfile', this.petProfile).then((resp) => {
-          this.petProfile = resp.data.result
-          this.totalPages = resp.data.result.totalPages
-          this.currentPage = resp.data.result.currentPage
-        })
-      }
-      // 新建档案
-      else {
-        delete this.petProfile.id
-        console.log(this.petProfile)
-        postFormData('/petProfile/addOnePetProfile', this.petProfile).then((resp) => {
-          this.petProfile = resp.data.result
-          this.totalPages = resp.data.result.totalPages
-          this.currentPage = resp.data.result.currentPage
-        })
-      }
-      this.back()
+    confirm() {
+      this.$nextTick(() => {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            if (this.petProfile.diseases.length === 0 || this.petProfile.medicines.length === 0 || this.petProfile.checkups.length === 0) {
+              this.$message.error('未填写全部信息')
+              return
+            }
+            // 更新档案
+            if (this.$route.query.id !== '') {
+              postFormData('/petProfile/updateOnePetProfile', this.petProfile).then((resp) => {
+                this.petProfile = resp.data.result
+                this.totalPages = resp.data.result.totalPages
+                this.currentPage = resp.data.result.currentPage
+              })
+            }
+            // 新建档案
+            else {
+              delete this.petProfile.id
+              postFormData('/petProfile/addOnePetProfile', this.petProfile).then((resp) => {
+                this.petProfile = resp.data.result
+                this.totalPages = resp.data.result.totalPages
+                this.currentPage = resp.data.result.currentPage
+              })
+            }
+            this.back()
+          }
+        });
+      });
+
     },
     back() {
       this.clear()
-      this.$router.push({name: "diseaseManage_diseaseReal"});
+      this.$router.push({name: 'diseaseManage_diseaseReal'});
     },
     clear() {
       this.petProfile = {
@@ -279,6 +344,7 @@ export default {
       this.getPetProfile()
     }
   }
+
 }
 </script>
 
