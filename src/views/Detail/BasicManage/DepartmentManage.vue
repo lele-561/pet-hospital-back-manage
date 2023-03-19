@@ -81,7 +81,7 @@ export default {
           rules: [{required: true, validator: valiPhoneNumberPass, trigger: 'blur'},]
         },
         {
-          model: 'directorName', label: '主管人', type: 'select', prop: 'directorName',
+          model: 'directorName', label: '主管人', type: 'selectDynamic', prop: 'directorName',
           rules: [{required: true, message: '请选择主管人', trigger: 'blur'}]
         },
       ],
