@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     getData() {
-      getFormData('/personnel/getAllPersonnels').then((resp) => {
+      getFormData('/personnel/getAllPersonnels',{content: '', currentPage: 0}).then((resp) => {
         for (let i in resp.data.result.personnels) {
           this.personnelOptions.push({
             value: resp.data.result.personnels[i].id,
@@ -182,7 +182,7 @@ export default {
   async mounted() {
     await this.getData()
     this.currentPage = 1
-    this.search('');
+    this.search('')
     this.$bus.$on('returnFormValidDepartment', (data) => {
       this.formValid = data
     })
