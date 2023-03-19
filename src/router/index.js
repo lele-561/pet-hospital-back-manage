@@ -11,6 +11,7 @@ import CheckupManage from "../views/Detail/BasicManage/CheckupManage";
 import PersonnelManage from "../views/Detail/BasicManage/PersonnelManage";
 import DiseaseExample from "../views/Detail/DiseaseManage/DiseaseExample";
 import DiseaseReal from "../views/Detail/DiseaseManage/DiseaseReal";
+import PetProfile from "../views/Detail/DiseaseManage/PetProfile";
 import ExamManage from "../views/Detail/TestManage/ExamManage";
 import PaperManage from "../views/Detail/TestManage/PaperManage";
 import QuestionManage from "../views/Detail/TestManage/QuestionManage";
@@ -68,6 +69,11 @@ const routes = [{
             path: 'diseaseManage/diseaseExample',
             name: 'diseaseManage_diseaseExample',
             component: DiseaseExample
+        },
+        {
+            path: 'diseaseManage/petProfile',
+            name: 'diseaseManage_petProfile',
+            component: PetProfile
         },
         // 测试管理
         {
