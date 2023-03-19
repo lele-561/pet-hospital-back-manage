@@ -1,7 +1,8 @@
 <template>
   <el-form ref="form" :model="formData" :inline="inline" label-width="90px">
     <el-form-item v-for="item in formLabel" :key="item.label" :label="item.label" :prop="item.prop" :rules="item.rules">
-      <el-input v-if="item.type === 'input'" v-model="formData[item.model]" :placeholder="'请输入' + item.label">
+      <el-input v-if="item.type === 'input'" v-model="formData[item.model]" :placeholder="'请输入' + item.label"
+                :maxlength='item.maxlength' show-word-limit>
       </el-input>
       <el-switch v-if="item.type === 'switch'" v-model="formData[item.model]"></el-switch>
       <el-date-picker v-if="item.type === 'date'" v-model="formData[item.model]" placeholder="选择日期" type="date"
@@ -14,6 +15,12 @@
       </el-select>
       <el-input v-if="item.type === 'textarea'" type="textarea" autosize v-model="formData[item.model]"
                 :placeholder="'请输入' + item.label"></el-input>
+      <el-radio-group v-if="item.type === 'radio-group'" v-model="formData[item.model]">
+        <el-radio label="A">A</el-radio>
+        <el-radio label="B">B</el-radio>
+        <el-radio label="C">C</el-radio>
+        <el-radio label="D">D</el-radio>
+      </el-radio-group>
     </el-form-item>
   </el-form>
 </template>
