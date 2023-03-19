@@ -44,7 +44,7 @@ export default {
     login: function () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          postFormData('/user/login', {
+          postFormData('/user/loginBackManage', {
             phoneNumber: this.form.phoneNumber,
             password: this.$md5(this.form.password)
           }).then((resp) => {
@@ -119,5 +119,4 @@ export default {
   background-size: cover;
   position: fixed;
 }
-
 </style>
