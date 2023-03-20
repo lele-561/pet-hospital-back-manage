@@ -7,7 +7,8 @@
       alive-text-color="#C5A553"
       class="el-menu-vertical-demo"
       text-color="#fff">
-    <h3>虚拟宠物医院后台管理</h3>
+    <h2>虚拟宠物医院</h2>
+    <h3>后台管理</h3>
     <!-- :index跳转路由使用 -->
     <el-menu-item v-for="item in noChildren" :key="item.path" :index="item.path" @click="clickMenu(item)">
       <i :class="'el-icon-' + item.icon"></i>
@@ -167,10 +168,16 @@ export default {
   height: 100%;
   border: none;
 
+  h2 {
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+  }
+
   h3 {
     color: #fff;
     text-align: center;
-    line-height: 48px;
+    line-height: 10px;
   }
 }
 </style>
