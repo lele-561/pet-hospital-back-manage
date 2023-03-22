@@ -77,7 +77,7 @@ export default {
               }).catch(() => {
               });
             } else if (resp.data.code === 1) {
-              this.$message.error('电话号码已存在')
+              this.$message.error(resp.data.message)
               this.form = {}
             }
           })
@@ -100,7 +100,6 @@ export default {
   padding: 35px 35px 15px 35px;
   background-color: #fff;
   left: 50%
-
 }
 
 .login-title {
