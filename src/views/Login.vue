@@ -53,12 +53,10 @@ export default {
                 message: resp.data.message,
                 type: 'success'
               })
+              this.$store.commit('setToken', resp.data.result)
               this.$router.push({name: 'home'})
-              //   this.$store.commit('setToken', resp.data.userId)
-              //   this.$store.commit('setRoleName', resp.data.roleName)
-              //   this.$store.commit('setUserName', resp.data.userName)
             } else if (resp.data.code === 1) {
-              this.$confirm('该用户不存在，是否前往注册？', '提示', {
+              this.$confirm(resp.data.message + '是否前往注册？', '提示', {
                 confirmButtonText: '确定',
                 type: 'error',
               }).then(() => {
@@ -66,13 +64,6 @@ export default {
               }).catch(() => {
               });
             } else if (resp.data.code === 2) {
-              this.$confirm('密码错误', '提示', {
-                confirmButtonText: '返回',
-                type: 'error',
-              }).then(() => {
-              }).catch(() => {
-              });
-            } else {
               this.$confirm('该用户无权限', '提示', {
                 confirmButtonText: '返回',
                 type: 'warning',

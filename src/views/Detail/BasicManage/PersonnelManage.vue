@@ -74,17 +74,12 @@ export default {
           type: 'selectStatic',
           prop: 'gender',
           opts: [{label: '男', value: '男'}, {label: '女', value: '女'},],
-          rules: [{
-            required: true, message: '请选择性别', trigger: 'blur'
-          }]
+          rules: [{required: true, message: '请选择性别', trigger: 'blur'}]
         },
         {
-          model: 'duty', label: '职务', type: 'input', prop: 'duty',
-          rules: [
-            {required: true, message: '请填写职务', trigger: 'blur'},
-            {min: 2, message: '姓名不得少于2个字', trigger: 'blur'},
-            {max: 20, message: '职务不得多于20个字', trigger: 'blur'}
-          ]
+          model: 'duty', label: '职务', type: 'selectStatic', prop: 'duty',
+          opts: [{label: '兽医', value: '兽医'}, {label: '医护', value: '医护'}, {label: '前台', value: '前台'}],
+          rules: [{required: true, message: '请选择职务', trigger: 'blur'}]
         },
         {
           model: 'phoneNumber', label: '电话号码', type: 'input', prop: 'phoneNumber',

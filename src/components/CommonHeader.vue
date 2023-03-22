@@ -8,11 +8,8 @@
         <span>
           <img :src="userImg" class="user"/>
         </span>
-        <!--        <el-dropdown-menu>-->
-        <!--          <el-dropdown-item common="b" @click.native="logOut">退出</el-dropdown-item>-->
-        <!--        </el-dropdown-menu>-->
         <el-dropdown-menu>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item common="b" @click.native="logOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -29,9 +26,8 @@ export default {
   },
   methods: {
     logOut() {
+      console.log('6666')
       this.$store.commit('clearToken')
-      this.$store.commit('clearRoleName')
-      this.$store.commit('clearUserName')
       this.$router.push({name: 'login'})
     },
     back() {
@@ -39,7 +35,6 @@ export default {
     }
   },
   components: {}
-
 }
 </script>
 
