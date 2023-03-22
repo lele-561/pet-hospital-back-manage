@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     logOut() {
-      console.log('6666')
       this.$store.commit('clearToken')
       this.$router.push({name: 'login'})
     },
