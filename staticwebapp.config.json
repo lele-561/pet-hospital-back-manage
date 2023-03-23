@@ -4,7 +4,7 @@
       "matchCondition": {
         "route": "/api/:path*"
       },
-      "backendUri": "https://pet-hospital.azurewebsites.net//{path}"
+      "backendUri": "https://pet-hospital.azurewebsites.net/{path}"
     }
   },
   "navigationFallback": {
