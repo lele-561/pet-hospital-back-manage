@@ -58,12 +58,13 @@ export default {
       pageSize: 10,
       totalPages: 1,
       currentPage: 1,
+      formValid: true,
       input: "",
       // 表单配置，显示在页面的所有内容
       operateFormLabel: [
-        {model: "disease_type_name", label: "疾病名", type: "textarea", 
-          rules:[{ required: true, message: '请选择疾病分类', trigger: 'change' }]},
-        {model: "title", label: "题干", type: "input", 
+        // {model: "disease_type_name", label: "疾病名", type: "textarea", 
+        //   rules:[{ required: true, message: '请选择疾病分类', trigger: 'change' }]},
+        {model: "title", label: "题干", type: "textarea", 
           rules:[{ required: true, message: '请输入题干', trigger: 'blur' },
           { min: 1, max: 500, message: '最多不超过500个字符', trigger: 'blur' }]},
         {model: "optionA", label: "A选项", type: "input",
@@ -104,51 +105,49 @@ export default {
   methods: {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
-      this.search(this.content)
+      this.search()
     },
     handleChange(value) {
       console.log(value)
       this.disease_type_id = value[1]
     },
-    getAllQuestions() {
-      getFormData('/examManage/getAllQuestions', {}).then((resp) => {
-        this.tableData = resp.data.result.questionInfos
-        // this.totalPages = resp.data.result.totalPages
-        // this.currentPage = resp.data.result.currentPage
-      })
-    },
     getOneQuetion(row) {
-      console
-      getFormData('/examManage/getOneQuestion', {}).then((resp) => {
+      console.log(row.question_id)
+      getFormData('/examManage/getOneQuestion', {questionId: row.question_id}).then((resp) => {
+        console.log(resp.data.result.questionInfo)
         this.operateFormData = resp.data.result.questionInfo
-        // this.totalPages = resp.data.result.totalPages
-        // this.currentPage = resp.data.result.currentPage
       })
     },
     search() {
-      postFormData('/examManage/searchQuestion', {disease_type_id: this.disease_type_id, search_text: this.input}).then((resp) => {
-        this.tableData = resp.data.result.questionInfos
-        // this.totalPages = resp.data.result.totalPages
-        // this.currentPage = resp.data.result.currentPage
+      console.log(this.disease_type_id+" "+this.input)
+      postFormData('/examManage/searchQuestion', {disease_type_id: this.disease_type_id, search_text: this.input, currentPage: this.currentPage}).then((resp) => {
+        this.tableData = resp.data.result.infos
+        this.totalPages = resp.data.result.totalPages
+        this.currentPage = resp.data.result.currentPage
       })
     },
-    confirm() {
-      if (this.operateType === 'add') {
-        postFormData('/examManage/addOneQuestion', this.operateFormData).then((resp) => {
-          if (resp.data.code === 0) {
-            this.$message({type: 'success', message: resp.data.message});
-            this.isShow = false;
-            this.getAllQuestions()
-          } else this.$message({type: 'warning', message: resp.data.message});
-        })
-      } else if (this.operateType === 'edit') {
-        postFormData('/examManage/modifyOneQuestion', this.operateFormData).then((resp) => {
-          if (resp.data.code === 0) {
-            this.$message({type: 'success', message: resp.data.message});
-            this.isShow = false;
-            this.getAllQuestions()
-          } else this.$message({type: 'warning', message: resp.data.message});
-        })
+    async confirm() {
+      this.formValid = false
+      await this.$bus.$emit('toFormValid', 'Question')
+      if (this.formValid) {
+        if (this.operateType === 'add') {
+          delete this.operateFormData.question_id
+          postFormData('/examManage/addOneQuestion', this.operateFormData).then((resp) => {
+            if (resp.data.code === 0) {
+              this.$message({type: 'success', message: resp.data.message});
+              this.isShow = false;
+              this.search()
+            } else this.$message({type: 'warning', message: resp.data.message});
+          })
+        } else if (this.operateType === 'edit') {
+          postFormData('/examManage/modifyOneQuestion', this.operateFormData).then((resp) => {
+            if (resp.data.code === 0) {
+              this.$message({type: 'success', message: resp.data.message});
+              this.isShow = false;
+              this.search()
+            } else this.$message({type: 'warning', message: resp.data.message});
+          })
+        }
       }
     },
     addQuestion() {
@@ -159,7 +158,7 @@ export default {
     editQuestion(row) {
       this.operateType = 'edit';
       this.isShow = true;
-      this.getOneQuetion(row.question_id)
+      this.getOneQuetion(row)
     },
     delQuestion(row) {
       this.$confirm('确认删除吗？', '提示', {
@@ -170,7 +169,7 @@ export default {
         getFormData('/examManage/deleteOneQuestion', {questionId: row.question_id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
-            this.getAllQuestions()
+            this.search()
           } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
@@ -180,7 +179,13 @@ export default {
   },
   mounted() {
     this.currentPage = 1
-    this.getAllQuestions()
+    this.search()
+    this.$bus.$on('returnFormValidQuestion', (data) => {
+      this.formValid = data
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off('returnFormValidQuestion')
   }
 };
 </script>

@@ -1,13 +1,209 @@
 <template>
-
+  <div>
+    <!-- 收集表单 -->
+    <el-dialog :title="operateType === 'add' ? '新增试卷' : '试卷信息'" :visible.sync="isShow">
+      <common-form ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="false">
+      </common-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="" @click="isShow = false">取消</el-button>
+        <el-button type="primary" @click="confirm">确定</el-button>
+      </div>
+    </el-dialog>
+    <el-form :inline="true" style="margin-top:12px">
+      <el-form-item label="">
+        <cascader
+          :url="url"
+          @change="handleChange"
+        ></cascader>
+        </el-form-item>
+      <el-form-item>
+        <el-input v-model="input" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="">
+        <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="addQuestion">新增</el-button>
+      </el-form-item>
+      
+    </el-form>
+    <!-- 表格部分 -->
+    <div>
+      <common-table-operator :tableData="tableData" :tableLabel="tableLabel" @changePage="search" @del="delPaper"
+                             @edit="editPaper"></common-table-operator>
+      <div style="text-align: center; margin-top: 10px">
+        <el-pagination :page-count="totalPages" :page-size="pageSize" :pager-count='7' background
+                       layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import {getFormData, postFormData} from '@/utils/api';
+import CommonForm from '@/components/CommonForm.vue';
+import CommonTableOperator from '@/components/CommonTableOperator.vue'
+import Cascader from "@/components/CommonCascader.vue"
+
 export default {
-  name: "PaperManage"
-}
+  name: 'PaperManage',
+  components: {
+    CommonForm, CommonTableOperator, Cascader
+  },
+  data() {
+    // let valiNumPositivePass = (rule, value, callback) => {
+    //   let reg = /^[+]{0,1}(\d+)$/g;
+    //   if (value === '') callback(new Error('请输入内容'));
+    //   else if (!reg.test(value)) callback(new Error('请输入0及0以上的整数'));
+    //   else callback();
+    // };
+    // let valiNumMoneyPass = (rule, value, callback) => {
+    //   let reg = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
+    //   if (value === '') callback(new Error('请输入内容'));
+    //   else if (!reg.test(value)) callback(new Error('请输入正确金额'));
+    //   else callback();
+    // };
+    return {
+      operateType: 'add',
+      isShow: false,
+      pageSize: 10,
+      totalPages: 1,
+      currentPage: 1,
+      input: '',
+      formValid: '',
+      // 表单配置，显示在页面的所有内容
+      formLabel: [
+        {
+          model: 'name', label: '药品名', type: 'input', prop: 'name',
+          rules: [
+            {required: true, message: '请填写药品名称', trigger: 'blur'},
+            {min: 2, message: '药品名称不得少于2个字', trigger: 'blur'},
+            {max: 20, message: '药品名称不得多于20个字', trigger: 'blur'}
+          ],
+        },
+        {
+          model: 'introduction', label: '说明', type: 'textarea', prop: 'introduction',
+          rules: [
+            {required: true, message: '请填写药品说明', trigger: 'blur'},
+            {min: 10, message: '药品说明不得少于10个字', trigger: 'blur'},
+            {max: 200, message: '药品说明不得多于200个字', trigger: 'blur'}
+          ],
+        },
+        {
+          model: 'price', label: '价格', type: 'input', prop: 'price',
+          rules: [{required: true, validator: valiNumMoneyPass, trigger: 'blur'},]
+        },
+        {
+          model: 'quantity', label: '数量', type: 'input', prop: 'quantity',
+          rules: [{required: true, validator: valiNumPositivePass, trigger: 'blur'},]
+        },
+      ],
+      // 表单数据，不一定都显示，但会传回后端
+      formData: {
+        paper_id: '',
+        disease_type_name: '',
+        name: '',
+        score: '',
+        question_num: '',
+        quantity: '',
+        question
+      },
+      // 表格配置
+      tableData: [],
+      tableLabel: [
+        {prop: 'paper_id', label: 'ID'},
+        {prop: 'disease_type_name', label: '疾病名'},
+        {prop: 'name', label: '试卷名称'},
+        {prop: 'score', label: '试卷总分'},
+        {prop: 'question_num', label: '试题数量'},
+      ]
+    };
+  },
+  methods: {
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage
+      this.search(this.content)
+    },
+    search: function (content) {
+      getFormData('/medicine/getAllMedicines', {content: content, currentPage: this.currentPage}).then((resp) => {
+        this.tableData = resp.data.result.medicines
+        this.totalPages = resp.data.result.totalPages
+        this.currentPage = resp.data.result.currentPage
+      })
+    },
+    async confirm() {
+      this.formValid = false
+      await this.$bus.$emit('toFormValid', 'Medicine')
+      if (this.formValid) {
+        if (this.operateType === 'add') {
+          delete this.formData.id
+          postFormData('/medicine/addOneMedicine', this.formData).then((resp) => {
+            if (resp.data.code === 0) {
+              this.$message({type: 'success', message: resp.data.message});
+              this.isShow = false;
+              this.search('')
+            } else this.$message({type: 'warning', message: resp.data.message});
+          })
+        } else if (this.operateType === 'edit') {
+          postFormData('/medicine/updateOneMedicine', this.formData).then((resp) => {
+            if (resp.data.code === 0) {
+              this.$message({type: 'success', message: resp.data.message});
+              this.isShow = false;
+              this.search('')
+            } else this.$message({type: 'warning', message: resp.data.message});
+          })
+        }
+      }
+    },
+    addMedicine() {
+      this.operateType = 'add';
+      this.isShow = true;
+      this.formData = {}
+    },
+    editMedicine(row) {
+      this.operateType = 'edit';
+      this.isShow = true;
+      this.formData = JSON.parse(JSON.stringify(row))  // 新对象，防止修改原值
+    },
+    delMedicine(row) {
+      this.$confirm('确认删除吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        postFormData('/medicine/deleteOneMedicine', {id: row.id}).then((resp) => {
+          if (resp.data.code === 0) {
+            this.$message({type: 'success', message: resp.data.message});
+            this.search('')
+          } else this.$message({type: 'warning', message: resp.data.message});
+        })
+      }).catch(() => {
+        this.$message({type: 'info', message: '已取消删除'});
+      });
+    }
+  },
+  mounted() {
+    this.currentPage = 1
+    this.search('')
+    this.$bus.$on('returnFormValidMedicine', (data) => {
+      this.formValid = data
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off('returnFormValidMedicine')
+  }
+};
 </script>
 
-<style scoped>
+<style lang='less' scoped>
+.header-button {
+  display: inline;
+  float: right;
+  margin-top: 2%;
+}
 
+.search {
+  display: inline;
+  margin-top: 2%;
+  float: right;
+}
 </style>

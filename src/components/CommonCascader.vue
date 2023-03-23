@@ -42,7 +42,7 @@ export default {
             getFormData(this.url,{}).then((resp) => {
                 // console.log(resp.data.data)
                 this.options.pop()
-                this.updateCascaderData(resp.data.data.disease_types)
+                this.updateCascaderData(resp.data.result.disease_types)
             })
         },
         updateCascaderData(response) {

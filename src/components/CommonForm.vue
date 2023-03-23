@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="formData" :inline="inline" label-width="90px">
+  <el-form ref="form" :model="formData" :inline="inline" label-width="110px">
     <el-form-item v-for="item in formLabel" :key="item.label" :label="item.label" :prop="item.prop" :rules="item.rules">
       <el-input v-if="item.type === 'input'" v-model="formData[item.model]" :placeholder="'请输入' + item.label"
                 :maxlength='item.maxlength' show-word-limit>
@@ -7,6 +7,15 @@
       <el-switch v-if="item.type === 'switch'" v-model="formData[item.model]"></el-switch>
       <el-date-picker v-if="item.type === 'date'" v-model="formData[item.model]" placeholder="选择日期" type="date"
                       value-format="yyyy-MM-dd"></el-date-picker>
+      <el-time-picker 
+        is-range 
+        v-if="item.type === 'time'"
+        v-model="formData[item.model]"
+        range-separator="至"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        placeholder="选择时间范围">
+      </el-time-picker>
       <el-select v-if="item.type === 'selectStatic'" v-model="formData[item.model]" clearable placeholder="请选择">
         <el-option v-for="item in item.opts" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
