@@ -1,8 +1,8 @@
 import axios from "axios";
 import store from "../store";
 
-// let base = '/api';  // 开发跨域
-let base = 'https://pet-hospital.azurewebsites.net';  // 云端部署跨域
+let base = '/api';  // 开发跨域
+// let base = 'https://pet-hospital.azurewebsites.net';  // 云端部署跨域
 
 
 export const getFormData = (url, params) => {
