@@ -11,7 +11,7 @@ module.exports = {
             '/api': {
                 // target: 'http://localhost:8080/',            // 后端url
                 target: 'http://pet-hospital.azurewebsites.net',   // 后端url
-                // target: 'http://pet-hospital.azurewebsites.net',   // B组mock用
+                // target: 'http://127.0.0.1:4523/m1/2398464-0-default',   // B组mock用
                 secure:true,
                 ws: true,
                 changeOrigin: true,
