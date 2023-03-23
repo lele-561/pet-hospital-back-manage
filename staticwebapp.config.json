@@ -1,14 +1,19 @@
 {
-  "proxies": {
-    "api": {
-      "matchCondition": {
-        "route": "/api/:path*"
-      },
-      "backendUri": "https://pet-hospital.azurewebsites.net/{path}"
+  "routes": [
+    {
+      "route": "/api/*",
+      "allowedOrigins": [
+        "https://pet-hospital.azurewebsites.net/{path}"
+      ],
+      "allowedMethods": [
+        "GET",
+        "POST"
+      ]
     }
-  },
+  ],
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/api/*"]
   }
 }
+
