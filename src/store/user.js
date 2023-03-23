@@ -7,14 +7,14 @@ export default {
     mutations: {
         setToken(state, val) {
             state.token = val
-            Cookie.set('token', val)
+            Cookie.set('adminToken', val)
         },
         clearToken(state) {
             state.token = ""
-            Cookie.remove('token')
+            Cookie.remove('adminToken')
         },
         getToken(state) {
-            state.token = state.token || Cookie.get('token')
+            state.token = state.token || Cookie.get('adminToken')
         },
     }
 }
