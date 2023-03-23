@@ -1,9 +1,6 @@
 {
-  "routes": [
-    {
-      "route": "/api/*",
-      "methods": ["GET", "POST"],
-      "allowedRoles": ["anonymous"]
-    }
-  ]
+  "globalHeaders": {
+    "Access-Control-Allow-Origin": "https://pet-hospital.azurewebsites.net",
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS"
+  }
 }
