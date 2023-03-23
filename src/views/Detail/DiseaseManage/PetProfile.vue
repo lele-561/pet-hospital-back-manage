@@ -4,17 +4,17 @@
     <el-form ref='form' :model='petProfile' :rules='rules' label-width='80px'>
       <el-row>
         <el-col :span=8>
-          <el-form-item prop='name' label='宠物名'>
+          <el-form-item label='宠物名' prop='name'>
             <el-input v-model='petProfile.name' placeholder='请输入宠物名'>{{ petProfile.name }}</el-input>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item prop='type' label='种类'>
+          <el-form-item label='种类' prop='type'>
             <el-input v-model='petProfile.type' placeholder='请输入种类'>{{ petProfile.type }}</el-input>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item prop='gender' label='性别'>
+          <el-form-item label='性别' prop='gender'>
             <el-select v-model='petProfile.gender' clearable placeholder='请选择性别'>
               <el-option v-for='item in genderOptions'
                          :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -24,17 +24,17 @@
       </el-row>
       <el-row>
         <el-col :span=8>
-          <el-form-item prop='weight' label='重量'>
+          <el-form-item label='重量' prop='weight'>
             <el-input v-model='petProfile.weight' placeholder='请输入重量（单位：kg）'>{{ petProfile.weight }}</el-input>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item prop='birthday' label='生日'>
-            <el-date-picker v-model="petProfile.birthday" type="date" placeholder="请选择生日"></el-date-picker>
+          <el-form-item label='生日' prop='birthday'>
+            <el-date-picker v-model="petProfile.birthday" placeholder="请选择生日" type="date"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span=8>
-          <el-form-item prop='age' label='年龄'>{{ petProfile.age }} 岁</el-form-item>
+          <el-form-item label='年龄' prop='age'>{{ petProfile.age }} 岁</el-form-item>
         </el-col>
       </el-row>
       <el-form-item label='所患疾病'>
@@ -43,12 +43,12 @@
                 @close='handleClose(tag, "disease")'>{{ tag['name'] }}
         </el-tag>
         <el-autocomplete v-if='inputDiseaseVisible' ref='saveDiseaseTagInput' v-model='inputDiseaseValue'
-                         class='input-new-tag' size='small'
-                         :fetch-suggestions='querySearchAsyncDisease'
+                         :fetch-suggestions='querySearchAsyncDisease' class='input-new-tag'
                          placeholder='请输入内容'
+                         size='small'
                          @select='handleSelectDisease'
         ></el-autocomplete>
-        <el-button v-else class='button-new-tag' type='warning' plain size='small'
+        <el-button v-else class='button-new-tag' plain size='small' type='warning'
                    @click='showInput("disease")'>+ 新疾病
         </el-button>
       </el-form-item>
@@ -58,12 +58,12 @@
                 @close='handleClose(tag, "medicine")'>{{ tag['name'] }}
         </el-tag>
         <el-autocomplete v-if='inputMedicineVisible' ref='saveMedicineTagInput' v-model='inputMedicineValue'
-                         class='input-new-tag' size='small'
-                         :fetch-suggestions='querySearchAsyncMedicine'
+                         :fetch-suggestions='querySearchAsyncMedicine' class='input-new-tag'
                          placeholder='请输入内容'
+                         size='small'
                          @select='handleSelectMedicine'
         ></el-autocomplete>
-        <el-button v-else class='button-new-tag' type='success' plain size='small'
+        <el-button v-else class='button-new-tag' plain size='small' type='success'
                    @click='showInput("medicine")'>+ 新药品
         </el-button>
       </el-form-item>
@@ -73,22 +73,22 @@
                 @close='handleClose(tag, "checkup")'>{{ tag['name'] }}
         </el-tag>
         <el-autocomplete v-if='inputCheckupVisible' ref='saveCheckupTagInput' v-model='inputCheckupValue'
-                         class='input-new-tag' size='small'
-                         :fetch-suggestions='querySearchAsyncCheckup'
+                         :fetch-suggestions='querySearchAsyncCheckup' class='input-new-tag'
                          placeholder='请输入内容'
+                         size='small'
                          @select='handleSelectCheckup'></el-autocomplete>
-        <el-button v-else class='button-new-tag' type='primary' plain size='small'
+        <el-button v-else class='button-new-tag' plain size='small' type='primary'
                    @click='showInput("checkup")'>+ 新检查
         </el-button>
       </el-form-item>
-      <el-form-item prop='description' label='病情表述'>
-        <el-input type='textarea' v-model='petProfile.description' autosize placeholder='请输入病情表述'></el-input>
+      <el-form-item label='病情表述' prop='description'>
+        <el-input v-model='petProfile.description' autosize placeholder='请输入病情表述' type='textarea'></el-input>
       </el-form-item>
     </el-form>
-    <el-button style='margin-left:10px; float: right'
-               type='success' icon='el-icon-check' @click='confirm'>保存
+    <el-button icon='el-icon-check'
+               style='margin-left:10px; float: right' type='success' @click='confirm'>保存
     </el-button>
-    <el-button style='float: right' type='info' icon='el-icon-back' @click='back'>返回</el-button>
+    <el-button icon='el-icon-back' style='float: right' type='info' @click='back'>返回</el-button>
   </div>
 </template>
 
@@ -337,9 +337,9 @@ export default {
       this.checkupOptions = []
     }
   },
-  mounted() {
+  async mounted() {
     this.petProfile.id = this.$route.query.id
-    this.getData()
+    await this.getData()
     if (this.$route.query.id !== '') {
       this.getPetProfile()
     }

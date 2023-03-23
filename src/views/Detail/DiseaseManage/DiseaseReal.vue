@@ -5,8 +5,8 @@
         <el-input v-model='input' placeholder='请输入'></el-input>
       </el-form-item>
       <el-form-item label=''>
-        <el-button type='success' icon='el-icon-search' @click='search(input)'>搜索</el-button>
-        <el-button type='primary' icon='el-icon-edit' @click='addPetProfile'>新增</el-button>
+        <el-button icon='el-icon-search' type='success' @click='search(input,currentPage)'>搜索</el-button>
+        <el-button icon='el-icon-edit' type='primary' @click='addPetProfile'>新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格部分 -->
@@ -56,10 +56,10 @@ export default {
   methods: {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
-      this.search(this.content)
+      this.search(this.content, this.currentPage)
     },
-    search: function (content) {
-      getFormData('/petProfile/getAllPetProfiles', {content: content, currentPage: this.currentPage}).then((resp) => {
+    search: function (content, page) {
+      getFormData('/petProfile/getAllPetProfiles', {content: content, currentPage: page}).then((resp) => {
         this.tableData = resp.data.result.petProfiles
         this.totalPages = resp.data.result.totalPages
         this.currentPage = resp.data.result.currentPage
@@ -77,7 +77,8 @@ export default {
         postFormData('/petProfile/deleteOnePetProfile', {id: row.id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
-            this.search('')
+            this.currentPage = 1
+            this.search('', this.currentPage)
           } else this.$message({type: 'warning', message: resp.data.message});
         })
       }).catch(() => {
@@ -87,7 +88,7 @@ export default {
   },
   mounted() {
     this.currentPage = 1
-    this.search('');
+    this.search('', this.currentPage);
   }
 };
 </script>
