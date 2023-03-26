@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog :title="operateType === 'add' ? '新增试题' : '试题信息'" :visible.sync="isShow">
-      <common-form ref="form" :formData="operateFormData" :formLabel="operateFormLabel" :inline="false">
+    <el-dialog ref="dialog" :title="operateType === 'add' ? '新增试题' : '试题信息'" :visible.sync="isShow">
+      <common-form ref="operateFormData" :formData="operateFormData" :formLabel="operateFormLabel" :inline="false">
       </common-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="" @click="isShow = false">取消</el-button>
@@ -23,7 +23,6 @@
         <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
         <el-button type="primary" icon="el-icon-edit" @click="addQuestion">新增</el-button>
       </el-form-item>
-      
     </el-form>
     <!-- 表格部分 -->
     <div>
@@ -64,22 +63,22 @@ export default {
       operateFormLabel: [
         // {model: "disease_type_name", label: "疾病名", type: "textarea", 
         //   rules:[{ required: true, message: '请选择疾病分类', trigger: 'change' }]},
-        {model: "title", label: "题干", type: "textarea", 
+        {model: "title", label: "题干", type: "textarea", prop: "title",
           rules:[{ required: true, message: '请输入题干', trigger: 'blur' },
           { min: 1, max: 500, message: '最多不超过500个字符', trigger: 'blur' }]},
-        {model: "optionA", label: "A选项", type: "input",
+        {model: "optionA", label: "A选项", type: "input", prop: "optionA",
           rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionB", label: "B选项", type: "input", 
+        {model: "optionB", label: "B选项", type: "input", prop: "optionB",
           rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionC", label: "C选项", type: "input", 
+        {model: "optionC", label: "C选项", type: "input", prop: "optionC",
           rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionD", label: "D选项", type: "input", 
+        {model: "optionD", label: "D选项", type: "input", prop: "optionD",
           rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "answer", label: "正确答案", type: "radio-group",
+        {model: "answer", label: "正确答案", type: "radio-group", prop: "answer",
           rules:[{ required: true, message: '请选择正确答案', trigger: 'change' },]}
       ],
       // 表单数据，不一定都显示，但会传回后端
@@ -96,8 +95,8 @@ export default {
       // 表格配置
       tableData: [],
       tableLabel: [
-        {prop: "question_id", label: 'ID'},
-        {prop: "disease_type_name", label: '疾病名'},
+        {prop: "question_id", label: '试题编号'},
+        {prop: "disease_type_name", label: '疾病类型'},
         {prop: "title", label: '题干'},
       ]
     };
@@ -113,9 +112,9 @@ export default {
     },
     getOneQuetion(row) {
       console.log(row.question_id)
-      getFormData('/examManage/getOneQuestion', {questionId: row.question_id}).then((resp) => {
-        console.log(resp.data.result.questionInfo)
-        this.operateFormData = resp.data.result.questionInfo
+      getFormData('/examManage/getOneQuestion', {question_id: row.question_id}).then((resp) => {
+        console.log(resp.data.result.question_info)
+        this.operateFormData = resp.data.result.question_info
       })
     },
     search() {
@@ -153,11 +152,15 @@ export default {
     addQuestion() {
       this.operateType = 'add';
       this.isShow = true;
+      this.$refs.dialog.$emit('open');
+      this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
       this.operateFormData = {}
     },
     editQuestion(row) {
       this.operateType = 'edit';
       this.isShow = true;
+      this.$refs.dialog.$emit('open');
+      this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
       this.getOneQuetion(row)
     },
     delQuestion(row) {
@@ -166,7 +169,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        getFormData('/examManage/deleteOneQuestion', {questionId: row.question_id}).then((resp) => {
+        getFormData('/examManage/deleteOneQuestion', {question_id: row.question_id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
             this.search()
