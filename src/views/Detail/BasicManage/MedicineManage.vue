@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog :title='operateType === "add" ? "新增药品" : "药品信息"' :visible.sync='isShow'>
+    <el-dialog ref='dialog' :title='operateType === "add" ? "新增药品" : "药品信息"' :visible.sync='isShow'>
       <common-form ref='form' :formData='formData' :formLabel='formLabel' :inline='false'>
       </common-form>
       <div slot='footer' class='dialog-footer'>
@@ -148,6 +148,8 @@ export default {
     addMedicine() {
       this.operateType = 'add';
       this.isShow = true;
+      this.$refs.dialog.$emit('open')
+      this.$refs.form.resetForm()
       this.formData = {}
     },
     editMedicine(row) {

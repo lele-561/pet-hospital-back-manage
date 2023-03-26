@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog :title='operateType === "add" ? "新增人员" : "人员信息"' :visible.sync='isShow'>
+    <el-dialog ref='dialog' :title='operateType === "add" ? "新增人员" : "人员信息"' :visible.sync='isShow'>
       <common-form ref='form' :formData='formData'
                    :formLabel='formLabel' :inline='false' :selectOptions='departmentOptions'>
       </common-form>
@@ -161,6 +161,8 @@ export default {
     addPersonnel() {
       this.operateType = 'add';
       this.isShow = true;
+      this.$refs.dialog.$emit('open')
+      this.$refs.form.resetForm()
       this.formData = {}
     },
     editPersonnel(row) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 收集表单 -->
-    <el-dialog :title='operateType === "add" ? "新增检查项目" : "检查项目信息"' :visible.sync='isShow'>
+    <el-dialog ref='dialog' :title='operateType === "add" ? "新增检查项目" : "检查项目信息"' :visible.sync='isShow'>
       <common-form ref='form' :formData='formData' :formLabel='formLabel' :inline='false'>
       </common-form>
       <div slot='footer' class='dialog-footer'>
@@ -137,6 +137,8 @@ export default {
     addCheckup() {
       this.operateType = 'add';
       this.isShow = true;
+      this.$refs.dialog.$emit('open')
+      this.$refs.form.resetForm()
       this.formData = {}
     },
     editCheckup(row) {
