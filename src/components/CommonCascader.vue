@@ -2,6 +2,7 @@
     <el-cascader
       v-model="selectedValues"
       :options="options"
+      :show-all-levels="false"
       :props="{ expandTrigger: 'hover' }"
       @change="handleChange"
       placeholder="请选择疾病分类"

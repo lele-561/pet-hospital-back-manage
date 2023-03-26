@@ -43,7 +43,11 @@ export default {
     selectOptions: Array,   // 单选项信息
     inline: Boolean
   },
-  methods: {},
+  methods: {
+    resetForm() {
+      this.$refs.form.resetFields()
+    }
+  }, 
   data() {
     return {}
   },
