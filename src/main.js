@@ -2,8 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 // import Vuex from 'vuex'
-import MavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
@@ -12,7 +10,6 @@ import * as echarts from 'echarts'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
-Vue.use(MavonEditor);
 Vue.prototype.$md5 = md5;
 Vue.prototype.$echarts = echarts;
 
