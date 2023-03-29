@@ -67,7 +67,7 @@ export default {
           model: 'name', label: '用户名', type: 'input', prop: 'name',
           rules: [
             {required: true, message: '请填写用户名', trigger: 'blur'},
-            {min: 2, message: '用户名不得少于2个字', trigger: 'blur'},
+            {min: 1, message: '用户名不得少于1个字', trigger: 'blur'},
             {max: 20, message: '用户名不得多于20个字', trigger: 'blur'}
           ],
         },

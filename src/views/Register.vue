@@ -45,8 +45,8 @@ export default {
         phoneNumber: [{required: true, validator: valiPhoneNumberPass, trigger: 'blur'},],
         name: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, message: '用户名长度不得少于3位', trigger: 'blur'},
-          {max: 20, message: '用户名长度不得多于20位', trigger: 'blur'}
+          {min: 1, message: '用户名不得少于1个字', trigger: 'blur'},
+          {max: 20, message: '用户名不得多于20个字', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
