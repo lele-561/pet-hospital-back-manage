@@ -9,8 +9,6 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "blueimp-md5": "^2.19.0",
-    "bright-comment": "^1.5.7",
     "core-js": "^3.6.5",
     "echarts": "^5.3.3",
     "element-ui": "^2.15.9",
@@ -18,9 +16,7 @@
     "js-md5": "^0.7.3",
     "less": "^4.1.2",
     "less-loader": "^6.0.0",
-    "mavon-editor": "^2.10.4",
     "mockjs": "^1.1.0",
-    "papaparse": "^5.3.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.6.2"
