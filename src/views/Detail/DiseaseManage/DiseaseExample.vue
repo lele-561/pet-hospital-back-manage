@@ -12,8 +12,8 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="病例大类" prop="disease_type_id">
-          <el-select v-model="operateFormData.disease_type_id" clearable placeholder="请选择病类" ref="selector" @change="handleChange">
+        <el-form-item label="病例大类" prop="disease_type_name">
+          <el-select v-model="operateFormData.disease_type_name" clearable placeholder="请选择病类" ref="selector" @change="handleChange">
             <el-option
               v-for="item in big_diseases"
               :key="item.value"
@@ -158,7 +158,7 @@ export default {
       
       operateFormData: {
         disease_id: -1,
-        disease_type_id: '',
+        disease_type_name: '',
         disease_name: "",
         symptom: "",
         examination: [],
@@ -168,7 +168,7 @@ export default {
       },
 
       rules: {
-        disease_type_id: [
+        disease_type_name: [
           {required: true, message: '请选择疾病所属类型', trigger: 'change'}
         ],
         disease_name: [
@@ -211,7 +211,7 @@ export default {
       this.search()
     },
     handleChange(value) {
-      this.operateFormData.disease_type_id = value
+      this.operateFormData.disease_type_name = value
     },
     handleExaminationChange(value) {
     },
@@ -255,7 +255,7 @@ export default {
         var old_resp = resp.data.result.big_disease
         for(let i = 0; i < old_resp.length; i++) {
           var temp_info = {
-            value: i, 
+            value: old_resp[i], 
             label: old_resp[i]
           }
           this.big_diseases.push(temp_info)
@@ -320,7 +320,7 @@ export default {
           var returnTreatment = this.operateFormData.treatment.join(',')
           var returnForm = {
           disease_id: this.operateFormData.disease_id,
-          disease_type_id: this.operateFormData.disease_type_id,
+          disease_type_name: this.operateFormData.disease_type_name,
           disease_name: this.operateFormData.disease_name,
           symptom: this.operateFormData.symptom,
           examination: returnExamination,
@@ -364,7 +364,8 @@ export default {
       this.operateType = 'add';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.operateFormData = {}
       this.fileList = []
     },
@@ -391,7 +392,8 @@ export default {
       this.operateType = 'edit';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.getOneDisease(e)
 
     },

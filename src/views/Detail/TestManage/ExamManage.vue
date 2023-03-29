@@ -252,7 +252,8 @@ export default {
       this.operateType = 'add';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.operateFormData = {}
       this.selectedPapers = []
       this.loadPaperData()
@@ -261,7 +262,8 @@ export default {
       this.operateType = 'edit';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.loadPaperData()
       this.getOneExam(row)
     },

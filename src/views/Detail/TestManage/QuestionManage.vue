@@ -153,14 +153,16 @@ export default {
       this.operateType = 'add';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
       this.operateFormData = {}
     },
     editQuestion(row) {
       this.operateType = 'edit';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
-      this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
+      if(this.$refs.operateFormData != undefined)
+        this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
       this.getOneQuetion(row)
     },
     delQuestion(row) {
