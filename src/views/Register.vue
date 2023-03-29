@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {postRequestJSON} from '../utils/api';
+import {postFormData} from '../utils/api';
 
 export default {
   name: 'Register',
@@ -63,7 +63,7 @@ export default {
     register: function () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          postRequestJSON('/user/register', {
+          postFormData('/user/register', {
             phoneNumber: this.form.phoneNumber,
             name: this.form.name,
             password: this.$md5(this.form.password)

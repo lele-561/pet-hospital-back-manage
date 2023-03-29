@@ -283,6 +283,22 @@ export default {
               this.$message.error('未填写全部信息')
               return
             }
+            // disease, medicine, checkup删除name，只剩id
+            let disease_ids=[]
+            let medicine_ids=[]
+            let checkup_ids=[]
+            for(let i in this.petProfile.diseases)
+              disease_ids.push(this.petProfile.diseases[i].id)
+            for(let i in this.petProfile.medicines)
+              medicine_ids.push(this.petProfile.medicines[i].id)
+            for(let i in this.petProfile.checkups)
+              checkup_ids.push(this.petProfile.checkups[i].id)
+            delete this.petProfile.diseases
+            delete this.petProfile.medicines
+            delete this.petProfile.checkups
+            this.petProfile['diseases']=disease_ids
+            this.petProfile['medicines']=medicine_ids
+            this.petProfile['checkups']=checkup_ids
             // 更新档案
             if (this.$route.query.id !== '') {
               postFormData('/petProfile/updateOnePetProfile', this.petProfile).then((resp) => {
