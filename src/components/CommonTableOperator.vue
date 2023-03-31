@@ -9,7 +9,7 @@
           show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{
-              item.prop === "role" ? scope.row[item.prop] === "true" ? "管理员" : "普通用户" : scope.row[item.prop]
+              item.prop === "role" ? scope.row[item.prop] === true ? "管理员" : "普通用户" : scope.row[item.prop]
             }}</span>
         </template>
       </el-table-column>
