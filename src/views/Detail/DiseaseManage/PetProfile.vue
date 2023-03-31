@@ -137,10 +137,10 @@ export default {
       genderOptions: [{value: '母', label: '母'}, {value: '公', label: '公'},],
       rules: {
         name: [{required: true, message: '请填写宠物名', trigger: 'blur'},
-          {min: 2, message: '宠物名不得少于2个字', trigger: 'blur'},
+          {min: 1, message: '宠物名不得少于1个字', trigger: 'blur'},
           {max: 20, message: '宠物名不得多于20个字', trigger: 'blur'}],
         type: [{required: true, message: '请填写宠物种类', trigger: 'blur'},
-          {min: 2, message: '种类不得少于2个字', trigger: 'blur'},
+          {min: 1, message: '种类不得少于1个字', trigger: 'blur'},
           {max: 10, message: '种类不得多于10个字', trigger: 'blur'}],
         gender: [{
           required: true, message: '请选择性别', trigger: 'blur'
