@@ -177,16 +177,18 @@ export default {
       })
     },
     getData() {
+      console.log('调用啦')
       // 获取所有已知数据
       getFormData('/diseaseManage/getDiseaseTypes').then((resp) => {
-        for (let i in resp.data.data.disease_types) {
-          for (let j in resp.data.data.disease_types[i].children) {
+        for (let i in resp.data.result.disease_types) {
+          for (let j in resp.data.result.disease_types[i].children) {
             this.diseaseOptions.push({
-              id: resp.data.data.disease_types[i].children[j].disease_type_id,
-              value: resp.data.data.disease_types[i].children[j].disease_type_name
+              id: resp.data.result.disease_types[i].children[j].disease_type_id,
+              value: resp.data.result.disease_types[i].children[j].disease_type_name
             })
           }
         }
+        console.log(this.diseaseOptions)
       })
       getFormData('/medicine/getAllMedicines').then((resp) => {
         for (let i in resp.data.result.medicines) {
@@ -253,7 +255,7 @@ export default {
       }, 500)
     },
     handleSelectMedicine(item) {
-      this.petProfile.medicine.push({id: item.id, name: item.value})
+      this.petProfile.medicines.push({id: item.id, name: item.value})
       this.inputMedicineVisible = false
       this.inputMedicineValue = ''
     },
@@ -284,21 +286,21 @@ export default {
               return
             }
             // disease, medicine, checkup删除name，只剩id
-            let disease_ids=[]
-            let medicine_ids=[]
-            let checkup_ids=[]
-            for(let i in this.petProfile.diseases)
+            let disease_ids = []
+            let medicine_ids = []
+            let checkup_ids = []
+            for (let i in this.petProfile.diseases)
               disease_ids.push(this.petProfile.diseases[i].id)
-            for(let i in this.petProfile.medicines)
+            for (let i in this.petProfile.medicines)
               medicine_ids.push(this.petProfile.medicines[i].id)
-            for(let i in this.petProfile.checkups)
+            for (let i in this.petProfile.checkups)
               checkup_ids.push(this.petProfile.checkups[i].id)
             delete this.petProfile.diseases
             delete this.petProfile.medicines
             delete this.petProfile.checkups
-            this.petProfile['diseases']=disease_ids
-            this.petProfile['medicines']=medicine_ids
-            this.petProfile['checkups']=checkup_ids
+            this.petProfile['diseases'] = disease_ids
+            this.petProfile['medicines'] = medicine_ids
+            this.petProfile['checkups'] = checkup_ids
             // 更新档案
             if (this.$route.query.id !== '') {
               postFormData('/petProfile/updateOnePetProfile', this.petProfile).then((resp) => {
