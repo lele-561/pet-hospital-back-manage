@@ -313,7 +313,7 @@ export default {
       this.selectedQuestions = []
       this.searchQuestion()
       this.$refs.dialog.$emit('open');
-      if(this.$refs.operateFormData != undefined)
+      if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.operateFormData = {}
 
@@ -325,7 +325,7 @@ export default {
       this.searchQuestion()
       this.getOnePaper(row)
       this.$refs.dialog.$emit('open');
-      if(this.$refs.operateFormData != undefined)
+      if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
     },
     delPaper(row) {
