@@ -153,7 +153,7 @@ export default {
         }],
         weight: [{required: true, validator: valiWeightPass, trigger: 'blur'},],
         description: [{required: true, message: '请填写病情描述', trigger: 'blur'},
-          {min: 10, message: '病情描述不得少于10个字', trigger: 'blur'},
+          {min: 2, message: '病情描述不得少于2个字', trigger: 'blur'},
           {max: 200, message: '病情描述不得多于200个字', trigger: 'blur'}],
       }
     }
@@ -319,10 +319,9 @@ export default {
               })
             }
             this.back()
-          }
-        });
+          } else return false
+        })
       });
-
     },
     back() {
       this.clear()
