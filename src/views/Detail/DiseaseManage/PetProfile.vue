@@ -190,19 +190,19 @@ export default {
         }
         console.log(this.diseaseOptions)
       })
-      getFormData('/medicine/getAllMedicines').then((resp) => {
-        for (let i in resp.data.result.medicines) {
+      getFormData('/medicine/getAllMedicines',{content: '', currentPage: 0}).then((resp) => {
+        for (let i in resp.data.result) {
           this.medicineOptions.push({
-            id: resp.data.result.medicines[i].id,
-            value: resp.data.result.medicines[i].name
+            id: resp.data.result[i].id,
+            value: resp.data.result[i].name
           })
         }
       })
-      getFormData('/checkup/getAllCheckups').then((resp) => {
-        for (let i in resp.data.result.checkups) {
+      getFormData('/checkup/getAllCheckups',{content: '', currentPage: 0}).then((resp) => {
+        for (let i in resp.data.result) {
           this.checkupOptions.push({
-            id: resp.data.result.checkups[i].id,
-            value: resp.data.result.checkups[i].name
+            id: resp.data.result[i].id,
+            value: resp.data.result[i].name
           })
         }
       })
