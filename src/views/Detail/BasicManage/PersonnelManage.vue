@@ -113,10 +113,10 @@ export default {
   methods: {
     getData() {
       getFormData('/department/getAllDepartments', {content: '', currentPage: 0}).then((resp) => {
-        for (let i in resp.data.result.departments) {
+        for (let i in resp.data.result) {
           this.departmentOptions.push({
-            value: resp.data.result.departments[i].name,
-            label: resp.data.result.departments[i].name
+            value: resp.data.result[i].name,
+            label: resp.data.result[i].name
           })
         }
       })
