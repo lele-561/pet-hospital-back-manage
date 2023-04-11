@@ -111,6 +111,10 @@ export default {
     search: function (content, page) {
       getFormData('/user/getAllUsers', {content: content, currentPage: page}).then((resp) => {
         this.tableData = resp.data.result.users
+        for (let i in this.tableData) {
+          if (this.tableData[i].role === true) this.tableData[i].role = '管理员'
+          else this.tableData[i].role = '普通用户'
+        }
         this.totalPages = resp.data.result.totalPages
         this.currentPage = resp.data.result.currentPage
       })
