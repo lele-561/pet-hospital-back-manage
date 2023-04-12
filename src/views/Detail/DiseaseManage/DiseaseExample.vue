@@ -123,8 +123,8 @@
     <!-- 表格部分 -->
     <div>
       <el-row class="rowClass" v-for="(colArr, index) in rowData" :key="index" :gutter="24">
-        <el-col v-for="(btn, index) in colArr" :key="btn.disease_id" :span="4">
-          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_name }}</el-button>
+        <el-col v-for="(btn, index) in colArr" :key="btn.disease_type_id" :span="4">
+          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_type_id">{{ btn.disease_name }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -157,7 +157,7 @@ export default {
       fileList: [],
       
       operateFormData: {
-        disease_id: -1,
+        disease_type_id: -1,
         disease_type_name: '',
         disease_name: "",
         symptom: "",
@@ -242,7 +242,7 @@ export default {
     },
     getOneDisease(e) {
       let id = e.currentTarget.getAttribute("id")
-      getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
+      getFormData('/diseaseManage/getOneDisease', {disease_type_id: id}).then((resp) => {
         this.operateFormData = JSON.parse(JSON.stringify(resp.data.result.disease_info))
         this.fileList = this.operateFormData.file_info
       })
@@ -321,7 +321,7 @@ export default {
           var returnExamination = this.operateFormData.examination.join(',')
           var returnTreatment = this.operateFormData.treatment.join(',')
           var returnForm = {
-          disease_id: this.operateFormData.disease_id,
+          disease_type_id: this.operateFormData.disease_type_id,
           disease_type_name: this.operateFormData.disease_type_name,
           disease_name: this.operateFormData.disease_name,
           symptom: this.operateFormData.symptom,
@@ -332,7 +332,7 @@ export default {
           file_descriptions: file_descriptions
         }
           if (this.operateType === 'add') {
-            delete returnForm.disease_id
+            delete returnForm.disease_type_id
             console.log("add")
             console.log(returnForm)
             postFormData('/diseaseManage/addOneDisease', returnForm).then((resp) => {
@@ -372,7 +372,7 @@ export default {
       this.fileList = []
     },
     delDisease() {
-      var id = this.operateFormData.disease_id
+      var id = this.operateFormData.disease_type_id
       this.$confirm('确认删除吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -380,7 +380,7 @@ export default {
       }).then(() => {
         this.isShow = false
         console.log(id)
-        getFormData('/diseaseManage/deleteOneDisease', {disease_id: id}).then((resp) => {
+        getFormData('/diseaseManage/deleteOneDisease', {disease_type_id: id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
             this.search()
