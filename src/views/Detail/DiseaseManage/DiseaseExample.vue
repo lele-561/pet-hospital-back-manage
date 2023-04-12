@@ -265,12 +265,12 @@ export default {
       })
     },
     loadExaminations() { 
-      getFormData('/checkup/getAllCheckups').then((resp) => {
+      getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
         this.examinations = resp.data.result.checkups
       })
     },
     loadMedicines() { 
-      getFormData('/medicine/getAllMedicines').then((resp) => {
+      getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
         this.medicines = resp.data.result.medicines
       })
     },
