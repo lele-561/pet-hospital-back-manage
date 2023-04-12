@@ -124,7 +124,7 @@
     <div>
       <el-row class="rowClass" v-for="(colArr, index) in rowData" :key="index" :gutter="24">
         <el-col v-for="(btn, index) in colArr" :key="btn.disease_id" :span="4">
-          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_type_name }}</el-button>
+          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_name }}</el-button>
         </el-col>
       </el-row>
     </div>
