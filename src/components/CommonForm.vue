@@ -25,10 +25,10 @@
       <el-input v-if="item.type === 'textarea'" type="textarea" autosize v-model="formData[item.model]"
                 :placeholder="'请输入' + item.label"></el-input>
       <el-radio-group v-if="item.type === 'radio-group'" v-model="formData[item.model]">
-        <el-radio label="A">A</el-radio>
-        <el-radio label="B">B</el-radio>
-        <el-radio label="C">C</el-radio>
-        <el-radio label="D">D</el-radio>
+        <el-radio label="1">A</el-radio>
+        <el-radio label="2">B</el-radio>
+        <el-radio label="3">C</el-radio>
+        <el-radio label="4">D</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

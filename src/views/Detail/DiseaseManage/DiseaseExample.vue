@@ -78,7 +78,7 @@
 
         <el-form-item label="上传文件">
           <el-upload
-            action="https://imgbb.com/"
+            action="https://pethospitalresources.blob.core.windows.net/pethospicalfiles/"
             list-type="text"
             :on-remove="handleRemove"
             :headers="{ 'content-type': 'multipart/form-data' }"
@@ -169,12 +169,14 @@ export default {
 
       rules: {
         disease_type_name: [
-          {required: true, message: '请选择疾病所属类型', trigger: 'change'}
+          {required: true, message: '请选择疾病所属类型', trigger: 'change'},
+          {min: 2, message: '名称不得少于2个字', trigger: 'blur'},
+          {max: 20, message: '名称不得多于20个字', trigger: 'blur'}
         ],
         disease_name: [
           {required: true, message: '请填写疾病名称', trigger: 'blur'},
           {min: 2, message: '名称不得少于2个字', trigger: 'blur'},
-          {max: 200, message: '名称不得多于200个字', trigger: 'blur'}
+          {max: 20, message: '名称不得多于20个字', trigger: 'blur'}
         ],
         symptom: [
           {required: true, message: '请填写病例基本情况', trigger: 'blur'},
