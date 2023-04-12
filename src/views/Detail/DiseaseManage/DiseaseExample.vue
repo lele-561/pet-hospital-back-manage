@@ -266,13 +266,13 @@ export default {
     },
     loadExaminations() { 
       getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
-        this.examinations = resp.data.result.checkups
+        this.examinations = resp.data.result
       })
       console.log(this.examinations)
     },
     loadMedicines() { 
       getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
-        this.medicines = resp.data.result.medicines
+        this.medicines = resp.data.result
       })
       console.log(this.medicines)
     },
