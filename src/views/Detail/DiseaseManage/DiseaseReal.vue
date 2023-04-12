@@ -2,10 +2,10 @@
   <div>
     <el-form :inline='true' style='margin-top:12px'>
       <el-form-item label=''>
-        <el-input v-model='input' placeholder='请输入'></el-input>
+        <el-input v-model='content' placeholder='请输入'></el-input>
       </el-form-item>
       <el-form-item label=''>
-        <el-button icon='el-icon-search' type='success' @click='search(input,currentPage)'>搜索</el-button>
+        <el-button icon='el-icon-search' type='success' @click='search(content,currentPage)'>搜索</el-button>
         <el-button icon='el-icon-edit' type='primary' @click='addPetProfile'>新增</el-button>
       </el-form-item>
     </el-form>
@@ -40,7 +40,7 @@ export default {
       pageSize: 10,
       totalPages: 1,
       currentPage: 1,
-      input: '',
+      content: '',
       // 表格配置
       petProfiles: '',
       tableData: [],
