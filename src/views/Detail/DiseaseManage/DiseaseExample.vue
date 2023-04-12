@@ -268,11 +268,13 @@ export default {
       getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
         this.examinations = resp.data.result.checkups
       })
+      console.log(this.examinations)
     },
     loadMedicines() { 
       getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
         this.medicines = resp.data.result.medicines
       })
+      console.log(this.medicines)
     },
     search() {
       postFormData('/diseaseManage/searchDisease', {disease_type: this.disease_type, search_text: this.input, currentPage: -1}).then((resp) => {
