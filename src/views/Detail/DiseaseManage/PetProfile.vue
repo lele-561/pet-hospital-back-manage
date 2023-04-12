@@ -177,18 +177,23 @@ export default {
       })
     },
     getData() {
-      console.log('调用啦')
       // 获取所有已知数据
-      getFormData('/diseaseManage/getDiseaseTypes').then((resp) => {
-        for (let i in resp.data.result.disease_types) {
-          for (let j in resp.data.result.disease_types[i].children) {
-            this.diseaseOptions.push({
-              id: resp.data.result.disease_types[i].children[j].disease_type_id,
-              value: resp.data.result.disease_types[i].children[j].disease_type_name
-            })
-          }
+      postFormData('/diseaseManage/searchDisease',{search_text:'',disease_type:'',currentPage:-1}).then((resp) => {
+        /// 接口 /diseaseManage/getDiseaseTypes
+        // for (let i in resp.data.result.disease_types) {
+        //   for (let j in resp.data.result.disease_types[i].children) {
+        //     this.diseaseOptions.push({
+        //       id: resp.data.result.disease_types[i].children[j].disease_type_id,
+        //       value: resp.data.result.disease_types[i].children[j].disease_type_name
+        //     })
+        //   }
+        // }
+        for (let i in resp.data.result.infos) {
+          this.diseaseOptions.push({
+            id: resp.data.result.infos[i].disease_id,
+            value: resp.data.result.infos[i].disease_name
+          })
         }
-        console.log(this.diseaseOptions)
       })
       getFormData('/medicine/getAllMedicines',{content: '', currentPage: 0}).then((resp) => {
         for (let i in resp.data.result) {
