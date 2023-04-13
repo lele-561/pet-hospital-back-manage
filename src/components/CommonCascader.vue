@@ -5,6 +5,7 @@
       :show-all-levels="false"
       :props="{ expandTrigger: 'hover' }"
       @change="handleChange"
+      @clear="handleClear"
       placeholder="请选择疾病分类"
       clearable
     ></el-cascader>
@@ -37,6 +38,9 @@ export default {
         handleChange(selectedValues) {
             this.selectedValues = selectedValues
             this.$emit('change', selectedValues)
+        },
+        handleClear(){
+            this.$emit('clear')
         },
         loadOptions() {
             // console.log(11111111)

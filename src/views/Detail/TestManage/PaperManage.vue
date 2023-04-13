@@ -14,7 +14,7 @@
           </el-form-item>
         </el-row>
         <el-row v-if='showAddCascader()' >
-          <el-form-item label="疾病类型" prop="disease_type_id_add_paper">
+          <el-form-item label="疾病类型" prop="disease_type_id">
             <cascader
               :url="url"
               @change="handleAddPaperChange"
@@ -147,6 +147,7 @@ export default {
         paper_id: -1,
         questions: [],
         disease_type_name: '',
+        disease_type_id: 0,
         name: '',
         question_score: 0,
         score: 0,
@@ -160,7 +161,7 @@ export default {
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
         question_score: [{ required: true, message: '请输入每题分值', trigger: 'blur' },
           {  pattern: /^[1-9][0-9]?$/, message: '分值为1-100之间的整数', trigger: 'blur' },],
-        disease_type_id_add_paper: [{ required: true, message: '请选择试卷所属疾病类型', trigger: 'change' }],
+        disease_type_id: [{ required: true, message: '请选择试卷所属疾病类型', trigger: 'blur' }],
       },
 
       // 表格配置
@@ -213,7 +214,7 @@ export default {
     },
     handleAddPaperChange(value) {
       console.log(value)
-      this.disease_type_id_add_paper = value[1]
+      this.operateFormData.disease_type_id = value[1]
     },
     handleTransferChange(data) {
       // const selectedData = this.$refs.transfer.getSelected();
@@ -269,10 +270,12 @@ export default {
         for(let i = 0; i < this.selectedQuestions.length; i++) {
           question_ids = question_ids + this.selectedQuestions[i] + ','
         }
-        console.log(question_ids)
+        console.log(this.question_ids)
+        console.log(this.operateFormData)
           if (valid) {
             if (this.operateType === 'add') {
               var temp_info = {
+                disease_type_id: this.operateFormData.disease_type_id,
                 question_ids: question_ids,
                 question_point: this.operateFormData.question_score,
                 name: this.operateFormData.name,
@@ -287,6 +290,7 @@ export default {
               })
             } else if (this.operateType === 'edit') {
               var temp_info = {
+                // disease_type_id: this.operateFormData.disease_type_id,
                 question_ids: question_ids,
                 question_point: this.operateFormData.question_score,
                 name: this.operateFormData.name,

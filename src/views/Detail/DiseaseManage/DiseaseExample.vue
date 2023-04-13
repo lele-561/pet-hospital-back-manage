@@ -7,8 +7,7 @@
       </common-form> -->
       <el-form ref="operateFormData" :model="operateFormData" :rules="rules" label-width="90px" :inline="false">
         <el-form-item label="病例名" prop="disease_name">
-          <el-input v-model="operateFormData.disease_name" placeholder='请输入病例名'
-            :maxlength='200' show-word-limit>
+          <el-input v-model="operateFormData.disease_name" placeholder='请输入病例名'>
           </el-input>
         </el-form-item>
 
@@ -123,8 +122,8 @@
     <!-- 表格部分 -->
     <div>
       <el-row class="rowClass" v-for="(colArr, index) in rowData" :key="index" :gutter="24">
-        <el-col v-for="(btn, index) in colArr" :key="btn.disease_type_id" :span="4">
-          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_type_id">{{ btn.disease_name }}</el-button>
+        <el-col v-for="(btn, index) in colArr" :key="btn.disease_id" :span="4">
+          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_name }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -242,7 +241,8 @@ export default {
     },
     getOneDisease(e) {
       let id = e.currentTarget.getAttribute("id")
-      getFormData('/diseaseManage/getOneDisease', {disease_type_id: id}).then((resp) => {
+      console.log(id)
+      getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
         this.operateFormData = JSON.parse(JSON.stringify(resp.data.result.disease_info))
         this.fileList = this.operateFormData.file_info
       })
@@ -323,16 +323,17 @@ export default {
           var returnExamination = this.operateFormData.examination.join(',')
           var returnTreatment = this.operateFormData.treatment.join(',')
           var returnForm = {
-          disease_type_id: this.operateFormData.disease_type_id,
-          disease_type_name: this.operateFormData.disease_type_name,
-          disease_name: this.operateFormData.disease_name,
-          symptom: this.operateFormData.symptom,
-          examination: returnExamination,
-          diagnosis: this.operateFormData.diagnosis,
-          treatment: returnTreatment,
-          file_urls: file_urls,
-          file_descriptions: file_descriptions
-        }
+            disease_type_id: this.operateFormData.disease_type_id,
+            disease_type: this.operateFormData.disease_type_name,
+            disease_name: this.operateFormData.disease_name,
+            symptom: this.operateFormData.symptom,
+            examination: returnExamination,
+            diagnosis: this.operateFormData.diagnosis,
+            treatment: returnTreatment,
+            file_urls: file_urls,
+            file_descriptions: file_descriptions
+            //TODO: 改一下后端接口
+          }
           if (this.operateType === 'add') {
             delete returnForm.disease_type_id
             console.log("add")
