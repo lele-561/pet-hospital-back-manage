@@ -178,8 +178,12 @@ export default {
     },
     getData() {
       // 获取所有已知数据
-      postFormData('/diseaseManage/searchDisease',{search_text:'',disease_type:'',currentPage:-1}).then((resp) => {
-        /// 接口 /diseaseManage/getDiseaseTypes
+      postFormData('/diseaseManage/searchDisease', {
+        search_text: '',
+        disease_type: '',
+        currentPage: -1
+      }).then((resp) => {
+        /// 接口 /diseaseManage/getDiseaseTypes也能用
         // for (let i in resp.data.result.disease_types) {
         //   for (let j in resp.data.result.disease_types[i].children) {
         //     this.diseaseOptions.push({
@@ -195,7 +199,7 @@ export default {
           })
         }
       })
-      getFormData('/medicine/getAllMedicines',{content: '', currentPage: 0}).then((resp) => {
+      getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
         for (let i in resp.data.result) {
           this.medicineOptions.push({
             id: resp.data.result[i].id,
@@ -203,7 +207,7 @@ export default {
           })
         }
       })
-      getFormData('/checkup/getAllCheckups',{content: '', currentPage: 0}).then((resp) => {
+      getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
         for (let i in resp.data.result) {
           this.checkupOptions.push({
             id: resp.data.result[i].id,
@@ -291,15 +295,15 @@ export default {
               return
             }
             // disease, medicine, checkup删除name，只剩id
-            let disease_ids = []
-            let medicine_ids = []
-            let checkup_ids = []
+            let disease_ids = ''
+            let medicine_ids = ''
+            let checkup_ids = ''
             for (let i in this.petProfile.diseases)
-              disease_ids.push(this.petProfile.diseases[i].id)
+              disease_ids += this.petProfile.diseases[i].id + ','
             for (let i in this.petProfile.medicines)
-              medicine_ids.push(this.petProfile.medicines[i].id)
+              medicine_ids += this.petProfile.medicines[i].id + ','
             for (let i in this.petProfile.checkups)
-              checkup_ids.push(this.petProfile.checkups[i].id)
+              checkup_ids += this.petProfile.checkups[i].id + ','
             delete this.petProfile.diseases
             delete this.petProfile.medicines
             delete this.petProfile.checkups
