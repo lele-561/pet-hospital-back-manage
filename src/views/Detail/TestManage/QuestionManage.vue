@@ -86,6 +86,7 @@ export default {
       operateFormData: {
         question_id: "",
         disease_type_name: "",
+        disease_type_id: 0,
         title: "",
         optionA: "",
         optionB: "",

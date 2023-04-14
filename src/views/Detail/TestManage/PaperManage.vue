@@ -271,7 +271,7 @@ export default {
           question_ids = question_ids + this.selectedQuestions[i] + ','
         }
         console.log(this.question_ids)
-        console.log(this.operateFormData)
+        // console.log(this.operateFormData)
           if (valid) {
             if (this.operateType === 'add') {
               var temp_info = {
@@ -281,6 +281,7 @@ export default {
                 name: this.operateFormData.name,
                 question_num: this.selectedQuestions.length,
               }
+              console.log(temp_info)
               postFormData('/examManage/addOnePaper', temp_info).then((resp) => {
                 if (resp.data.code === 0) {
                   this.$message({type: 'success', message: resp.data.message});

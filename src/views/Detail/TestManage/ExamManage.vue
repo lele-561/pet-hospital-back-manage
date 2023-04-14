@@ -166,11 +166,23 @@ export default {
           });
           this.selectedPapers.pop();
       }
+      else {
+        console.log(this.selectedPapers)
+        console.log(this.paperData)
+        let obj = {}
+        obj = this.paperData.find((item) => {
+          return item.paper_id === this.selectedPapers[0]
+        }
+        )
+        this.operateFormData.paper_info = obj
+      }
+
     },
     loadPaperData() {
       postFormData('/examManage/searchPaper', {disease_type_id: -1, search_text: '', currentPage: -1}).then((resp) => {
         this.paperData = resp.data.result.infos
       })
+      console.log(this.paperData)
     },
     filterMethod(query, item) {
       //TODO: 按名字和id都能搜索
@@ -208,10 +220,11 @@ export default {
       this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.operateType === 'add') {
+              console.log(this.operateFormData)
               this.post_exam_info = {
                 paper_id: this.operateFormData.paper_info.paper_id,
                 start_time: this.operateFormData.examTime[0],
-                start_time: this.operateFormData.examTime[1],
+                end_time: this.operateFormData.examTime[1],
                 name: this.operateFormData.name,
                 authority: this.operateFormData.authority
               } 
