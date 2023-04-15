@@ -92,7 +92,9 @@ export default {
         functions: '',
         phoneNumber: '',
         directorId: '',
-        directorName: ''
+        directorName: '',
+        originDirectorName: '',
+        originDirectorId: '',
       },
       // 表格配置
       tableData: [],
@@ -106,10 +108,10 @@ export default {
   methods: {
     getData() {
       getFormData('/personnel/getAllPersonnels', {content: '', currentPage: 0}).then((resp) => {
-        for (let i in resp.data.result) {
+        for (let i in resp.data.result.personnels) {
           this.personnelOptions.push({
-            value: resp.data.result[i].id,
-            label: resp.data.result[i].name
+            value: resp.data.result.personnels[i].id,
+            label: resp.data.result.personnels[i].name
           })
         }
       })
@@ -129,11 +131,18 @@ export default {
       this.formValid = false
       await this.$bus.$emit('toFormValid', 'Department')
       if (this.formValid) {
+        // 不修改时，name的位置是名字
+        if (this.formData.originDirectorName === this.formData.directorName)
+          this.formData.directorId = this.formData.originDirectorId
         // 点击select更换主管人后，id会存储在传入的name字段，因此在这里改一下数据
-        this.formData.directorId = this.formData.directorName
+        else
+          this.formData.directorId = this.formData.directorName
         delete this.formData.directorName
+        delete this.formData.originDirectorId
+        delete this.formData.originDirectorName
         if (this.operateType === 'add') {
           delete this.formData.id
+          console.log(this.formData)
           postFormData('/department/addOneDepartment', this.formData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message({type: 'success', message: resp.data.message});
@@ -143,6 +152,8 @@ export default {
             } else this.$message({type: 'warning', message: resp.data.message});
           })
         } else if (this.operateType === 'edit') {
+          console.log(this.formData)
+
           postFormData('/department/updateOneDepartment', this.formData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message({type: 'success', message: resp.data.message});
@@ -165,6 +176,8 @@ export default {
       this.operateType = 'edit';
       this.isShow = true;
       this.formData = JSON.parse(JSON.stringify(row))  // 新对象，防止修改原值
+      this.formData.originDirectorId = this.formData.directorId
+      this.formData.originDirectorName = this.formData.directorName
     },
     delDepartment(row) {
       this.$confirm('确认删除吗？', '提示', {
