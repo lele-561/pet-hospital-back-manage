@@ -7,8 +7,7 @@
       </common-form> -->
       <el-form ref="operateFormData" :model="operateFormData" :rules="rules" label-width="90px" :inline="false">
         <el-form-item label="病例名" prop="disease_name">
-          <el-input v-model="operateFormData.disease_name" placeholder='请输入病例名'
-            :maxlength='200' show-word-limit>
+          <el-input v-model="operateFormData.disease_name" placeholder='请输入病例名'>
           </el-input>
         </el-form-item>
 
@@ -78,7 +77,7 @@
 
         <el-form-item label="上传文件">
           <el-upload
-            action="https://imgbb.com/"
+            action="https://pethospitalresources.blob.core.windows.net/pethospicalfiles/"
             list-type="text"
             :on-remove="handleRemove"
             :headers="{ 'content-type': 'multipart/form-data' }"
@@ -124,7 +123,7 @@
     <div>
       <el-row class="rowClass" v-for="(colArr, index) in rowData" :key="index" :gutter="24">
         <el-col v-for="(btn, index) in colArr" :key="btn.disease_id" :span="4">
-          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_type_name }}</el-button>
+          <el-button class="buttonClass" plain @click="editDisease" :id="btn.disease_id">{{ btn.disease_name }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -157,7 +156,7 @@ export default {
       fileList: [],
       
       operateFormData: {
-        disease_id: -1,
+        disease_type_id: -1,
         disease_type_name: '',
         disease_name: "",
         symptom: "",
@@ -169,12 +168,14 @@ export default {
 
       rules: {
         disease_type_name: [
-          {required: true, message: '请选择疾病所属类型', trigger: 'change'}
+          {required: true, message: '请选择疾病所属类型', trigger: 'change'},
+          {min: 2, message: '名称不得少于2个字', trigger: 'blur'},
+          {max: 20, message: '名称不得多于20个字', trigger: 'blur'}
         ],
         disease_name: [
           {required: true, message: '请填写疾病名称', trigger: 'blur'},
           {min: 2, message: '名称不得少于2个字', trigger: 'blur'},
-          {max: 200, message: '名称不得多于200个字', trigger: 'blur'}
+          {max: 20, message: '名称不得多于20个字', trigger: 'blur'}
         ],
         symptom: [
           {required: true, message: '请填写病例基本情况', trigger: 'blur'},
@@ -240,6 +241,7 @@ export default {
     },
     getOneDisease(e) {
       let id = e.currentTarget.getAttribute("id")
+      console.log(id)
       getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
         this.operateFormData = JSON.parse(JSON.stringify(resp.data.result.disease_info))
         this.fileList = this.operateFormData.file_info
@@ -263,14 +265,16 @@ export default {
       })
     },
     loadExaminations() { 
-      getFormData('/checkup/getAllCheckups').then((resp) => {
-        this.examinations = resp.data.result.checkups
+      getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
+        this.examinations = resp.data.result
       })
+      console.log(this.examinations)
     },
     loadMedicines() { 
-      getFormData('/medicine/getAllMedicines').then((resp) => {
-        this.medicines = resp.data.result.medicines
+      getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
+        this.medicines = resp.data.result
       })
+      console.log(this.medicines)
     },
     search() {
       postFormData('/diseaseManage/searchDisease', {disease_type: this.disease_type, search_text: this.input, currentPage: -1}).then((resp) => {
@@ -319,18 +323,19 @@ export default {
           var returnExamination = this.operateFormData.examination.join(',')
           var returnTreatment = this.operateFormData.treatment.join(',')
           var returnForm = {
-          disease_id: this.operateFormData.disease_id,
-          disease_type_name: this.operateFormData.disease_type_name,
-          disease_name: this.operateFormData.disease_name,
-          symptom: this.operateFormData.symptom,
-          examination: returnExamination,
-          diagnosis: this.operateFormData.diagnosis,
-          treatment: returnTreatment,
-          file_urls: file_urls,
-          file_descriptions: file_descriptions
-        }
+            disease_type_id: this.operateFormData.disease_type_id,
+            disease_type: this.operateFormData.disease_type_name,
+            disease_name: this.operateFormData.disease_name,
+            symptom: this.operateFormData.symptom,
+            examination: returnExamination,
+            diagnosis: this.operateFormData.diagnosis,
+            treatment: returnTreatment,
+            file_urls: file_urls,
+            file_descriptions: file_descriptions
+            //TODO: 改一下后端接口
+          }
           if (this.operateType === 'add') {
-            delete returnForm.disease_id
+            delete returnForm.disease_type_id
             console.log("add")
             console.log(returnForm)
             postFormData('/diseaseManage/addOneDisease', returnForm).then((resp) => {
@@ -370,7 +375,7 @@ export default {
       this.fileList = []
     },
     delDisease() {
-      var id = this.operateFormData.disease_id
+      var id = this.operateFormData.disease_type_id
       this.$confirm('确认删除吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -378,7 +383,7 @@ export default {
       }).then(() => {
         this.isShow = false
         console.log(id)
-        getFormData('/diseaseManage/deleteOneDisease', {disease_id: id}).then((resp) => {
+        getFormData('/diseaseManage/deleteOneDisease', {disease_type_id: id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
             this.search()

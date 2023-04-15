@@ -14,6 +14,7 @@
         <cascader
           :url="url"
           @change="handleChange"
+          @clear="handleClear"
         ></cascader>
         </el-form-item>
       <el-form-item>
@@ -65,7 +66,7 @@ export default {
         //   rules:[{ required: true, message: '请选择疾病分类', trigger: 'change' }]},
         {model: "title", label: "题干", type: "textarea", prop: "title",
           rules:[{ required: true, message: '请输入题干', trigger: 'blur' },
-          { min: 1, max: 500, message: '最多不超过500个字符', trigger: 'blur' }]},
+          { min: 2, max: 500, message: '题干最少2个字符，最多500个字符', trigger: 'blur' }]},
         {model: "optionA", label: "A选项", type: "input", prop: "optionA",
           rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
           { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
@@ -85,6 +86,7 @@ export default {
       operateFormData: {
         question_id: "",
         disease_type_name: "",
+        disease_type_id: 0,
         title: "",
         optionA: "",
         optionB: "",
@@ -109,6 +111,9 @@ export default {
     handleChange(value) {
       console.log(value)
       this.disease_type_id = value[1]
+    },
+    handleClear(value) {
+      this.disease_type_id = ""
     },
     getOneQuetion(row) {
       console.log(row.question_id)
