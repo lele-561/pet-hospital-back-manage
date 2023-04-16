@@ -75,7 +75,7 @@ export default {
           model: 'role',
           label: '权限',
           type: 'selectStatic',
-          opts: [{label: '管理员', value: 'true'}, {label: '普通用户', value: 'false'},],
+          opts: [{label: '管理员', value: true}, {label: '普通用户', value: false},],
           rules: [{required: true, message: '请选择权限', trigger: 'blur'}]
         },
         {
@@ -123,7 +123,14 @@ export default {
       this.formValid = false
       await this.$bus.$emit('toFormValid', 'User')
       if (this.formValid) {
-        postFormData('/user/updateOneUser', this.formData).then((resp) => {
+        var realFormData = JSON.parse(JSON.stringify(this.formData))  // 新对象，防止修改原值
+        if (this.formData.role === '管理员')
+          realFormData.role = true
+        // 点击select更换主管人后，id会存储在传入的name字段，因此在这里改一下数据
+        else if (this.formData.role === '普通用户')
+          realFormData.role = false
+        console.log(realFormData)
+        postFormData('/user/updateOneUser', realFormData).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
             this.isShow = false;
