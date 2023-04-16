@@ -334,12 +334,13 @@ export default {
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
     },
     delPaper(row) {
+      console.log(row)
       this.$confirm('确认删除吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        getFormData('/examManage/deleteOneExam', {exam_id: row.exam_id}).then((resp) => {
+        getFormData('/examManage/deleteOnePaper', {paper_id: row.paper_id}).then((resp) => {
           if (resp.data.code === 0) {
             this.$message({type: 'success', message: resp.data.message});
             this.search()

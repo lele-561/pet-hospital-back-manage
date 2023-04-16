@@ -245,6 +245,7 @@ export default {
       getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
         this.operateFormData = JSON.parse(JSON.stringify(resp.data.result.disease_info))
         this.fileList = this.operateFormData.file_info
+        this.operateFormData.disease_type_id = resp.data.result.disease_info.disease_id
       })
     },
     loadAllData() {
@@ -291,8 +292,12 @@ export default {
               this.rowData.push(this.colData)
               this.colData = []
             }
+
           })
+          this.rowData.push(this.colData)
         }
+        console.log(resp.data.result.inofs)
+        console.log(this.rowData)
       })
     },
     confirm(formName) {

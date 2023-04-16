@@ -2,11 +2,66 @@
   <div>
     <!-- 收集表单 -->
     <el-dialog ref="dialog" :title="operateType === 'add' ? '新增试题' : '试题信息'" :visible.sync="isShow">
-      <common-form ref="operateFormData" :formData="operateFormData" :formLabel="operateFormLabel" :inline="false">
-      </common-form>
+      <!-- <common-form ref="operateFormData" :formData="operateFormData" :formLabel="operateFormLabel" :inline="false">
+      </common-form> -->
+      <el-form ref="operateFormData" :model="operateFormData" :rules="rules" label-width="110px" :inline="false">
+        <el-row>
+          <el-form-item  label="题干" prop="title">
+            <el-input type="" v-model="operateFormData.title" placeholder='请输入试题题干'>
+            </el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item v-show="operateType === 'edit'" label="疾病类型" prop="disease_type_name">
+            {{ operateFormData.disease_type_name }}
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="新疾病类型" prop="disease_type_id">
+            <cascader
+              :url="url"
+              @change="handleAddQuestionChange"
+            ></cascader>
+            </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item  label="A选项" prop="optionA">
+            <el-input v-model="operateFormData.optionA" placeholder='请输入选项'>
+            </el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item  label="B选项" prop="optionB">
+            <el-input v-model="operateFormData.optionB" placeholder='请输入选项'>
+            </el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item  label="C选项" prop="optionC">
+            <el-input v-model="operateFormData.optionC" placeholder='请输入选项'>
+            </el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item  label="D选项" prop="optionD">
+            <el-input v-model="operateFormData.optionD" placeholder='请输入选项'>
+            </el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item  label="正确答案" prop="answer">
+            <el-radio-group v-model="operateFormData.answer">
+              <el-radio label="1">A</el-radio>
+              <el-radio label="2">B</el-radio>
+              <el-radio label="3">C</el-radio>
+              <el-radio label="4">D</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-row>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="" @click="isShow = false">取消</el-button>
-        <el-button type="primary" @click="confirm">确定</el-button>
+        <el-button type="primary" @click="confirm('operateFormData')">确定</el-button>
       </div>
     </el-dialog>
     <el-form :inline="true" style="margin-top:12px">
@@ -18,7 +73,7 @@
         ></cascader>
         </el-form-item>
       <el-form-item>
-        <el-input v-model="input" placeholder="请输入"></el-input>
+        <el-input v-model="input" placeholder="请输入" :max-length="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
@@ -58,30 +113,25 @@ export default {
       pageSize: 10,
       totalPages: 1,
       currentPage: 1,
-      formValid: true,
+      // formValid: true,
       input: "",
       // 表单配置，显示在页面的所有内容
-      operateFormLabel: [
+      rules: {
         // {model: "disease_type_name", label: "疾病名", type: "textarea", 
         //   rules:[{ required: true, message: '请选择疾病分类', trigger: 'change' }]},
-        {model: "title", label: "题干", type: "textarea", prop: "title",
-          rules:[{ required: true, message: '请输入题干', trigger: 'blur' },
-          { min: 2, max: 500, message: '题干最少2个字符，最多500个字符', trigger: 'blur' }]},
-        {model: "optionA", label: "A选项", type: "input", prop: "optionA",
-          rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionB", label: "B选项", type: "input", prop: "optionB",
-          rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionC", label: "C选项", type: "input", prop: "optionC",
-          rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "optionD", label: "D选项", type: "input", prop: "optionD",
-          rules:[{ required: true, message: '请输入选项', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }]},
-        {model: "answer", label: "正确答案", type: "radio-group", prop: "answer",
-          rules:[{ required: true, message: '请选择正确答案', trigger: 'change' },]}
-      ],
+        disease_type_id: [{required: true, message: '请选择疾病类型', trigger: 'change'}],
+        title: [{ required: true, message: '请输入题干', trigger: 'blur' },
+          { min: 2, max: 500, message: '题干最少2个字符，最多500个字符', trigger: 'blur' }],
+        optionA:[{ required: true, message: '请输入选项', trigger: 'blur' },
+          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+        optionB:[{ required: true, message: '请输入选项', trigger: 'blur' },
+          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+        optionC:[{ required: true, message: '请输入选项', trigger: 'blur' },
+          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+        optionD:[{ required: true, message: '请输入选项', trigger: 'blur' },
+          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+        answer:[{ required: true, message: '请选择正确答案', trigger: 'change' },]
+      },
       // 表单数据，不一定都显示，但会传回后端
       operateFormData: {
         question_id: "",
@@ -111,9 +161,14 @@ export default {
     handleChange(value) {
       console.log(value)
       this.disease_type_id = value[1]
+      this.search()
     },
     handleClear(value) {
-      this.disease_type_id = ""
+      this.disease_type_id = -1
+      this.search()
+    },
+    handleAddQuestionChange(value) {
+      this.operateFormData.disease_type_id = value[1]
     },
     getOneQuetion(row) {
       console.log(row.question_id)
@@ -124,17 +179,19 @@ export default {
     },
     search() {
       console.log(this.disease_type_id+" "+this.input)
+      if(this.disease_type_id === undefined) {
+        this.disease_type_id = -1
+      }
       postFormData('/examManage/searchQuestion', {disease_type_id: this.disease_type_id, search_text: this.input, currentPage: this.currentPage}).then((resp) => {
         this.tableData = resp.data.result.infos
         this.totalPages = resp.data.result.totalPages
         this.currentPage = resp.data.result.currentPage
       })
     },
-    async confirm() {
-      this.formValid = false
-      await this.$bus.$emit('toFormValid', 'Question')
-      if (this.formValid) {
-        if (this.operateType === 'add') {
+    confirm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if(valid) {
+          if (this.operateType === 'add') {
           delete this.operateFormData.question_id
           postFormData('/examManage/addOneQuestion', this.operateFormData).then((resp) => {
             if (resp.data.code === 0) {
@@ -143,23 +200,24 @@ export default {
               this.search()
             } else this.$message({type: 'warning', message: resp.data.message});
           })
-        } else if (this.operateType === 'edit') {
-          postFormData('/examManage/modifyOneQuestion', this.operateFormData).then((resp) => {
-            if (resp.data.code === 0) {
-              this.$message({type: 'success', message: resp.data.message});
-              this.isShow = false;
-              this.search()
-            } else this.$message({type: 'warning', message: resp.data.message});
-          })
+          } else if (this.operateType === 'edit') {
+            postFormData('/examManage/modifyOneQuestion', this.operateFormData).then((resp) => {
+              if (resp.data.code === 0) {
+                this.$message({type: 'success', message: resp.data.message});
+                this.isShow = false;
+                this.search()
+              } else this.$message({type: 'warning', message: resp.data.message});
+            })
+          }
         }
-      }
+      });
     },
     addQuestion() {
       this.operateType = 'add';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
       if(this.$refs.operateFormData !== undefined)
-        this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.operateFormData = {}
     },
     editQuestion(row) {
@@ -167,8 +225,9 @@ export default {
       this.isShow = true;
       this.$refs.dialog.$emit('open');
       if(this.$refs.operateFormData !== undefined)
-        this.$refs.operateFormData.resetForm();// 在这里重置表单校验状态
+        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.getOneQuetion(row)
+      // console.log(this.operateFormData)
     },
     delQuestion(row) {
       this.$confirm('确认删除吗？', '提示', {
@@ -190,13 +249,13 @@ export default {
   mounted() {
     this.currentPage = 1
     this.search()
-    this.$bus.$on('returnFormValidQuestion', (data) => {
-      this.formValid = data
-    })
+    // this.$bus.$on('returnFormValidQuestion', (data) => {
+    //   this.formValid = data
+    // })
   },
-  beforeDestroy() {
-    this.$bus.$off('returnFormValidQuestion')
-  }
+  // beforeDestroy() {
+  //   this.$bus.$off('returnFormValidQuestion')
+  // }
 };
 </script>
 
