@@ -60,7 +60,7 @@
     </el-dialog>
     <el-form :inline="true" style="margin-top:12px">
       <el-form-item>
-        <el-input v-model="input" placeholder="请输入"></el-input>
+        <el-input v-model="input" placeholder="请输入" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>

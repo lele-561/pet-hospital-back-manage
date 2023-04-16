@@ -112,7 +112,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="input" placeholder="请输入"></el-input>
+        <el-input v-model="input" placeholder="请输入" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
@@ -243,9 +243,10 @@ export default {
       let id = e.currentTarget.getAttribute("id")
       console.log(id)
       getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
-        this.operateFormData = JSON.parse(JSON.stringify(resp.data.result.disease_info))
+        this.operateFormData = resp.data.result.disease_info
         this.fileList = this.operateFormData.file_info
         this.operateFormData.disease_type_id = resp.data.result.disease_info.disease_id
+        console.log(resp.data.result.disease_info)
       })
     },
     loadAllData() {
@@ -268,14 +269,15 @@ export default {
     loadExaminations() { 
       getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
         this.examinations = resp.data.result
+        console.log(resp.data.result)
       })
-      console.log(this.examinations)
+      
     },
     loadMedicines() { 
       getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
         this.medicines = resp.data.result
+        console.log(resp.data.result)
       })
-      console.log(this.medicines)
     },
     search() {
       postFormData('/diseaseManage/searchDisease', {disease_type: this.disease_type, search_text: this.input, currentPage: -1}).then((resp) => {
@@ -405,7 +407,6 @@ export default {
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.getOneDisease(e)
-
     },
   },
   mounted() {

@@ -73,7 +73,7 @@
         ></cascader>
         </el-form-item>
       <el-form-item>
-        <el-input v-model="input" placeholder="请输入" :max-length="20" show-word-limit></el-input>
+        <el-input v-model="input" placeholder="请输入" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="">
         <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
