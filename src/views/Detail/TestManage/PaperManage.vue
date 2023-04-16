@@ -83,6 +83,7 @@
         <cascader
           :url="url"
           @change="handlePaperChange"
+          @clear="handleClear"
         ></cascader>
         </el-form-item>
       <el-form-item>
@@ -187,6 +188,10 @@ export default {
       this.handleQuestionChange([-1,-1])
       this.formKey++
     },
+    handleClear() {
+      this.disease_type_id_paper = -1
+      this.search()
+    },
     isSelected(option) {
       // 检查数据是否被选中
       return this.selectedQuestions.some(item => item.question_id === option.question_id);
@@ -207,6 +212,7 @@ export default {
     handlePaperChange(value) {
       console.log(value)
       this.disease_type_id_paper = value[1]
+      this.search()
     },
     handleQuestionChange(value) {
       console.log(value)
@@ -255,7 +261,10 @@ export default {
       })
     },
     search() {
-      console.log(this.disease_type_id_paper+" "+this.input)
+      if(this.disease_type_id_paper === undefined) {
+        this.disease_type_id_paper = -1
+      }
+      console.log(this.disease_type_id_paper+"! "+this.input)
       postFormData('/examManage/searchPaper', {disease_type_id: this.disease_type_id_paper, search_text: this.input, currentPage: this.currentPage}).then((resp) => {
         console.log(resp.data.result.infos)
         this.tableData = resp.data.result.infos

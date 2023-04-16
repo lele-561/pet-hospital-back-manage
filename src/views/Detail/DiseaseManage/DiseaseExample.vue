@@ -102,7 +102,7 @@
     <!-- 搜索框 -->
     <el-form :inline="true" style="margin-top:12px">
       <el-form-item>
-        <el-select v-model="value" clearable placeholder="请选择病类" ref="selectorSearch" @change="handleSearchChange">
+        <el-select v-model="value" clearable placeholder="请选择病类" ref="selectorSearch" @change="handleSearchChange" @clear="handleClear">
           <el-option
             v-for="item in big_diseases"
             :key="item.value"
@@ -211,6 +211,10 @@ export default {
       this.disease_type = obj.label
       this.search()
     },
+    handleClear() {
+      this.disease_type = ""
+      this.search()
+    },
     handleChange(value) {
       this.operateFormData.disease_type_name = value
     },
@@ -280,6 +284,10 @@ export default {
       })
     },
     search() {
+      if(this.disease_type === undefined) {
+        this.disease_type = ''
+      }
+      console.log(this.disease_type + " " + this.input)
       postFormData('/diseaseManage/searchDisease', {disease_type: this.disease_type, search_text: this.input, currentPage: -1}).then((resp) => {
         this.tableData = resp.data.result.infos
         this.rowData = []
@@ -376,9 +384,10 @@ export default {
       this.operateType = 'add';
       this.isShow = true;
       this.$refs.dialog.$emit('open');
+      this.operateFormData = {}
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
-      this.operateFormData = {}
+
       this.fileList = []
     },
     delDisease() {
