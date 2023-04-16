@@ -108,10 +108,10 @@ export default {
   methods: {
     getData() {
       getFormData('/personnel/getAllPersonnels', {content: '', currentPage: 0}).then((resp) => {
-        for (let i in resp.data.result.personnels) {
+        for (let i in resp.data.result) {
           this.personnelOptions.push({
-            value: resp.data.result.personnels[i].id,
-            label: resp.data.result.personnels[i].name
+            value: resp.data.result[i].id,
+            label: resp.data.result[i].name
           })
         }
       })
@@ -142,7 +142,6 @@ export default {
         delete this.formData.originDirectorName
         if (this.operateType === 'add') {
           delete this.formData.id
-          console.log(this.formData)
           postFormData('/department/addOneDepartment', this.formData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message({type: 'success', message: resp.data.message});
@@ -152,8 +151,6 @@ export default {
             } else this.$message({type: 'warning', message: resp.data.message});
           })
         } else if (this.operateType === 'edit') {
-          console.log(this.formData)
-
           postFormData('/department/updateOneDepartment', this.formData).then((resp) => {
             if (resp.data.code === 0) {
               this.$message({type: 'success', message: resp.data.message});
