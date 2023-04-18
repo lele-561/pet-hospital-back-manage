@@ -11,17 +11,26 @@
             </el-input>
           </el-form-item>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-form-item v-show="operateType === 'edit'" label="疾病类型" prop="disease_type_name">
             {{ operateFormData.disease_type_name }}
           </el-form-item>
-        </el-row>
+        </el-row> -->
         <el-row>
-          <el-form-item label="新疾病类型" prop="disease_type_id">
-            <cascader
+          <el-form-item label="疾病类型" prop="disease_type_id">
+            <el-cascader
+              v-model="selectedValues"
+              :options="options"
+              :show-all-levels="false"
+              :props="{ expandTrigger: 'hover' }"
+              @change="handleAddQuestionChange"
+              placeholder="请选择疾病分类"
+              clearable
+            ></el-cascader>
+            <!-- <cascader
               :url="url"
               @change="handleAddQuestionChange"
-            ></cascader>
+            ></cascader> -->
             </el-form-item>
         </el-row>
         <el-row>
@@ -115,6 +124,14 @@ export default {
       currentPage: 1,
       // formValid: true,
       input: "",
+      selectedValues: [],
+      options: [
+            {
+                value: "", // 第一级别选项的值为空
+                label: "", // 第一级别选项的标签为空
+                children: [] // 第一级别选项没有子选项
+            }
+        ],
       // 表单配置，显示在页面的所有内容
       rules: {
         // {model: "disease_type_name", label: "疾病名", type: "textarea", 
@@ -168,7 +185,59 @@ export default {
       this.search()
     },
     handleAddQuestionChange(value) {
+      this.selectedValues = value
+      console.log(this.selectedValues)
       this.operateFormData.disease_type_id = value[1]
+    },
+    loadOptions() {
+      this.selectedValues = []
+      getFormData(this.url,{}).then((resp) => {
+          // console.log(resp.data.data)
+          this.options = []
+          this.updateCascaderData(resp.data.result.disease_types)
+          console.log("default: "+this.operateFormData.disease_type_id)
+          if(this.operateFormData.disease_type_id !== -1 && this.operateFormData.disease_type_id !== undefined) {
+              const matchedOption = this.findOptionByValue(this.operateFormData.disease_type_id)
+              console.log(matchedOption)
+              if(matchedOption) {
+                  this.selectedValues = matchedOption
+              }
+          }
+      })
+    },
+    updateCascaderData(response) {
+      const diseaseTypes = response;
+      diseaseTypes.forEach(type => {
+          const typeObj = {
+              value: type.disease_id,
+              label: type.disease_type,
+              children: []
+          };
+          type.children.forEach(child => {
+              typeObj.children.push({
+              value: child.disease_type_id,
+              label: child.disease_type_name
+              });
+          });
+          
+          this.options.push(typeObj);
+          // console.log(typeObj)
+      });
+    },
+    findOptionByValue(value) {
+        let path = []
+        for(let i = 0; i < this.options.length; i++) {
+          var option = this.options[i]
+          var children = option.children
+          for(let j = 0; j < children.length; j++) {
+            if(children[j].value === value) {
+              path.push(i)
+              path.push(children[j].value)
+              return path
+            }
+          }
+        }
+        return path
     },
     getOneQuetion(row) {
       console.log(row.question_id)
@@ -219,14 +288,17 @@ export default {
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.operateFormData = {}
+      this.loadOptions()
     },
     editQuestion(row) {
       this.operateType = 'edit';
       this.isShow = true;
+      this.loadOptions()
       this.$refs.dialog.$emit('open');
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
       this.getOneQuetion(row)
+      this.loadOptions()
       // console.log(this.operateFormData)
     },
     delQuestion(row) {
