@@ -21,12 +21,13 @@
         </el-form-item>
         <el-form-item label="考试日期" prop="start_date">
           <el-date-picker v-model="operateFormData.start_date" placeholder="请选择考试日期" type="date"
-                      value-format="yyyy-MM-dd"></el-date-picker>
+                      format="yyyy-MM-dd" value-format="yyyy-MM-dd" ></el-date-picker>
         </el-form-item>
         <el-form-item label="考试时间" prop="examTime">
           <el-time-picker 
             is-range 
             v-model="operateFormData.examTime"
+            value-format="HH:mm:ss"
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
@@ -91,6 +92,30 @@ export default {
     CommonForm, CommonTableOperator
   },
   data() {
+    let validateDate = (rule, value, callback) => {
+      if(this.operateType === 'add') {
+        const date = new Date()
+        const nowDate = date.getDate()
+        const nowMonth = date.getMonth() + 1
+        const nowYear = date.getFullYear()
+        // console.log(nowDate + " "+ nowMonth+ " "+nowYear)
+        var valueDate = parseInt(value.split("-")[2])
+        var valueMonth = parseInt(value.split("-")[1])
+        var valueYear = parseInt(value.split("-")[0])
+        // console.log(valueDate + " "+ valueMonth+ " "+valueYear)
+        if (value === null || value === undefined) callback(new Error('请选择考试日期'));
+        if(valueYear >= nowYear) {
+          if(valueMonth >= nowMonth) {
+            if(valueDate > nowDate)
+              callback()
+          }
+        }
+        callback(new Error('考试日期不得早于当前日期'));
+      }
+      else callback()
+      // const nowTime = Date.now()
+      
+    };
     return {
       operateType: "add",
       isShow: false,
@@ -120,16 +145,16 @@ export default {
         examTime: "",
 
         start_time: "",
-        start_time: "",
+        end_time: "",
       },
       // 表单配置，显示在页面的所有内容
       opts: [{label: '1（最低）', value: '1'}, {label: '2', value: '2'},{label: '3', value: '3'},
           {label: '4', value: '4'},{label: '5（最高）', value: '5'}],
       rules: {
-        name: [{ required: true, message: '请输入试卷名', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入考试名', trigger: 'blur' },
+          { min: 2, max: 200, message: '考试名最少2个字符，最多200个字符', trigger: 'blur' }],
         authority: [{ required: true, message: '请选择考生权限', trigger: 'change' }],
-        start_date: [{ required: true, message: '请选择考试日期', trigger: 'change' }],
+        start_date: [{ required: true, validator: validateDate, trigger: 'change' }],
         examTime: [{ required: true, message: '请选择考试时间', trigger: 'change' }]
       },
 
@@ -192,15 +217,16 @@ export default {
       this.selectedPapers.length = 0
       getFormData('/examManage/getOneExam', {exam_id: row.exam_id}).then((resp) => {
         this.oldResp = resp.data.result.exam_info
+        console.log(this.oldResp)
         this.exam_info = {
           paper_info: this.oldResp.paper_info,
           authority: this.oldResp.authority,
           exam_id: this.oldResp.exam_id,
           name: this.oldResp.exam_name,
           start_date: this.oldResp.start_time.split(" ")[0],
-          examTime: [this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.start_time.split(" ")[1], this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.end_time.split(" ")[1]],
-          start_time: this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.start_time.split(" ")[1],
-          start_time:this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.end_time.split(" ")[1],
+          examTime: [this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.start_time.split(" ")[1].split(".")[0], this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.end_time.split(" ")[1].split(".")[0]],
+          start_time: this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.start_time.split(" ")[1].split(".")[0],
+          end_time:this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.end_time.split(" ")[1].split(".")[0],
         }
         console.log(this.exam_info)
         this.operateFormData = this.exam_info
@@ -220,11 +246,17 @@ export default {
       this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.operateType === 'add') {
+              console.log("add")
               console.log(this.operateFormData)
+              // var date = this.operateFormData.examTime[0].split("T")[0]
+              // var start = this.operateFormData.examTime[0].split("T")[1].split(".")[0]
+              // var end = this.operateFormData.examTime[1].split("T")[1].split(".")[0]
+              // start = date+" "+start
+              // end = date+" "+end
               this.post_exam_info = {
                 paper_id: this.operateFormData.paper_info.paper_id,
-                start_time: this.operateFormData.examTime[0],
-                end_time: this.operateFormData.examTime[1],
+                start_time: this.operateFormData.start_date+" "+this.operateFormData.examTime[0],
+                end_time: this.operateFormData.start_date+" "+this.operateFormData.examTime[1],
                 name: this.operateFormData.name,
                 authority: this.operateFormData.authority
               } 
@@ -240,8 +272,8 @@ export default {
             } else if (this.operateType === 'edit') {
               this.post_exam_info = {
                 paper_id: this.operateFormData.paper_info.paper_id,
-                start_time: this.operateFormData.examTime[0],
-                end_time: this.operateFormData.examTime[1],
+                start_time: this.operateFormData.start_date+" "+this.operateFormData.examTime[0],
+                end_time: this.operateFormData.start_date+" "+this.operateFormData.examTime[1],
                 exam_name: this.operateFormData.name,
                 authority: this.operateFormData.authority,
                 exam_id: this.operateFormData.exam_id

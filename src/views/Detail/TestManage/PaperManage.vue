@@ -159,7 +159,7 @@ export default {
       //     {label: '20', value: '20'}],
       rules: {
         name: [{ required: true, message: '请输入试卷名', trigger: 'blur' },
-          { min: 1, max: 200, message: '最多不超过200个字符', trigger: 'blur' }],
+          { min: 2, max: 200, message: '试卷名最少2个字符，最多200个字符', trigger: 'blur' }],
         question_score: [{ required: true, message: '请输入每题分值', trigger: 'blur' },
           {  pattern: /^[1-9][0-9]?$/, message: '分值为1-100之间的整数', trigger: 'blur' },],
         disease_type_id: [{ required: true, message: '请选择试卷所属疾病类型', trigger: 'blur' }],
