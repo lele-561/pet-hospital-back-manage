@@ -245,13 +245,14 @@ export default {
       return true;
     },
     handleUploadSuccess(response, file) {
-      console.log(response)
-      console.log(this.fileSrc)
+      // console.log(response)
+      // console.log(this.fileSrc)
       console.log(response.result.file_info)
       for(let i = 0; i < response.result.file_info.length; i++) {
-        let index = i+1
+        let index = 0
+        index = this.fileList.length+1
         const fileItem = {
-          name: '影像资料'+index+"",
+          name: '影像资料'+index,
           url: this.fileSrc + response.result.file_info[i].file_url,
           type: response.result.file_info[i].file_type,
           description: ""
@@ -333,7 +334,6 @@ export default {
       })
     },
     confirm(formName) {
-
       this.$refs[formName].validate((valid) => {
         for(let i = 0; i < this.fileList.length; i++) {
           if(this.fileList[i].description === '') {
@@ -350,19 +350,25 @@ export default {
             return false;
           }
         }
-        // var file_urls = []
-        // var file_descriptions = []
         console.log(this.fileList)
-        var file_items = []
+        var file_url = ""
+        var file_type = ""
+        var file_description = ""
         for(let i = 0; i < this.fileList.length; i++) {
-          var file = {
-            url: this.fileList[i].url,
-            type: this.fileList[i].type,
-            description: this.fileList[i].description
+          var url = []
+          url = this.fileList[i].url.split("/")
+          if(i === 0) {
+            file_url = url[url.length-1]
+            file_type = this.fileList[i].type
+            file_description = this.fileList[i].description
           }
-          file_items.push(file)
+          else {
+            file_url = file_url +","+ url[url.length-1]
+            file_type = file_type + "," + this.fileList[i].type
+            file_description = file_description + "," + this.fileList[i].description
+          }
         }
-        console.log(file_items)
+
         if (valid) {
           var returnExamination = this.operateFormData.examination.join(',')
           var returnTreatment = this.operateFormData.treatment.join(',')
@@ -374,7 +380,10 @@ export default {
             examination: returnExamination,
             diagnosis: this.operateFormData.diagnosis,
             treatment: returnTreatment,
-            file_items: file_items
+            file_url: file_url,
+            // file_type: file_type,
+            file_description: file_description
+            // file_items: file_items
             // file_urls: file_urls,
             // file_descriptions: file_descriptions
             //TODO: 改一下后端接口
