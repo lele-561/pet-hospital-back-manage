@@ -23,7 +23,10 @@
       <common-table-operator :tableData='tableData' :tableLabel='tableLabel'
                              @changePage='search' @del='delCheckup' @edit='editCheckup'></common-table-operator>
       <div style='text-align: center; margin-top: 10px'>
-        <el-pagination :page-count='totalPages' :page-size='pageSize' :pager-count='7' background
+        <el-pagination :page-count='totalPages'
+                       :page-size='pageSize'
+                       :current-page.sync="currentPage"
+                       :pager-count='7' background
                        layout='prev, pager, next, jumper' @current-change='handleCurrentChange'>
         </el-pagination>
       </div>
@@ -99,11 +102,9 @@ export default {
   methods: {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
-      console.log(this.content)
       this.search(this.content, this.currentPage)
     },
     search: function (content, page) {
-      console.log(content, page)
       getFormData('/checkup/getAllCheckups', {content: content, currentPage: page}).then((resp) => {
         this.tableData = resp.data.result.checkups
         this.totalPages = resp.data.result.totalPages
