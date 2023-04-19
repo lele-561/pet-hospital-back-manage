@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: Cascader数据不更新问题，selected数据显示 -->
   <div>
     <!-- 收集表单 -->
     <el-dialog ref="dialog" :title="operateType === 'add' ? '新增试卷' : '试卷信息'" :visible.sync="isShow" :fullscreen="isFullScreen" @close="clearSearch">
@@ -9,7 +8,7 @@
         <el-row>
           <el-form-item  label="试卷名" prop="name">
             <el-input v-model="operateFormData.name" placeholder='请输入试卷名'
-              :maxlength='200' show-word-limit>
+              :maxlength='100' show-word-limit>
             </el-input>
           </el-form-item>
         </el-row>
@@ -161,7 +160,7 @@ export default {
         name: [{ required: true, message: '请输入试卷名', trigger: 'blur' },
           { min: 2, max: 100, message: '试卷名最少2个字符，最多100个字符', trigger: 'blur' }],
         question_score: [{ required: true, message: '请输入每题分值', trigger: 'blur' },
-          {  pattern: /^[1-9][0-9]?$/, message: '分值为1-100之间的整数', trigger: 'blur' },],
+          {  pattern: /^[1-9][0-9]?$/, message: '分值为1-99之间的整数', trigger: 'blur' },],
         disease_type_id: [{ required: true, message: '请选择试卷所属疾病类型', trigger: 'blur' }],
       },
 
