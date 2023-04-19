@@ -77,10 +77,10 @@
 
         <el-form-item label="上传文件">
           <el-upload
-            action="https://pethospitalresources.blob.core.windows.net/pethospicalfiles/"
+            action="https://pet-hospital.azurewebsites.net/diseaseManage/uploadFile"
             list-type="text"
             :on-remove="handleRemove"
-            :headers="{ 'content-type': 'multipart/form-data' }"
+            :headers="{ Authorization: token }"
             :on-success="handleUploadSuccess"
             :before-remove="beforeRemove"
             :before-upload="beforeUpload"
@@ -146,6 +146,9 @@ export default {
       isShow: false,
       // isFullScreen: true,
       input: "",
+
+      token: "",
+      fileSrc: 'https://pethospitalresources.blob.core.windows.net/pethospicalfiles/',
 
       // videoSrc: "https://www.w3schools.com/html/mov_bbb.mp4",
       big_diseases: [],
@@ -223,15 +226,38 @@ export default {
     handleTreatmentChange(value) {
     },
     beforeUpload(file) {
+      console.log("before upload", file);
+      // 可以在 beforeUpload 方法中对文件进行校验，返回 false 表示取消上传，返回 true 表示上传文件
+      const isFileType =
+        file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp"
+         || file.type === "video/asx" || file.type === "video/asf" || file.type === "video/mpeg" || file.type === "video/wmv"
+         || file.type === "video/3gp" || file.type === "video/mp4" || file.type === "video/mov" || file.type === "video/avi"
+         || file.type === "video/flv" || file.type === "video/rmvb"
+      const isFileSize = (file.size / 1024)/1024 < 30;
+      if (!isFileType) {
+        this.$message.error("暂时不支持该格式文件上传！");
+        return false;
+      }
+      if (!isFileSize) {
+        this.$message.error("上传文件过大，请压缩文件或重新选择文件上传！");
+        return false;
+      }
+      return true;
     },
     handleUploadSuccess(response, file) {
-      const fileItem = {
-        name: file.name,
-        url: 'https://picsum.photos/300/300',
-        type: 'image',
-        description: ""
-      };
-      this.fileList.push(fileItem);
+      console.log(response)
+      console.log(this.fileSrc)
+      console.log(response.result.file_info)
+      for(let i = 0; i < response.result.file_info.length; i++) {
+        let index = i+1
+        const fileItem = {
+          name: '影像资料'+index+"",
+          url: this.fileSrc + response.result.file_info[i].file_url,
+          type: response.result.file_info[i].file_type,
+          description: ""
+        };
+        this.fileList.push(fileItem);
+      }
       console.log(this.fileList)
     },
     beforeRemove(file, fileList) {
@@ -245,7 +271,7 @@ export default {
     },
     getOneDisease(e) {
       let id = e.currentTarget.getAttribute("id")
-      console.log(id)
+      // console.log(id)
       getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
         this.operateFormData = resp.data.result.disease_info
         this.fileList = this.operateFormData.file_info
@@ -273,14 +299,12 @@ export default {
     loadExaminations() { 
       getFormData('/checkup/getAllCheckups', {content: '', currentPage: 0}).then((resp) => {
         this.examinations = resp.data.result
-        console.log(resp.data.result)
       })
       
     },
     loadMedicines() { 
       getFormData('/medicine/getAllMedicines', {content: '', currentPage: 0}).then((resp) => {
         this.medicines = resp.data.result
-        console.log(resp.data.result)
       })
     },
     search() {
@@ -306,34 +330,39 @@ export default {
           })
           this.rowData.push(this.colData)
         }
-        console.log(resp.data.result.inofs)
-        console.log(this.rowData)
       })
     },
     confirm(formName) {
+
       this.$refs[formName].validate((valid) => {
-        var file_urls = []
-        var file_descriptions = []
         for(let i = 0; i < this.fileList.length; i++) {
           if(this.fileList[i].description === '') {
             this.$alert('影像资料描述不能为空！', '提示', {
-            confirmButtonText: '确定',
-            callback: action => {
-              this.$message({
-                type: 'info',
-                message: '已取消提交'
-              });
-            }
-          });
-          break
-          }
-          else {
-            file_urls.push(this.fileList[i].url)
-            file_descriptions.push(this.fileList[i].description)
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消提交'
+                });
+              }
+            });
+            console.log('error submit!!');
+            return false;
           }
         }
-        console.log(file_urls)
-        console.log(file_descriptions)
+        // var file_urls = []
+        // var file_descriptions = []
+        console.log(this.fileList)
+        var file_items = []
+        for(let i = 0; i < this.fileList.length; i++) {
+          var file = {
+            url: this.fileList[i].url,
+            type: this.fileList[i].type,
+            description: this.fileList[i].description
+          }
+          file_items.push(file)
+        }
+        console.log(file_items)
         if (valid) {
           var returnExamination = this.operateFormData.examination.join(',')
           var returnTreatment = this.operateFormData.treatment.join(',')
@@ -345,8 +374,9 @@ export default {
             examination: returnExamination,
             diagnosis: this.operateFormData.diagnosis,
             treatment: returnTreatment,
-            file_urls: file_urls,
-            file_descriptions: file_descriptions
+            file_items: file_items
+            // file_urls: file_urls,
+            // file_descriptions: file_descriptions
             //TODO: 改一下后端接口
           }
           if (this.operateType === 'add') {
@@ -387,7 +417,6 @@ export default {
       this.operateFormData = {}
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
-
       this.fileList = []
     },
     delDisease() {
@@ -421,6 +450,8 @@ export default {
   mounted() {
     this.search()
     this.loadAllData()
+    this.$store.commit('getToken');
+    this.token = "Bearer "+this.$store.state.user.token
   },
 }
 </script>
