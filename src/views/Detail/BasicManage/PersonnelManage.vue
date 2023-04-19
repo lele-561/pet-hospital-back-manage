@@ -24,7 +24,10 @@
       <common-table-operator :tableData='tableData' :tableLabel='tableLabel' @changePage='search' @del='delPersonnel'
                              @edit='editPersonnel'></common-table-operator>
       <div style='text-align: center; margin-top: 10px'>
-        <el-pagination :page-count='totalPages' :page-size='pageSize' :pager-count='7' background
+        <el-pagination :page-count='totalPages'
+                       :page-size='pageSize'
+                       :current-page.sync="currentPage"
+                       :pager-count='7' background
                        layout='prev, pager, next, jumper' @current-change='handleCurrentChange'>
         </el-pagination>
       </div>
