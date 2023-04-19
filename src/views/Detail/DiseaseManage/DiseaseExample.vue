@@ -381,7 +381,7 @@ export default {
             diagnosis: this.operateFormData.diagnosis,
             treatment: returnTreatment,
             file_url: file_url,
-            // file_type: file_type,
+            file_type: file_type,
             file_description: file_description
             // file_items: file_items
             // file_urls: file_urls,
