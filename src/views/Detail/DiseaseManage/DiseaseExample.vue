@@ -429,15 +429,15 @@ export default {
         }
         });
     },
-    // addDisease() {
-    //   this.operateType = 'add';
-    //   this.isShow = true;
-    //   this.$refs.dialog.$emit('open');
-    //   this.operateFormData = {}
-    //   if(this.$refs.operateFormData !== undefined)
-    //     this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
-    //   this.fileList = []
-    // },
+     addDisease() {
+      this.operateType = 'add';
+       this.isShow = true;
+       this.$refs.dialog.$emit('open');
+       this.operateFormData = {}
+       if(this.$refs.operateFormData !== undefined)
+         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+       this.fileList = []
+     },
     delDisease() {
       var id = this.operateFormData.disease_type_id
       this.$confirm('确认删除吗？', '提示', {
