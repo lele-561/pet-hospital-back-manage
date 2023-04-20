@@ -275,9 +275,19 @@ export default {
       // console.log(id)
       getFormData('/diseaseManage/getOneDisease', {disease_id: id}).then((resp) => {
         this.operateFormData = resp.data.result.disease_info
-        this.fileList = this.operateFormData.file_info
+        for(let i = 0; i < resp.data.result.disease_info.file_info.length; i++) {
+          const fileItem = {
+            name: resp.data.result.disease_info.file_info[i].name,
+            url: this.fileSrc + resp.data.result.disease_info.file_info[i].url,
+            type: resp.data.result.disease_info.file_info[i].type,
+            description: resp.data.result.disease_info.file_info[i].description
+          };
+          this.fileList.push(fileItem)
+        }
+        // this.fileList = this.operateFormData.file_info
         this.operateFormData.disease_type_id = resp.data.result.disease_info.disease_id
-        console.log(resp.data.result.disease_info)
+        // console.log(resp.data.result.disease_info)
+        // console.log(this.fileList)
       })
     },
     loadAllData() {
@@ -419,15 +429,15 @@ export default {
         }
         });
     },
-    addDisease() {
-      this.operateType = 'add';
-      this.isShow = true;
-      this.$refs.dialog.$emit('open');
-      this.operateFormData = {}
-      if(this.$refs.operateFormData !== undefined)
-        this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
-      this.fileList = []
-    },
+    // addDisease() {
+    //   this.operateType = 'add';
+    //   this.isShow = true;
+    //   this.$refs.dialog.$emit('open');
+    //   this.operateFormData = {}
+    //   if(this.$refs.operateFormData !== undefined)
+    //     this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+    //   this.fileList = []
+    // },
     delDisease() {
       var id = this.operateFormData.disease_type_id
       this.$confirm('确认删除吗？', '提示', {
@@ -453,6 +463,7 @@ export default {
       this.$refs.dialog.$emit('open');
       if(this.$refs.operateFormData !== undefined)
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
+      this.fileList = []
       this.getOneDisease(e)
     },
   },
