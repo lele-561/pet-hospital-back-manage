@@ -176,7 +176,7 @@ export default {
       this.search()
     },
     handleChange(value) {
-      console.log(value)
+      // console.log(value)
       this.disease_type_id = value[1]
       this.search()
     },
@@ -186,7 +186,7 @@ export default {
     },
     handleAddQuestionChange(value) {
       this.selectedValues = value
-      console.log(this.selectedValues)
+      // console.log(this.selectedValues)
       this.operateFormData.disease_type_id = value[1]
     },
     loadOptions() {
@@ -195,10 +195,10 @@ export default {
           // console.log(resp.data.data)
           this.options = []
           this.updateCascaderData(resp.data.result.disease_types)
-          console.log("default: "+this.operateFormData.disease_type_id)
+          // console.log("default: "+this.operateFormData.disease_type_id)
           if(this.operateFormData.disease_type_id !== -1 && this.operateFormData.disease_type_id !== undefined) {
               const matchedOption = this.findOptionByValue(this.operateFormData.disease_type_id)
-              console.log(matchedOption)
+              // console.log(matchedOption)
               if(matchedOption) {
                   this.selectedValues = matchedOption
               }
@@ -240,14 +240,14 @@ export default {
         return path
     },
     getOneQuetion(row) {
-      console.log(row.question_id)
+      // console.log(row.question_id)
       getFormData('/examManage/getOneQuestion', {question_id: row.question_id}).then((resp) => {
-        console.log(resp.data.result.question_info)
+        // console.log(resp.data.result.question_info)
         this.operateFormData = resp.data.result.question_info
       })
     },
     search() {
-      console.log(this.disease_type_id+" "+this.input)
+      // console.log(this.disease_type_id+" "+this.input)
       if(this.disease_type_id === undefined) {
         this.disease_type_id = -1
       }

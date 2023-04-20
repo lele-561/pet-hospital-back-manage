@@ -209,36 +209,36 @@ export default {
       this.search()
     },
     handlePaperChange(value) {
-      console.log(value)
+      // console.log(value)
       this.disease_type_id_paper = value[1]
       this.search()
     },
     handleQuestionChange(value) {
-      console.log(value)
+      // console.log(value)
       this.disease_type_id_question = value[1]
     },
     handleAddPaperChange(value) {
-      console.log(value)
+      // console.log(value)
       this.operateFormData.disease_type_id = value[1]
     },
     handleTransferChange(data) {
       // const selectedData = this.$refs.transfer.getSelected();
       // this.selectedQuestions = selectedData
       // console.log(list)
-      console.log(this.selectedQuestions)
+      // console.log(this.selectedQuestions)
     },
     searchQuestion() {
       if(typeof this.disease_type_id_question == "undefined") {
         this.disease_type_id_question = -1
       }
-      console.log(this.disease_type_id_question+" "+this.questionInput)
+      // console.log(this.disease_type_id_question+" "+this.questionInput)
       // TODO: 解决cascader显示不更新的问题
       postFormData('/examManage/searchQuestion', {disease_type_id: this.disease_type_id_question, search_text: this.questionInput, currentPage: -1}).then((resp) => {
         this.questionData = resp.data.result.infos
       })
-      console.log("update!")
-      console.log(this.questionData)
-      console.log(this.selectedQuestions)
+      // console.log("update!")
+      // console.log(this.questionData)
+      // console.log(this.selectedQuestions)
     },
     showAddCascader: function() {
       // console.log(this.operateType === 'add')
@@ -263,9 +263,9 @@ export default {
       if(this.disease_type_id_paper === undefined) {
         this.disease_type_id_paper = -1
       }
-      console.log(this.disease_type_id_paper+"! "+this.input)
+      // console.log(this.disease_type_id_paper+"! "+this.input)
       postFormData('/examManage/searchPaper', {disease_type_id: this.disease_type_id_paper, search_text: this.input, currentPage: this.currentPage}).then((resp) => {
-        console.log(resp.data.result.infos)
+        // console.log(resp.data.result.infos)
         this.tableData = resp.data.result.infos
         this.totalPages = resp.data.result.totalPages
         this.currentPage = resp.data.result.currentPage
@@ -278,7 +278,7 @@ export default {
         for(let i = 0; i < this.selectedQuestions.length; i++) {
           question_ids = question_ids + this.selectedQuestions[i] + ','
         }
-        console.log(this.question_ids)
+        // console.log(this.question_ids)
         // console.log(this.operateFormData)
           if (valid) {
             if (this.operateType === 'add') {
@@ -289,7 +289,7 @@ export default {
                 name: this.operateFormData.name,
                 question_num: this.selectedQuestions.length,
               }
-              console.log(temp_info)
+              // console.log(temp_info)
               postFormData('/examManage/addOnePaper', temp_info).then((resp) => {
                 if (resp.data.code === 0) {
                   this.$message({type: 'success', message: resp.data.message});
@@ -315,7 +315,7 @@ export default {
               })
             }
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });
@@ -334,7 +334,7 @@ export default {
     editPaper(row) {
       this.operateType = 'edit';
       this.isShow = true;
-      console.log(this.disease_type_id_question)
+      // console.log(this.disease_type_id_question)
       this.searchQuestion()
       this.getOnePaper(row)
       this.$refs.dialog.$emit('open');
@@ -342,7 +342,7 @@ export default {
         this.$refs.operateFormData.resetFields();// 在这里重置表单校验状态
     },
     delPaper(row) {
-      console.log(row)
+      // console.log(row)
       this.$confirm('确认删除吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

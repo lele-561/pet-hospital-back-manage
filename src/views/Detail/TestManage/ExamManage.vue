@@ -192,8 +192,8 @@ export default {
           this.selectedPapers.pop();
       }
       else {
-        console.log(this.selectedPapers)
-        console.log(this.paperData)
+        // console.log(this.selectedPapers)
+        // console.log(this.paperData)
         let obj = {}
         obj = this.paperData.find((item) => {
           return item.paper_id === this.selectedPapers[0]
@@ -207,7 +207,7 @@ export default {
       postFormData('/examManage/searchPaper', {disease_type_id: -1, search_text: '', currentPage: -1}).then((resp) => {
         this.paperData = resp.data.result.infos
       })
-      console.log(this.paperData)
+      // console.log(this.paperData)
     },
     filterMethod(query, item) {
       //TODO: 按名字和id都能搜索
@@ -217,7 +217,7 @@ export default {
       this.selectedPapers.length = 0
       getFormData('/examManage/getOneExam', {exam_id: row.exam_id}).then((resp) => {
         this.oldResp = resp.data.result.exam_info
-        console.log(this.oldResp)
+        // console.log(this.oldResp)
         this.exam_info = {
           paper_info: this.oldResp.paper_info,
           authority: this.oldResp.authority,
@@ -228,10 +228,10 @@ export default {
           start_time: this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.start_time.split(" ")[1].split(".")[0],
           end_time:this.oldResp.start_time.split(" ")[0]+" "+this.oldResp.end_time.split(" ")[1].split(".")[0],
         }
-        console.log(this.exam_info)
+        // console.log(this.exam_info)
         this.operateFormData = this.exam_info
         this.selectedPapers.push(this.exam_info.paper_info.paper_id)
-        console.log(this.selectedPapers)
+        // console.log(this.selectedPapers)
         // TODO: 需要getOneExam中的数据为所有paperdata的子集才能正确显示
       })
     },
@@ -246,8 +246,8 @@ export default {
       this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.operateType === 'add') {
-              console.log("add")
-              console.log(this.operateFormData)
+              // console.log("add")
+              // console.log(this.operateFormData)
               // var date = this.operateFormData.examTime[0].split("T")[0]
               // var start = this.operateFormData.examTime[0].split("T")[1].split(".")[0]
               // var end = this.operateFormData.examTime[1].split("T")[1].split(".")[0]
@@ -260,7 +260,7 @@ export default {
                 name: this.operateFormData.name,
                 authority: this.operateFormData.authority
               } 
-              console.log(this.post_exam_info)
+              // console.log(this.post_exam_info)
               // delete this.operateFormData.exam_id
               postFormData('/examManage/addOneExam', this.post_exam_info).then((resp) => {
                 if (resp.data.code === 0) {
@@ -278,7 +278,7 @@ export default {
                 authority: this.operateFormData.authority,
                 exam_id: this.operateFormData.exam_id
               } 
-              console.log(this.post_exam_info)
+              // console.log(this.post_exam_info)
               postFormData('/examManage/modifyOneExam', this.post_exam_info).then((resp) => {
                 if (resp.data.code === 0) {
                   this.$message({type: 'success', message: resp.data.message});
@@ -288,7 +288,7 @@ export default {
               })
             }
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });
